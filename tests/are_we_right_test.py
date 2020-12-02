@@ -1,33 +1,15 @@
+import os
+import json
+
 from wbf.are_we_right import calculate_metrics
 
 
+ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
+
+
 def test_calculate_metrics():
-    papers = [
-        {
-            "doi": "10.1011/111111",
-            "issn": "1234-1234",
-            "pathway": "already-oa",
-            "unpaywall_status": "oa",
-        },
-        {
-            "doi": "10.1011/222222",
-            "issn": "1234-1234",
-            "pathway": "nocost",
-            "unpaywall_status": "not-oa",
-        },
-        {
-            "doi": "10.1011/222222",
-            "issn": "1234-5678",
-            "pathway": "other",
-            "unpaywall_status": "not-oa",
-        },
-        {
-            "doi": "10.1011/444444",
-            "issn": "1234-1234",
-            "pathway": "not-attempted",
-            "unpaywall_status": "not-found",
-        },
-    ]
+    with open(os.path.join(ASSETS_PATH, "papers_enriched_dummy.json"), "r") as fh:
+        papers = json.load(fh)
 
     n_oa, n_pathway_nocost, n_pathway_other, n_unknown = calculate_metrics(papers)
 
