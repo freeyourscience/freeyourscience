@@ -1,4 +1,10 @@
-n_pubs, n_oa, n_pathway_nocost, n_pathway_other, n_unknown = 1000, 400, 500, 50, 50
+input_of_papers = [
+  {'doi':'10.1011/111111' , 'issn':'1234-1234'}
+]
+
+n_pubs = len(input_of_papers)
+
+n_oa, n_pathway_nocost, n_pathway_other, n_unknown = 400, 500, 50, 50
 
 print(f"looked at {n_pubs} publications")
 print(f"{n_oa} are already OA")
