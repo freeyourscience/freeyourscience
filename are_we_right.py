@@ -1,21 +1,29 @@
+from typing import Optional
+
 input_of_papers = [
   {'doi':'10.1011/111111' , 'issn':'1234-1234'},
-  {'doi':'10.1011/222222' , 'issn':'1234-1234'}
+  {'doi':'10.1011/222222' , 'issn':'1234-1234'},
+  {'doi':'10.1011/333333' , 'issn':'1234-1234'}
 ]
+n_unknown = 0
 
-def is_oa(paper: dict):
+def unpaywall_state(paper: dict) -> Optional[bool]:
   if paper['doi'] == '10.1011/111111':
-    return True
+    paper["unpaywall_status"] = True
+  elif paper['doi'] == '10.1011/222222':
+    paper["unpaywall_status"] = False
   else:
-    return False
+    paper["unpaywall_status"] = None
+
+  return paper
 
 n_pubs = len(input_of_papers)
 
-non_oa_papers = list(filter(is_oa, input_of_papers))
+papers_with_oa_states = list(map(unpaywall_state, input_of_papers))
+n_oa = sum((True for p in papers_with_oa_states if p["unpaywall_status"]))
+n_unknown += sum((True for p in papers_with_oa_states if p["unpaywall_status"] is None))
 
-n_oa = n_pubs - len(non_oa_papers)
-
-n_pathway_nocost, n_pathway_other, n_unknown = 500, 50, 50
+n_pathway_nocost, n_pathway_other = 500, 50
 
 print(f"looked at {n_pubs} publications")
 print(f"{n_oa} are already OA")
