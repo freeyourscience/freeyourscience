@@ -1,21 +1,23 @@
 from typing import Optional
 
 input_of_papers = [
-  {'doi':'10.1011/111111' , 'issn':'1234-1234'},
-  {'doi':'10.1011/222222' , 'issn':'1234-1234'},
-  {'doi':'10.1011/333333' , 'issn':'1234-1234'}
+    {"doi": "10.1011/111111", "issn": "1234-1234"},
+    {"doi": "10.1011/222222", "issn": "1234-1234"},
+    {"doi": "10.1011/333333", "issn": "1234-1234"},
 ]
 n_unknown = 0
 
-def unpaywall_state(paper: dict) -> Optional[bool]:
-  if paper['doi'] == '10.1011/111111':
-    paper["unpaywall_status"] = True
-  elif paper['doi'] == '10.1011/222222':
-    paper["unpaywall_status"] = False
-  else:
-    paper["unpaywall_status"] = None
 
-  return paper
+def unpaywall_state(paper: dict) -> Optional[bool]:
+    if paper["doi"] == "10.1011/111111":
+        paper["unpaywall_status"] = True
+    elif paper["doi"] == "10.1011/222222":
+        paper["unpaywall_status"] = False
+    else:
+        paper["unpaywall_status"] = None
+
+    return paper
+
 
 n_pubs = len(input_of_papers)
 
