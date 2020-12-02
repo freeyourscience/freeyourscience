@@ -86,7 +86,7 @@ def test_oa_pathway_irrelevant_oa_status():
 
 
 def test_oa_pathway_with_no_api_key():
-    api_key = os.environ.pop("SHERPA_API_KEY")
+    api_key = os.environ.pop("SHERPA_API_KEY", False)
 
     with pytest.raises(RuntimeError):
         oa_pathway(
@@ -97,4 +97,5 @@ def test_oa_pathway_with_no_api_key():
             }
         )
 
-    api_key = os.environ["SHERPA_API_KEY"] = api_key
+    if api_key:
+        api_key = os.environ["SHERPA_API_KEY"] = api_key
