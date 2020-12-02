@@ -1,4 +1,4 @@
-from .are_we_right import calculate_metrics
+from wbf.are_we_right import calculate_metrics
 
 
 def test_calculate_metrics():

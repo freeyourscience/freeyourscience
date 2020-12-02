@@ -4,13 +4,6 @@ input_of_papers = [
     {"doi": "10.1011/222222", "issn": "1234-5678"},
     {"doi": "10.1011/444444", "issn": "1234-1234"},
 ]
-"""
-looked at 4 publications"
-1 are already OA"
-1 could be OA at no cost"
-1 has other OA pathway(s)"
-1 could not be determined"
-"""
 
 
 def unpaywall_status(paper: dict) -> dict:
