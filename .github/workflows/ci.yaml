@@ -11,6 +11,6 @@ jobs:
         with:
           python-version: 3
 
-      - run: pip3 install -r requirements-dev.txt
+      - run: pip3 install -r requirements.txt -r requirements-dev.txt
       - run: black --check
       - run: pytest
