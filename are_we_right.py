@@ -47,20 +47,29 @@ n_pubs = len(input_of_papers)
 papers_with_oa_status = map(unpaywall_status, input_of_papers)
 papers_with_pathway = map(oa_pathway, papers_with_oa_status)
 
-n_oa = 0
-n_pathway_nocost = 0
-n_pathway_other = 0
-n_unknown = 0
 
-for p in papers_with_pathway:
-    if p["unpaywall_status"] == "oa":
-        n_oa += 1
-    elif p["pathway"] == "nocost":
-        n_pathway_nocost += 1
-    elif p["pathway"] == "other":
-        n_pathway_other += 1
-    elif p["unpaywall_status"] == "not-found" or p["pathway"] == "not-found":
-        n_unknown += 1
+def calculate_metrics(papers):
+    n_oa = 0
+    n_pathway_nocost = 0
+    n_pathway_other = 0
+    n_unknown = 0
+
+    for p in papers:
+        if p["unpaywall_status"] == "oa":
+            n_oa += 1
+        elif p["pathway"] == "nocost":
+            n_pathway_nocost += 1
+        elif p["pathway"] == "other":
+            n_pathway_other += 1
+        elif p["unpaywall_status"] == "not-found" or p["pathway"] == "not-found":
+            n_unknown += 1
+
+    return n_oa, n_pathway_nocost, n_pathway_other, n_unknown
+
+
+n_oa, n_pathway_nocost, n_pathway_other, n_unknown = calculate_metrics(
+    papers_with_pathway
+)
 
 print(f"looked at {n_pubs} publications")
 print(f"{n_oa} are already OA")
