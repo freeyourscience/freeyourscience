@@ -1,11 +1,3 @@
-input_of_papers = [
-    {"doi": "10.1011/111111", "issn": "1234-1234"},
-    {"doi": "10.1011/222222", "issn": "1234-1234"},
-    {"doi": "10.1011/222222", "issn": "1234-5678"},
-    {"doi": "10.1011/444444", "issn": "1234-1234"},
-]
-
-
 def unpaywall_status(paper: dict) -> dict:
     if paper["doi"] == "10.1011/111111":
         paper["unpaywall_status"] = "oa"
@@ -35,12 +27,6 @@ def oa_pathway(paper: dict) -> dict:
     return paper
 
 
-n_pubs = len(input_of_papers)
-
-papers_with_oa_status = map(unpaywall_status, input_of_papers)
-papers_with_pathway = map(oa_pathway, papers_with_oa_status)
-
-
 def calculate_metrics(papers):
     n_oa = 0
     n_pathway_nocost = 0
@@ -60,12 +46,25 @@ def calculate_metrics(papers):
     return n_oa, n_pathway_nocost, n_pathway_other, n_unknown
 
 
-n_oa, n_pathway_nocost, n_pathway_other, n_unknown = calculate_metrics(
-    papers_with_pathway
-)
+if __name__ == "__main__":
+    input_of_papers = [
+        {"doi": "10.1011/111111", "issn": "1234-1234"},
+        {"doi": "10.1011/222222", "issn": "1234-1234"},
+        {"doi": "10.1011/222222", "issn": "1234-5678"},
+        {"doi": "10.1011/444444", "issn": "1234-1234"},
+    ]
 
-print(f"looked at {n_pubs} publications")
-print(f"{n_oa} are already OA")
-print(f"{n_pathway_nocost} could be OA at no cost")
-print(f"{n_pathway_other} has other OA pathway(s)")
-print(f"{n_unknown} could not be determined")
+    n_pubs = len(input_of_papers)
+
+    papers_with_oa_status = map(unpaywall_status, input_of_papers)
+    papers_with_pathway = map(oa_pathway, papers_with_oa_status)
+
+    n_oa, n_pathway_nocost, n_pathway_other, n_unknown = calculate_metrics(
+        papers_with_pathway
+    )
+
+    print(f"looked at {n_pubs} publications")
+    print(f"{n_oa} are already OA")
+    print(f"{n_pathway_nocost} could be OA at no cost")
+    print(f"{n_pathway_other} has other OA pathway(s)")
+    print(f"{n_unknown} could not be determined")
