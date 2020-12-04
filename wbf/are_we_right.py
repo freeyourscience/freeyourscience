@@ -36,15 +36,15 @@ def unpaywall_status_api(doi: str, email: Optional[str] = None) -> str:
 def unpaywall_status(paper: dict) -> dict:
     """Enrich a given paper with information about the availability of an open access
     copy collected from the an unpaywall data dump or the unpaywall API, which is added
-    as an "unpaywall_status" key to the given dictionary that can contain any of the
-    following values:
+    as an "oa_status" key to the given dictionary that can contain any of the following
+    values:
       * oa (the paper is available as open access)
       * not-oa (no open access version of the paper is available)
       * not-found (in case no paper was found or there was an issue with the request)
 
     TODO: Use unpaywall dump as first resource and only fall back to API
     """
-    paper["unpaywall_status"] = unpaywall_status_api(paper["doi"])
+    paper["oa_status"] = unpaywall_status_api(paper["doi"])
 
     return paper
 
@@ -74,11 +74,11 @@ def oa_pathway(paper: dict, api_key: Optional[str] = None) -> dict:
             "No Sherpa API key available in the 'SHERPA_API_KEY' environment variable."
         )
 
-    if paper["unpaywall_status"] == "oa":
+    if paper["oa_status"] == "oa":
         paper["pathway"] = "already-oa"
         return paper
 
-    if paper["unpaywall_status"] == "not-found":
+    if paper["oa_status"] == "not-found":
         paper["pathway"] = "not-attempted"
         return paper
 
@@ -119,13 +119,13 @@ def calculate_metrics(papers):
     n_unknown = 0
 
     for p in papers:
-        if p["unpaywall_status"] == "oa":
+        if p["oa_status"] == "oa":
             n_oa += 1
         elif p["pathway"] == "nocost":
             n_pathway_nocost += 1
         elif p["pathway"] == "other":
             n_pathway_other += 1
-        elif p["unpaywall_status"] == "not-found" or p["pathway"] == "not-found":
+        elif p["oa_status"] == "not-found" or p["pathway"] == "not-found":
             n_unknown += 1
 
     return n_oa, n_pathway_nocost, n_pathway_other, n_unknown

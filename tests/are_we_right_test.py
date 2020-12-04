@@ -44,7 +44,7 @@ def test_oa_pathway_successes(issn, pathway, monkeypatch):
         paper={
             "doi": "10.1011/111111",
             "issn": issn,
-            "unpaywall_status": "not-oa",
+            "oa_status": "not-oa",
         },
         api_key="DUMMY-KEY",
     )
@@ -63,7 +63,7 @@ def test_oa_pathway_request_error(monkeypatch):
         paper={
             "doi": "10.1011/111111",
             "issn": "1234-1234",
-            "unpaywall_status": "not-oa",
+            "oa_status": "not-oa",
         },
         api_key="DUMMY-KEY",
     )
@@ -76,11 +76,11 @@ def test_oa_pathway_irrelevant_oa_status():
         "issn": "1234-1234",
     }
 
-    paper["unpaywall_status"] = "oa"
+    paper["oa_status"] = "oa"
     updated_paper = oa_pathway(paper=paper, api_key="DUMMY-KEY")
     assert updated_paper["pathway"] == "already-oa"
 
-    paper["unpaywall_status"] = "not-found"
+    paper["oa_status"] = "not-found"
     updated_paper = oa_pathway(paper=paper, api_key="DUMMY-KEY")
     assert updated_paper["pathway"] == "not-attempted"
 
@@ -93,7 +93,7 @@ def test_oa_pathway_with_no_api_key():
             paper={
                 "doi": "10.1011/111111",
                 "issn": "1234-1234",
-                "unpaywall_status": "not-oa",
+                "oa_status": "not-oa",
             }
         )
 
