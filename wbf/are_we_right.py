@@ -17,8 +17,8 @@ def unpaywall_status_api(doi: str, email: Optional[str] = None) -> str:
         In case no email address is passed to the function as an argument and none is
         found in the ``UNPAYWALL_EMAIL`` environment variable.
     """
-    email = os.getenv("UNPAYWALL_EMAIL", email)
-    if email is None:
+    email = os.getenv("UNPAYWALL_EMAIL") if email is None else email
+    if email is None or not email:
         raise RuntimeError(
             "No email address for use with the unpaywall API in the 'UNPAYWALL_EMAIL'"
             + " environment variable."
@@ -67,8 +67,8 @@ def oa_pathway(paper: dict, api_key: Optional[str] = None) -> dict:
         found in the ``SHERPA_API_KEY`` environment variable.
         To obtain an API key, register at https://v2.sherpa.ac.uk/cgi/register
     """
-    api_key = os.getenv("SHERPA_API_KEY", api_key)
-    if api_key is None:
+    api_key = os.getenv("SHERPA_API_KEY") if api_key is None else api_key
+    if api_key is None or not api_key:
         raise RuntimeError(
             "No Sherpa API key available in the 'SHERPA_API_KEY' environment variable."
         )
