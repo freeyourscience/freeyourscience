@@ -30,6 +30,7 @@ pip install -e .[dev]
 ```
 
 and then run the tests with
-```
+
+```bash
 pytest tests/
 ```
