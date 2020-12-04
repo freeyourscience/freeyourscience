@@ -50,7 +50,8 @@ def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> OAPathway:
 
 
 def cached_pathway(issn: str) -> Optional[OAPathway]:
-    return None
+    cache = {"0003-987X": OAPathway.other}
+    return cache.get(issn, None)
 
 
 def oa_pathway(paper: PaperWithOAStatus) -> PaperWithOAPathway:
