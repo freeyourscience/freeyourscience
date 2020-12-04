@@ -1,5 +1,6 @@
 import os
 import json
+import argparse
 from typing import Optional
 
 import requests
@@ -99,17 +100,31 @@ def calculate_metrics(papers):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=20,
+        help="Limit the number of papers to process, set to 0 to remove limit.",
+    )
+    args = parser.parse_args()
+
+    # Load data
     dataset_file_path = os.path.join(
         os.path.dirname(__file__), "..", "tests", "assets", "crossref_subset.json"
     )
     with open(dataset_file_path, "r") as fh:
         input_of_papers = json.load(fh)
 
-    n_pubs = len(input_of_papers)
+    if args.limit:
+        input_of_papers = input_of_papers[: args.limit]
 
+    # Enrich data
     papers_with_oa_status = map(unpaywall_status, input_of_papers)
     papers_with_pathway = map(oa_pathway, papers_with_oa_status)
 
+    # Calculate & report metrics
+    n_pubs = len(input_of_papers)
     n_oa, n_pathway_nocost, n_pathway_other, n_unknown = calculate_metrics(
         papers_with_pathway
     )
