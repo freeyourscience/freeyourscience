@@ -109,7 +109,7 @@ def test_oa_pathway_doesnt_call_api_when_cached(mocker):
 
 def test_oa_pathway_chaches_after_api_call(monkeypatch):
     issn = "1234-1234"
-    target_pathway = OAPathway.already_oa
+    target_pathway = OAPathway.nocost
     cache = {}
 
     def mock_sherpa_pathway_api(*args, **kwargs):

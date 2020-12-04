@@ -72,5 +72,6 @@ def oa_pathway(paper: PaperWithOAStatus) -> PaperWithOAPathway:
         pathway = cached_pathway(paper.issn)
         if not pathway:
             pathway = sherpa_pathway_api(paper.issn)
+            cache_pathway(paper.issn, pathway)
 
     return PaperWithOAPathway(oa_pathway=pathway, **paper.dict())
