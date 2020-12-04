@@ -1,6 +1,7 @@
 import os
 import json
 import argparse
+from functools import partial
 from typing import List
 
 from wbf.oa_pathway import oa_pathway
@@ -11,6 +12,8 @@ from wbf.schemas import (
     Paper,
     PaperWithOAPathway,
 )
+
+PATHWAY_CACHE = dict()
 
 
 def calculate_metrics(papers: List[PaperWithOAPathway]):
@@ -57,7 +60,9 @@ if __name__ == "__main__":
 
     # Enrich data
     papers_with_oa_status = map(oa_status, input_of_papers)
-    papers_with_pathway = map(oa_pathway, papers_with_oa_status)
+    papers_with_pathway = map(
+        partial(oa_pathway, cache=PATHWAY_CACHE), papers_with_oa_status
+    )
 
     # Calculate & report metrics
     n_pubs = len(input_of_papers)
@@ -70,3 +75,6 @@ if __name__ == "__main__":
     print(f"{n_pathway_nocost} could be OA at no cost")
     print(f"{n_pathway_other} has other OA pathway(s)")
     print(f"{n_unknown} could not be determined")
+
+    # Handle caches
+    print(PATHWAY_CACHE)

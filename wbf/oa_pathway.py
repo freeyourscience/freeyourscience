@@ -49,29 +49,23 @@ def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> OAPathway:
     return OAPathway.nocost
 
 
-def cached_pathway(issn: str) -> Optional[OAPathway]:
-    cache = {"0003-987X": OAPathway.other}
-    return cache.get(issn, None)
-
-
-def cache_pathway(issn: str, pathway: OAPathway):
-    print(f"Caching pathway {pathway} for {issn}")
-
-
-def oa_pathway(paper: PaperWithOAStatus) -> PaperWithOAPathway:
+def oa_pathway(paper: PaperWithOAStatus, cache=None) -> PaperWithOAPathway:
     """Enrich a given paper with information about the available open access pathway
     collected from the Sherpa API.
 
-    TODO: Cache publisher policies.
+    Cache can be anything that exposes ``get(key, default)`` and ``__setitem__``
     """
     if paper.oa_status is OAStatus.oa:
         pathway = OAPathway.already_oa
     elif paper.oa_status is OAStatus.not_found:
         pathway = OAPathway.not_attempted
     else:
-        pathway = cached_pathway(paper.issn)
-        if not pathway:
+        if cache is not None:
+            pathway = cache.get(paper.issn, None)
+            if not pathway:
+                pathway = sherpa_pathway_api(paper.issn)
+                cache[paper.issn] = pathway
+        else:
             pathway = sherpa_pathway_api(paper.issn)
-            cache_pathway(paper.issn, pathway)
 
     return PaperWithOAPathway(oa_pathway=pathway, **paper.dict())
