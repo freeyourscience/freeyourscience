@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-import pathlib
 
 setup(
     name="wbf",
@@ -8,6 +7,6 @@ setup(
     python_requires=">=3.7, <4",
     install_requires=["requests", "pydantic"],
     extras_require={
-        "dev": ["black", "pytest", "pytest-cov"],
+        "dev": ["black", "pytest", "pytest-cov", "pytest-mock"],
     },
 )

@@ -49,6 +49,10 @@ def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> OAPathway:
     return OAPathway.nocost
 
 
+def cached_pathway(issn: str) -> Optional[OAPathway]:
+    return None
+
+
 def oa_pathway(paper: PaperWithOAStatus) -> PaperWithOAPathway:
     """Enrich a given paper with information about the available open access pathway
     collected from the Sherpa API.
@@ -60,6 +64,9 @@ def oa_pathway(paper: PaperWithOAStatus) -> PaperWithOAPathway:
     elif paper.oa_status is OAStatus.not_found:
         pathway = OAPathway.not_attempted
     else:
-        pathway = sherpa_pathway_api(paper.issn)
+        pathway = cached_pathway(paper.issn)
+        if not pathway:
+            pathway = sherpa_pathway_api(paper.issn)
+            # TODO: Cache issn:pathway
 
     return PaperWithOAPathway(oa_pathway=pathway, **paper.dict())

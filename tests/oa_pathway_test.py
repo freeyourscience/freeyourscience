@@ -4,6 +4,7 @@ import json
 import pytest
 from requests import Response
 
+import wbf.oa_pathway as oa_pathway_module
 from wbf.oa_pathway import oa_pathway, sherpa_pathway_api
 from wbf.schemas import (
     Paper,
@@ -92,3 +93,15 @@ def test_sherpa_pathway_api_with_no_api_key():
 
     if api_key:
         os.environ["SHERPA_API_KEY"] = api_key
+
+
+def test_oa_pathway_doesnt_call_api_when_cached(mocker):
+    sherpa_pathway_api_spy = mocker.spy(oa_pathway_module, "sherpa_pathway_api")
+
+    oa_pathway(
+        PaperWithOAStatus(
+            doi="10.1011/111111", issn="0003-987X", oa_status=OAStatus.not_oa
+        )
+    )
+
+    assert sherpa_pathway_api_spy.call_count == 0
