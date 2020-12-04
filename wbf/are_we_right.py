@@ -1,4 +1,5 @@
 import os
+import json
 from typing import Optional
 
 import requests
@@ -98,12 +99,11 @@ def calculate_metrics(papers):
 
 
 if __name__ == "__main__":
-    input_of_papers = [
-        {"doi": "10.1011/111111", "issn": "1234-1234"},
-        {"doi": "10.1011/222222", "issn": "1234-1234"},
-        {"doi": "10.1011/222222", "issn": "2050-084X"},
-        {"doi": "10.1011/444444", "issn": "1234-1234"},
-    ]
+    dataset_file_path = os.path.join(
+        os.path.dirname(__file__), "..", "tests", "assets", "crossref_subset.json"
+    )
+    with open(dataset_file_path, "r") as fh:
+        input_of_papers = json.load(fh)
 
     n_pubs = len(input_of_papers)
 
