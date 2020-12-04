@@ -33,7 +33,7 @@ def unpaywall_status_api(doi: str, email: Optional[str] = None) -> str:
     return "oa" if data["is_oa"] else "not-oa"
 
 
-def unpaywall_status(paper: dict) -> dict:
+def oa_status(paper: dict) -> dict:
     """Enrich a given paper with information about the availability of an open access
     copy collected from the an unpaywall data dump or the unpaywall API, which is added
     as an "oa_status" key to the given dictionary that can contain any of the following
@@ -152,7 +152,7 @@ if __name__ == "__main__":
         input_of_papers = input_of_papers[: args.limit]
 
     # Enrich data
-    papers_with_oa_status = map(unpaywall_status, input_of_papers)
+    papers_with_oa_status = map(oa_status, input_of_papers)
     papers_with_pathway = map(oa_pathway, papers_with_oa_status)
 
     # Calculate & report metrics
