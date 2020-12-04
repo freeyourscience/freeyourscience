@@ -2,25 +2,25 @@
     {
         "doi": "10.1011/111111",
         "issn": "1234-1234",
-        "pathway": "already-oa",
+        "oa_pathway": "already_oa",
         "oa_status": "oa"
     },
     {
         "doi": "10.1011/222222",
         "issn": "1234-1234",
-        "pathway": "nocost",
-        "oa_status": "not-oa"
+        "oa_pathway": "nocost",
+        "oa_status": "not_oa"
     },
     {
         "doi": "10.1011/222222",
         "issn": "1234-5678",
-        "pathway": "other",
-        "oa_status": "not-oa"
+        "oa_pathway": "other",
+        "oa_status": "not_oa"
     },
     {
         "doi": "10.1011/444444",
         "issn": "1234-1234",
-        "pathway": "not-attempted",
-        "oa_status": "not-found"
+        "oa_pathway": "not_attempted",
+        "oa_status": "not_found"
     }
 ]

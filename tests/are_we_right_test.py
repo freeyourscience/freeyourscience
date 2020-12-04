@@ -10,6 +10,13 @@ from wbf.are_we_right import (
     unpaywall_status_api,
     sherpa_pathway_api,
 )
+from wbf.schemas import (
+    Paper,
+    PaperWithOAPathway,
+    PaperWithOAStatus,
+    OAPathway,
+    OAStatus,
+)
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -18,6 +25,8 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
 def test_calculate_metrics():
     with open(os.path.join(ASSETS_PATH, "papers_enriched_dummy.json"), "r") as fh:
         papers = json.load(fh)
+
+    papers = (PaperWithOAPathway(**paper) for paper in papers)
 
     n_oa, n_pathway_nocost, n_pathway_other, n_unknown = calculate_metrics(papers)
 
@@ -29,7 +38,11 @@ def test_calculate_metrics():
 
 @pytest.mark.parametrize(
     "issn,pathway",
-    [("1179-3163", "other"), ("2050-084X", "nocost"), ("DOESNT-EXIST", "not-found")],
+    [
+        ("1179-3163", OAPathway.other),
+        ("2050-084X", OAPathway.nocost),
+        ("DOESNT-EXIST", OAPathway.not_found),
+    ],
 )
 def test_sherpa_pathway_api_successes(issn, pathway, monkeypatch):
     with open(os.path.join(ASSETS_PATH, "publishers.json"), "r") as fh:
@@ -49,7 +62,7 @@ def test_sherpa_pathway_api_successes(issn, pathway, monkeypatch):
         issn=issn,
         api_key="DUMMY-KEY",
     )
-    assert sherpa_pathway == pathway
+    assert sherpa_pathway is pathway
 
 
 def test_sherpa_pathway_api_request_error(monkeypatch):
@@ -64,31 +77,31 @@ def test_sherpa_pathway_api_request_error(monkeypatch):
         issn="1234-1234",
         api_key="DUMMY-KEY",
     )
-    assert pathway == "not-found"
+    assert pathway == OAPathway.not_found
 
 
 def test_oa_pathway(monkeypatch):
-    paper = {
-        "doi": "10.1011/111111",
-        "issn": "1234-1234",
-    }
+    base_paper = Paper(
+        doi="10.1011/111111",
+        issn="1234-1234",
+    )
 
-    paper["oa_status"] = "oa"
+    paper = PaperWithOAStatus(oa_status=OAStatus.oa, **base_paper.dict())
     updated_paper = oa_pathway(paper=paper)
-    assert updated_paper["pathway"] == "already-oa"
+    assert updated_paper.oa_pathway is OAPathway.already_oa
 
-    paper["oa_status"] = "not-found"
+    paper = PaperWithOAStatus(oa_status=OAStatus.not_found, **base_paper.dict())
     updated_paper = oa_pathway(paper=paper)
-    assert updated_paper["pathway"] == "not-attempted"
+    assert updated_paper.oa_pathway is OAPathway.not_attempted
 
     def mock_sherpa_pathway_api(*args, **kwargs):
-        return "test_pathway"
+        return OAPathway.already_oa
 
     monkeypatch.setattr("wbf.are_we_right.sherpa_pathway_api", mock_sherpa_pathway_api)
 
-    paper["oa_status"] = "not-oa"
+    paper = PaperWithOAStatus(oa_status=OAStatus.not_oa, **base_paper.dict())
     updated_paper = oa_pathway(paper=paper)
-    assert updated_paper["pathway"] == "test_pathway"
+    assert updated_paper.oa_pathway is OAPathway.already_oa
 
 
 def test_sherpa_pathway_api_with_no_api_key():
@@ -103,7 +116,7 @@ def test_sherpa_pathway_api_with_no_api_key():
 
 @pytest.mark.parametrize(
     "is_oa,oa_status",
-    [(True, "oa"), (False, "not-oa"), (None, "not-found")],
+    [(True, OAStatus.oa), (False, OAStatus.not_oa), (None, OAStatus.not_found)],
 )
 def test_unpaywall_status_api(is_oa, oa_status, monkeypatch):
     def mock_get_doi(*args, **kwargs):
@@ -120,7 +133,7 @@ def test_unpaywall_status_api(is_oa, oa_status, monkeypatch):
     irrelevant_dummy_doi = "10.1011/111111"
     unpaywall_status = unpaywall_status_api(irrelevant_dummy_doi, "dummy@local.test")
 
-    assert unpaywall_status == oa_status
+    assert unpaywall_status is oa_status
 
 
 def test_unpaywall_status_api_with_no_email():

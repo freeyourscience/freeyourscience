@@ -1,15 +1,22 @@
 import os
 import json
 import argparse
-from typing import Optional
+from typing import Optional, List
 
 import requests
 
+from wbf.schemas import (
+    OAPathway,
+    OAStatus,
+    Paper,
+    PaperWithOAPathway,
+    PaperWithOAStatus,
+)
 
-def unpaywall_status_api(doi: str, email: Optional[str] = None) -> str:
+
+def unpaywall_status_api(doi: str, email: Optional[str] = None) -> OAStatus:
     """Fetch information about the availability of an open access version for a given
-    DOI from the unpaywall API (api.unpaywall.org) and return "oa", "not-oa" or
-    "not-found" as the DOI's open access status.
+    DOI from the unpaywall API (api.unpaywall.org)
 
     Raises
     ------
@@ -26,37 +33,26 @@ def unpaywall_status_api(doi: str, email: Optional[str] = None) -> str:
 
     response = requests.get(f"https://api.unpaywall.org/v2/{doi}?email={email}")
     if not response.ok:
-        return "not-found"
+        return OAStatus.not_found
 
     data = response.json()
-    return "oa" if data["is_oa"] else "not-oa"
+    return OAStatus.oa if data["is_oa"] else OAStatus.not_oa
 
 
-def oa_status(paper: dict) -> dict:
+def oa_status(paper: Paper) -> PaperWithOAStatus:
     """Enrich a given paper with information about the availability of an open access
-    copy collected from the an unpaywall data dump or the unpaywall API, which is added
-    as an "oa_status" key to the given dictionary that can contain any of the following
-    values:
-      * oa (the paper is available as open access)
-      * not-oa (no open access version of the paper is available)
-      * not-found (in case no paper was found or there was an issue with the request)
+    copy collected from the an unpaywall data dump or the unpaywall API.
 
     TODO: Use unpaywall dump as first resource and only fall back to API
     """
-    paper["oa_status"] = unpaywall_status_api(paper["doi"])
+    oa_status = unpaywall_status_api(paper.doi)
 
-    return paper
+    return PaperWithOAStatus(oa_status=oa_status, **paper.dict())
 
 
-def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> str:
+def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> OAPathway:
     """Fetch information about the available open access pathways for the publisher that
-    owns a given ISSN from the Sherpa API (v2.sherpa.ac.uk) and return one of the
-    following values:
-      * already-oa (the paper is already available as open access)
-      * not-attempted (there is no information about the open access availability)
-      * nocost (the publisher policy allows for re-publishing without additional cost)
-      * other (the publisher policy doesn't allow for free re-publishing)
-      * not-found (no information about the publisher policy could be retreived)
+    owns a given ISSN from the Sherpa API (v2.sherpa.ac.uk)
 
     Raises
     ------
@@ -77,11 +73,11 @@ def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> str:
         + f'filter=[["issn","equals","{issn}"]]'
     )
     if not response.ok:
-        return "not-found"
+        return OAPathway.not_found
 
     publications = response.json()
     if not publications or not publications["items"]:
-        return "not-found"
+        return OAPathway.not_found
 
     # TODO: How to handle multiple publishers found for ISSN?
 
@@ -92,56 +88,48 @@ def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> str:
         and any([perm["additional_oa_fee"] == "no" for perm in policy["permitted_oa"]])
     ]
     if not oa_policies_no_cost:
-        return "other"
+        return OAPathway.other
 
-    return "nocost"
+    return OAPathway.nocost
 
 
-def oa_pathway(paper: dict) -> dict:
+def oa_pathway(paper: PaperWithOAStatus) -> PaperWithOAPathway:
     """Enrich a given paper with information about the available open access pathway
-    collected from the Sherpa API (v2.sherpa.ac.uk), which is added as a "pathway" key
-    to the given dictionary that can contain any of the following values:
-      * already-oa (the paper is already available as open access)
-      * not-attempted (there is no information about the open access availability)
-      * nocost (the publisher policy allows for re-publishing without additional cost)
-      * other (the publisher policy doesn't allow for free re-publishing)
-      * not-found (no information about the publisher policy could be retreived)
+    collected from the Sherpa API.
 
     TODO: Cache publisher policies.
     """
-    if paper["oa_status"] == "oa":
-        paper["pathway"] = "already-oa"
-        return paper
+    if paper.oa_status is OAStatus.oa:
+        pathway = OAPathway.already_oa
+    elif paper.oa_status is OAStatus.not_found:
+        pathway = OAPathway.not_attempted
+    else:
+        pathway = sherpa_pathway_api(paper.issn)
 
-    if paper["oa_status"] == "not-found":
-        paper["pathway"] = "not-attempted"
-        return paper
-
-    paper["pathway"] = sherpa_pathway_api(paper["issn"])
-
-    return paper
+    return PaperWithOAPathway(oa_pathway=pathway, **paper.dict())
 
 
-def calculate_metrics(papers):
+def calculate_metrics(papers: List[PaperWithOAPathway]):
     n_oa = 0
     n_pathway_nocost = 0
     n_pathway_other = 0
     n_unknown = 0
 
     for p in papers:
-        if p["oa_status"] == "oa":
+        if p.oa_status is OAStatus.oa:
             n_oa += 1
-        elif p["pathway"] == "nocost":
+        elif p.oa_pathway is OAPathway.nocost:
             n_pathway_nocost += 1
-        elif p["pathway"] == "other":
+        elif p.oa_pathway is OAPathway.other:
             n_pathway_other += 1
-        elif p["oa_status"] == "not-found" or p["pathway"] == "not-found":
+        elif p.oa_status is OAStatus.not_found or p.oa_pathway is OAPathway.not_found:
             n_unknown += 1
 
     return n_oa, n_pathway_nocost, n_pathway_other, n_unknown
 
 
 if __name__ == "__main__":
+    # TODO: Consider checking against publicly available publishers / ISSNS (e.g. elife)
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--limit",
@@ -160,6 +148,8 @@ if __name__ == "__main__":
 
     if args.limit:
         input_of_papers = input_of_papers[: args.limit]
+
+    input_of_papers = [Paper(**paper) for paper in input_of_papers]
 
     # Enrich data
     papers_with_oa_status = map(oa_status, input_of_papers)
