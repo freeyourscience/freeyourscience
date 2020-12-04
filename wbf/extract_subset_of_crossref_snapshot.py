@@ -1,7 +1,9 @@
+import gzip
 import json
 import tarfile
 
-SNAPSHOT_PATH = "/mnt/data/wbf/crossref-metadata-2020-10.json.tar.gz"
+CROSSREF_SNAPSHOT_PATH = "/mnt/data/wbf/crossref-metadata-2020-10.json.tar.gz"
+UNPAYWALL_SNAPSHOT_PATH = "/mnt/data/wbf/unpaywall.jsonl.gzip"
 
 
 def extract_doi_issn(json_loader):
@@ -25,9 +27,16 @@ def load_crossref_snapshot(json_tar_gz_path):
                     yield record
 
 
+def load_unpaywall_snapshot(jsonl_gzip_path):
+    """Yields records from unpaywall snapshot jsonl.gzip"""
+    with gzip.open(jsonl_gzip_path) as file:
+        for line in file:
+            yield json.loads(line)
+
+
 if __name__ == "__main__":
     subset = []
-    doi_issn = extract_doi_issn(load_crossref_snapshot(SNAPSHOT_PATH))
+    doi_issn = extract_doi_issn(load_crossref_snapshot(CROSSREF_SNAPSHOT_PATH))
     for i in range(1000000):
         if i % 100 == 0:
             subset.append(next(doi_issn))
