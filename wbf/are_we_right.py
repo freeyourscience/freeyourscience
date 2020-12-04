@@ -6,13 +6,45 @@ from typing import Optional
 import requests
 
 
+def unpaywall_status_api(doi: str, email: Optional[str] = None) -> str:
+    """Fetch information about the availability of an open access version for a given
+    DOI from the unpaywall API (api.unpaywall.org) and return "oa", "not-oa" or
+    "not-found" as the DOI's open access status.
+
+    Raises
+    ------
+    RuntimeError
+        In case no email address is passed to the function as an argument and none is
+        found in the ``SHERPA_API_KEY`` environment variable.
+        To obtain an API key, register at https://v2.sherpa.ac.uk/cgi/register
+    """
+    email = os.getenv("UNPAYWALL_EMAIL", email)
+    if email is None:
+        raise RuntimeError(
+            "No email address for use with the unpaywall API in the 'UNPAYWALL_EMAIL'"
+            + " environment variable."
+        )
+
+    response = requests.get(f"https://api.unpaywall.org/v2/{doi}?email={email}")
+    if not response.ok:
+        return "not-found"
+
+    data = response.json()
+    return "oa" if data["is_oa"] else "not-oa"
+
+
 def unpaywall_status(paper: dict) -> dict:
-    if paper["doi"] == "10.1011/111111":
-        paper["unpaywall_status"] = "oa"
-    elif paper["doi"] == "10.1011/222222":
-        paper["unpaywall_status"] = "not-oa"
-    else:
-        paper["unpaywall_status"] = "not-found"
+    """Enrich a given paper with information about the availability of an open access
+    copy collected from the an unpaywall data dump or the unpaywall API, which is added
+    as an "unpaywall_status" key to the given dictionary that can contain any of the
+    following values:
+      * oa (the paper is available as open access)
+      * not-oa (no open access version of the paper is available)
+      * not-found (in case no paper was found or there was an issue with the request)
+
+    TODO: Use unpaywall dump as first resource and only fall back to API
+    """
+    paper["unpaywall_status"] = unpaywall_status_api(paper["doi"])
 
     return paper
 
