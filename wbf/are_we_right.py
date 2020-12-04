@@ -15,8 +15,7 @@ def unpaywall_status_api(doi: str, email: Optional[str] = None) -> str:
     ------
     RuntimeError
         In case no email address is passed to the function as an argument and none is
-        found in the ``SHERPA_API_KEY`` environment variable.
-        To obtain an API key, register at https://v2.sherpa.ac.uk/cgi/register
+        found in the ``UNPAYWALL_EMAIL`` environment variable.
     """
     email = os.getenv("UNPAYWALL_EMAIL", email)
     if email is None:
