@@ -48,17 +48,15 @@ def oa_status(paper: dict) -> dict:
     return paper
 
 
-def oa_pathway(paper: dict, api_key: Optional[str] = None) -> dict:
-    """Enrich a given paper with information about the available open access pathway
-    collected from the Sherpa API (v2.sherpa.ac.uk), which is added as a "pathway" key
-    to the given dictionary that can contain any of the following values:
+def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> str:
+    """Fetch information about the available open access pathways for the publisher that
+    owns a given ISSN from the Sherpa API (v2.sherpa.ac.uk) and return one of the
+    following values:
       * already-oa (the paper is already available as open access)
       * not-attempted (there is no information about the open access availability)
       * nocost (the publisher policy allows for re-publishing without additional cost)
       * other (the publisher policy doesn't allow for free re-publishing)
       * not-found (no information about the publisher policy could be retreived)
-
-    TODO: Cache publisher policies.
 
     Raises
     ------
@@ -73,27 +71,17 @@ def oa_pathway(paper: dict, api_key: Optional[str] = None) -> dict:
             "No Sherpa API key available in the 'SHERPA_API_KEY' environment variable."
         )
 
-    if paper["oa_status"] == "oa":
-        paper["pathway"] = "already-oa"
-        return paper
-
-    if paper["oa_status"] == "not-found":
-        paper["pathway"] = "not-attempted"
-        return paper
-
     response = requests.get(
         "https://v2.sherpa.ac.uk/cgi/retrieve?"
         + f"item-type=publication&api-key={api_key}&format=Json&"
-        + f'filter=[["issn","equals","{paper["issn"]}"]]'
+        + f'filter=[["issn","equals","{issn}"]]'
     )
     if not response.ok:
-        paper["pathway"] = "not-found"
-        return paper
+        return "not-found"
 
     publications = response.json()
     if not publications or not publications["items"]:
-        paper["pathway"] = "not-found"
-        return paper
+        return "not-found"
 
     # TODO: How to handle multiple publishers found for ISSN?
 
@@ -104,10 +92,33 @@ def oa_pathway(paper: dict, api_key: Optional[str] = None) -> dict:
         and any([perm["additional_oa_fee"] == "no" for perm in policy["permitted_oa"]])
     ]
     if not oa_policies_no_cost:
-        paper["pathway"] = "other"
+        return "other"
+
+    return "nocost"
+
+
+def oa_pathway(paper: dict) -> dict:
+    """Enrich a given paper with information about the available open access pathway
+    collected from the Sherpa API (v2.sherpa.ac.uk), which is added as a "pathway" key
+    to the given dictionary that can contain any of the following values:
+      * already-oa (the paper is already available as open access)
+      * not-attempted (there is no information about the open access availability)
+      * nocost (the publisher policy allows for re-publishing without additional cost)
+      * other (the publisher policy doesn't allow for free re-publishing)
+      * not-found (no information about the publisher policy could be retreived)
+
+    TODO: Cache publisher policies.
+    """
+    if paper["oa_status"] == "oa":
+        paper["pathway"] = "already-oa"
         return paper
 
-    paper["pathway"] = "nocost"
+    if paper["oa_status"] == "not-found":
+        paper["pathway"] = "not-attempted"
+        return paper
+
+    paper["pathway"] = sherpa_pathway_api(paper["issn"])
+
     return paper
 
 
