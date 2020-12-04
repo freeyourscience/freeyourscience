@@ -13,8 +13,6 @@ from wbf.schemas import (
     PaperWithOAPathway,
 )
 
-PATHWAY_CACHE = dict()
-
 
 def calculate_metrics(papers: List[PaperWithOAPathway]):
     n_oa = 0
@@ -44,7 +42,20 @@ if __name__ == "__main__":
         default=20,
         help="Limit the number of papers to process, set to 0 to remove limit.",
     )
+    parser.add_argument(
+        "--pathway-cache",
+        type=str,
+        default="./pathway.json",
+        help="Path to cache open access pathway information at.",
+    )
     args = parser.parse_args()
+
+    # Load cache
+    pathway_cache = dict()
+    if os.path.isfile(args.pathway_cache):
+        with open(args.pathway_cache, "r") as fh:
+            pathway_cache = json.load(fh)
+            print(f"Loaded {len(pathway_cache)} cached ISSN to OA pathway mappings")
 
     # Load data
     dataset_file_path = os.path.join(
@@ -56,12 +67,13 @@ if __name__ == "__main__":
     if args.limit:
         input_of_papers = input_of_papers[: args.limit]
 
+    # TODO: Skip papers with ISSNs for which cache says no policy could be found
     input_of_papers = [Paper(**paper) for paper in input_of_papers]
 
     # Enrich data
     papers_with_oa_status = map(oa_status, input_of_papers)
     papers_with_pathway = map(
-        partial(oa_pathway, cache=PATHWAY_CACHE), papers_with_oa_status
+        partial(oa_pathway, cache=pathway_cache), papers_with_oa_status
     )
 
     # Calculate & report metrics
@@ -76,5 +88,7 @@ if __name__ == "__main__":
     print(f"{n_pathway_other} has other OA pathway(s)")
     print(f"{n_unknown} could not be determined")
 
-    # Handle caches
-    print(PATHWAY_CACHE)
+    # Save cache
+    print(f"Cached {len(pathway_cache)} ISSN to OA pathway mappings")
+    with open(args.pathway_cache, "w") as fh:
+        json.dump(pathway_cache, fh, indent=2)
