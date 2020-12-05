@@ -1,6 +1,7 @@
 import os
 import json
 import argparse
+from contextlib import contextmanager
 from functools import partial
 from typing import List
 
@@ -11,6 +12,21 @@ from wbf.schemas import (
     PaperWithOAPathway,
     PaperWithOAStatus,
 )
+
+
+@contextmanager
+def json_filesystem_cache(name):
+    pathway_cache = dict()
+    if os.path.isfile(args.pathway_cache):
+        with open(args.pathway_cache, "r") as fh:
+            pathway_cache = json.load(fh)
+            print(f"Loaded {len(pathway_cache)} cached ISSN to OA pathway mappings")
+    try:
+        yield pathway_cache
+    finally:
+        print(f"Cached {len(pathway_cache)} ISSN to OA pathway mappings")
+        with open(args.pathway_cache, "w") as fh:
+            json.dump(pathway_cache, fh, indent=2)
 
 
 def calculate_metrics(papers: List[PaperWithOAPathway]):
@@ -49,13 +65,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # Load cache
-    pathway_cache = dict()
-    if os.path.isfile(args.pathway_cache):
-        with open(args.pathway_cache, "r") as fh:
-            pathway_cache = json.load(fh)
-            print(f"Loaded {len(pathway_cache)} cached ISSN to OA pathway mappings")
-
     # Load data
     dataset_file_path = os.path.join(
         os.path.dirname(__file__), "..", "tests", "assets", "unpaywall_subset.json"
@@ -77,24 +86,20 @@ if __name__ == "__main__":
         if paper["journal_issn_l"] is not None
     ]
 
-    # Enrich data
-    papers_with_pathway = map(
-        partial(oa_pathway, cache=pathway_cache), papers_with_oa_status
-    )
+    with json_filesystem_cache(args.pathway_cache) as pathway_cache:
+        # Enrich data
+        papers_with_pathway = map(
+            partial(oa_pathway, cache=pathway_cache), papers_with_oa_status
+        )
 
-    # Calculate & report metrics
-    n_pubs = len(input_of_papers)
-    n_oa, n_pathway_nocost, n_pathway_other, n_unknown = calculate_metrics(
-        papers_with_pathway
-    )
+        # Calculate & report metrics
+        n_pubs = len(input_of_papers)
+        n_oa, n_pathway_nocost, n_pathway_other, n_unknown = calculate_metrics(
+            papers_with_pathway
+        )
 
     print(f"looked at {n_pubs} publications")
     print(f"{n_oa} are already OA")
     print(f"{n_pathway_nocost} could be OA at no cost")
     print(f"{n_pathway_other} has other OA pathway(s)")
     print(f"{n_unknown} could not be determined")
-
-    # Save cache
-    print(f"Cached {len(pathway_cache)} ISSN to OA pathway mappings")
-    with open(args.pathway_cache, "w") as fh:
-        json.dump(pathway_cache, fh, indent=2)
