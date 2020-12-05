@@ -41,7 +41,12 @@ def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> OAPathway:
         policy
         for policy in publications["items"][0]["publisher_policy"]
         if policy["open_access_prohibited"] == "no"
-        and any([perm["additional_oa_fee"] == "no" for perm in policy["permitted_oa"]])
+        and any(
+            [
+                "additional_oa_fee" not in perm or perm["additional_oa_fee"] == "no"
+                for perm in policy["permitted_oa"]
+            ]
+        )
     ]
     if not oa_policies_no_cost:
         return OAPathway.other
