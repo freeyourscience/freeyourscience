@@ -63,14 +63,18 @@ if __name__ == "__main__":
         default="./pathway.json",
         help="Path to cache open access pathway information at.",
     )
+    parser.add_argument(
+        "--unpaywall-extract",
+        type=str,
+        default="../tests/assets/unpaywall_subset.jsonl",
+        help="Path to extract of unpaywall dataset with doi, issn and oa status",
+    )
     args = parser.parse_args()
 
     # Load data
-    dataset_file_path = os.path.join(
-        os.path.dirname(__file__), "..", "tests", "assets", "unpaywall_subset.json"
-    )
+    dataset_file_path = os.path.join(os.path.dirname(__file__), args.unpaywall_extract)
     with open(dataset_file_path, "r") as fh:
-        input_of_papers = json.load(fh)
+        input_of_papers = [json.loads(line) for line in fh]
 
     if args.limit:
         input_of_papers = input_of_papers[: args.limit]
