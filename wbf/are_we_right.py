@@ -11,6 +11,7 @@ from wbf.schemas import (
     OAStatus,
     Paper,
     PaperWithOAPathway,
+    PaperWithOAStatus,
 )
 
 
@@ -59,7 +60,7 @@ if __name__ == "__main__":
 
     # Load data
     dataset_file_path = os.path.join(
-        os.path.dirname(__file__), "..", "tests", "assets", "crossref_subset.json"
+        os.path.dirname(__file__), "..", "tests", "assets", "unpaywall_subset.json"
     )
     with open(dataset_file_path, "r") as fh:
         input_of_papers = json.load(fh)
@@ -68,10 +69,17 @@ if __name__ == "__main__":
         input_of_papers = input_of_papers[: args.limit]
 
     # TODO: Skip papers with ISSNs for which cache says no policy could be found
-    input_of_papers = [Paper(**paper) for paper in input_of_papers]
+    papers_with_oa_status = [
+        PaperWithOAStatus(
+            doi=paper["doi"],
+            issn=paper["journal_issn_l"],
+            oa_status=("oa" if paper["is_oa"] else "not_oa"),
+        )
+        for paper in input_of_papers
+        if paper["journal_issn_l"] is not None
+    ]
 
     # Enrich data
-    papers_with_oa_status = map(oa_status, input_of_papers)
     papers_with_pathway = map(
         partial(oa_pathway, cache=pathway_cache), papers_with_oa_status
     )
