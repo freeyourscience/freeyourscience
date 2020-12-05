@@ -5,7 +5,7 @@ import pytest
 from requests import Response
 
 import wbf.oa_pathway as oa_pathway_module
-from wbf.oa_pathway import oa_pathway, sherpa_pathway_api
+from wbf.oa_pathway import oa_pathway, sherpa_pathway_api, has_no_cost_oa_policy
 from wbf.schemas import (
     Paper,
     PaperWithOAStatus,
@@ -125,3 +125,34 @@ def test_oa_pathway_chaches_after_api_call(monkeypatch):
 
     assert issn in cache
     assert cache[issn] is target_pathway
+
+
+@pytest.mark.parametrize(
+    "policy,expected",
+    [
+        # In case open access isn't prohibited but no permitted_oa regulations are
+        # available, we choose to be conservative and assume that there might be costs
+        ({"open_access_prohibited": "no"}, False),
+        ({"open_access_prohibited": "yes"}, False),
+        # If the additional_oa_fee key is absent, we choose to be conservative and
+        # assume that there might be costs
+        ({"permitted_oa": [{}], "open_access_prohibited": "no"}, False),
+        (
+            {
+                "permitted_oa": [{"additional_oa_fee": "no"}],
+                "open_access_prohibited": "no",
+            },
+            True,
+        ),
+        (
+            {
+                "permitted_oa": [{"additional_oa_fee": "yes"}],
+                "open_access_prohibited": "no",
+            },
+            False,
+        ),
+    ],
+)
+def test_has_no_cost_oa_policy(policy, expected):
+    result = has_no_cost_oa_policy(policy)
+    assert result == expected

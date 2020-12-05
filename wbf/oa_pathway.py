@@ -6,6 +6,21 @@ import requests
 from wbf.schemas import OAStatus, OAPathway, PaperWithOAStatus, PaperWithOAPathway
 
 
+def has_no_cost_oa_policy(policy: dict) -> bool:
+    if policy["open_access_prohibited"] != "no":
+        return False
+
+    if "permitted_oa" not in policy:
+        return False
+
+    return any(
+        [
+            "additional_oa_fee" in perm and perm["additional_oa_fee"] == "no"
+            for perm in policy["permitted_oa"]
+        ]
+    )
+
+
 def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> OAPathway:
     """Fetch information about the available open access pathways for the publisher that
     owns a given ISSN from the Sherpa API (v2.sherpa.ac.uk)
@@ -36,18 +51,9 @@ def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> OAPathway:
         return OAPathway.not_found
 
     # TODO: How to handle multiple publishers found for ISSN?
-
-    oa_policies_no_cost = [
-        policy
-        for policy in publications["items"][0]["publisher_policy"]
-        if policy["open_access_prohibited"] == "no"
-        and any(
-            [
-                "additional_oa_fee" not in perm or perm["additional_oa_fee"] == "no"
-                for perm in policy["permitted_oa"]
-            ]
-        )
-    ]
+    oa_policies_no_cost = list(
+        filter(has_no_cost_oa_policy, publications["items"][0]["publisher_policy"])
+    )
     if not oa_policies_no_cost:
         return OAPathway.other
 
