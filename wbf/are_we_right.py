@@ -5,11 +5,9 @@ from functools import partial
 from typing import List
 
 from wbf.oa_pathway import oa_pathway
-from wbf.oa_status import oa_status
 from wbf.schemas import (
     OAPathway,
     OAStatus,
-    Paper,
     PaperWithOAPathway,
     PaperWithOAStatus,
 )
