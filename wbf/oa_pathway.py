@@ -52,7 +52,15 @@ def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> OAPathway:
         return OAPathway.not_found
 
     publications = response.json()
-    if not publications or not publications["items"]:
+    try:
+        if (
+            not publications
+            or not publications["items"]
+            or not publications["items"][0]["publisher_policy"]
+        ):
+            return OAPathway.not_found
+    except Exception as e:
+        print("ERROR with publications:", json.dumps(publications), e)
         return OAPathway.not_found
 
     # TODO: How to handle multiple publishers found for ISSN?
