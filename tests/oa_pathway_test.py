@@ -4,6 +4,7 @@ import json
 import pytest
 from requests import Response
 
+import wbf.oa_pathway as oa_pathway_module
 from wbf.oa_pathway import oa_pathway, sherpa_pathway_api
 from wbf.schemas import (
     Paper,
@@ -92,3 +93,35 @@ def test_sherpa_pathway_api_with_no_api_key():
 
     if api_key:
         os.environ["SHERPA_API_KEY"] = api_key
+
+
+def test_oa_pathway_doesnt_call_api_when_cached(mocker):
+    sherpa_pathway_api_spy = mocker.spy(oa_pathway_module, "sherpa_pathway_api")
+    issn = "0003-987X"
+    cache = {issn: OAPathway.nocost}
+
+    oa_pathway(
+        PaperWithOAStatus(doi="10.1011/111111", issn=issn, oa_status=OAStatus.not_oa),
+        cache=cache,
+    )
+
+    assert sherpa_pathway_api_spy.call_count == 0
+
+
+def test_oa_pathway_chaches_after_api_call(monkeypatch):
+    issn = "1234-1234"
+    target_pathway = OAPathway.nocost
+    cache = {}
+
+    def mock_sherpa_pathway_api(*args, **kwargs):
+        return target_pathway
+
+    monkeypatch.setattr("wbf.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api)
+
+    oa_pathway(
+        PaperWithOAStatus(doi="10.1011/111111", issn=issn, oa_status=OAStatus.not_oa),
+        cache=cache,
+    )
+
+    assert issn in cache
+    assert cache[issn] is target_pathway
