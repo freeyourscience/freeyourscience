@@ -1,4 +1,5 @@
 import os
+import json
 from typing import Optional
 
 import requests
@@ -13,12 +14,16 @@ def has_no_cost_oa_policy(policy: dict) -> bool:
     if "permitted_oa" not in policy:
         return False
 
-    return any(
-        [
-            "additional_oa_fee" in perm and perm["additional_oa_fee"] == "no"
-            for perm in policy["permitted_oa"]
-        ]
-    )
+    try:
+        return any(
+            [
+                "additional_oa_fee" in perm and perm["additional_oa_fee"] == "no"
+                for perm in policy["permitted_oa"]
+            ]
+        )
+    except Exception:
+        print("ERROR with policy:", json.dumps(policy))
+        return False
 
 
 def sherpa_pathway_api(issn: str, api_key: Optional[str] = None) -> OAPathway:
