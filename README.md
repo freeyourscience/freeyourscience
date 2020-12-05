@@ -22,11 +22,11 @@ republished as OpenAccess without additional cost.
 
 ## Setup & Test
 
-Install the requirements in a Python 3.7 or 3.8 environment as follows
+Install the package in development mode in a Python 3.7 or 3.8 environment from the root
+of the repository as follows
 
 ```
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
+pip install -e .[dev]
 ```
 
 and then run the tests with
