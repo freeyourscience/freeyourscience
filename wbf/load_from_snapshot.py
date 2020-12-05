@@ -25,12 +25,8 @@ def load_unpaywall_snapshot(jsonl_gzip_path):
 
 
 if __name__ == "__main__":
-    subset = []
     doi_issn = extract_doi_issn(load_unpaywall_snapshot(UNPAYWALL_SNAPSHOT_PATH))
-    for i in range(10000):
-        if i % 100 == 0:
-            subset.append(next(doi_issn))
-        else:
-            next(doi_issn)
-    with open("tests/assets/unpaywall_subset.json", "w") as fh:
-        json.dump(subset, fh)
+    with open("/mnt/data/wbf/unpaywall_extract.jsonl", "w") as fh:
+        for i, record in enumerate(doi_issn):
+            fh.write(json.dumps(record))
+            fh.write("\n")
