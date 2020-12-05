@@ -6,6 +6,7 @@ from functools import partial
 from typing import List
 
 from wbf.oa_pathway import oa_pathway
+from wbf.load_from_snapshot import load_jsonl
 from wbf.schemas import (
     OAPathway,
     OAStatus,
@@ -51,12 +52,7 @@ def calculate_metrics(papers: List[PaperWithOAPathway]):
 if __name__ == "__main__":
     # TODO: Consider checking against publicly available publishers / ISSNS (e.g. elife)
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--limit",
-        type=int,
-        default=20,
-        help="Limit the number of papers to process, set to 0 to remove limit.",
-    )
+    # TODO: find way to reintroduce '--limit' for generator based loading
     parser.add_argument(
         "--pathway-cache",
         type=str,
@@ -73,22 +69,17 @@ if __name__ == "__main__":
 
     # Load data
     dataset_file_path = os.path.join(os.path.dirname(__file__), args.unpaywall_extract)
-    with open(dataset_file_path, "r") as fh:
-        input_of_papers = [json.loads(line) for line in fh]
-
-    if args.limit:
-        input_of_papers = input_of_papers[: args.limit]
 
     # TODO: Skip papers with ISSNs for which cache says no policy could be found
-    papers_with_oa_status = [
+    papers_with_oa_status = (
         PaperWithOAStatus(
             doi=paper["doi"],
             issn=paper["journal_issn_l"],
             oa_status=("oa" if paper["is_oa"] else "not_oa"),
         )
-        for paper in input_of_papers
+        for paper in load_jsonl(dataset_file_path)
         if paper["journal_issn_l"] is not None
-    ]
+    )
 
     with json_filesystem_cache(args.pathway_cache) as pathway_cache:
         # Enrich data
@@ -97,12 +88,11 @@ if __name__ == "__main__":
         )
 
         # Calculate & report metrics
-        n_pubs = len(input_of_papers)
+        # TODO: count number of papers from generator
         n_oa, n_pathway_nocost, n_pathway_other, n_unknown = calculate_metrics(
             papers_with_pathway
         )
 
-    print(f"looked at {n_pubs} publications")
     print(f"{n_oa} are already OA")
     print(f"{n_pathway_nocost} could be OA at no cost")
     print(f"{n_pathway_other} has other OA pathway(s)")

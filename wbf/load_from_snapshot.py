@@ -23,6 +23,12 @@ def load_unpaywall_snapshot(jsonl_gzip_path):
             yield json.loads(line)
 
 
+def load_jsonl(filepath):
+    with open(filepath, "r") as fh:
+        for line in fh:
+            yield json.loads(line)
+
+
 if __name__ == "__main__":
     doi_issn = extract_fields(load_unpaywall_snapshot(UNPAYWALL_SNAPSHOT_PATH))
     with open("tests/assets/unpaywall_subset.jsonl", "w") as fh:
