@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from wbf.schemas import OAPathway, OAStatus, PaperWithOAStatus, PaperWithOAPathway
+from wbf.schemas import OAPathway, OAStatus, PaperWithOAPathway
 
 
 def test_get_landing_page(client: TestClient) -> None:
@@ -34,14 +34,6 @@ def test_get_paper_missing_args(client: TestClient) -> None:
     assert not r.ok
     assert r.status_code == 422
 
-    r = client.get("/papers?doi=123")
-    assert not r.ok
-    assert r.status_code == 422
-
-    r = client.get("/papers?issn=123")
-    assert not r.ok
-    assert r.status_code == 422
-
 
 def test_get_paper(monkeypatch, client: TestClient) -> None:
     issn = "1618-5641"
@@ -50,15 +42,15 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     oa_pathway = OAPathway.nocost.value
 
     monkeypatch.setattr(
-        "wbf.api.oa_status",
-        lambda paper: PaperWithOAStatus(oa_status=oa_status, **paper.dict()),
+        "wbf.api.unpaywall_status_api",
+        lambda *a, **kw: (oa_status, issn),
     )
     monkeypatch.setattr(
         "wbf.api.oa_pathway",
         lambda paper: PaperWithOAPathway(oa_pathway=oa_pathway, **paper.dict()),
     )
 
-    r = client.get(f"/papers?doi={doi}&issn={issn}")
+    r = client.get(f"/papers?doi={doi}")
     assert r.ok
     paper = r.json()
     assert paper["oa_status"] == oa_status

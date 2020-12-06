@@ -3,8 +3,8 @@ from typing import Optional
 from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import HTMLResponse
 
-from wbf.schemas import PaperWithOAPathway, Paper
-from wbf.oa_status import oa_status
+from wbf.schemas import PaperWithOAPathway, Paper, PaperWithOAStatus
+from wbf.oa_status import unpaywall_status_api
 from wbf.oa_pathway import oa_pathway
 
 
@@ -49,11 +49,9 @@ def get_publications_for_author(
 
 
 @api_router.get("/papers", response_model=PaperWithOAPathway)
-def get_paper(doi: str, issn: str):
-    # TODO: Fetch ISSN based on DOI
-
-    paper = Paper(doi=doi, issn=issn)
-    paper_with_status = oa_status(paper)
+def get_paper(doi: str):
+    oa_status, issn = unpaywall_status_api(doi)
+    paper_with_status = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
     paper_with_pathway = oa_pathway(paper_with_status)
 
     return paper_with_pathway
