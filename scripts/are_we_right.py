@@ -1,27 +1,11 @@
 import os
-import json
 import argparse
-from contextlib import contextmanager
 from functools import partial
 
+from wbf.cache import json_filesystem_cache
 from wbf.data import load_jsonl, calculate_metrics
 from wbf.oa_pathway import oa_pathway
 from wbf.schemas import PaperWithOAStatus
-
-
-@contextmanager
-def json_filesystem_cache(name):
-    pathway_cache = dict()
-    if os.path.isfile(args.pathway_cache):
-        with open(args.pathway_cache, "r") as fh:
-            pathway_cache = json.load(fh)
-            print(f"Loaded {len(pathway_cache)} cached ISSN to OA pathway mappings")
-    try:
-        yield pathway_cache
-    finally:
-        print(f"Cached {len(pathway_cache)} ISSN to OA pathway mappings")
-        with open(args.pathway_cache, "w") as fh:
-            json.dump(pathway_cache, fh, indent=2)
 
 
 if __name__ == "__main__":
