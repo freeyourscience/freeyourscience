@@ -4,6 +4,9 @@ from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import HTMLResponse
 
 from wbf.schemas import PaperWithOAPathway, Paper
+from wbf.oa_status import oa_status
+from wbf.oa_pathway import oa_pathway
+
 
 api_router = APIRouter()
 
@@ -46,7 +49,11 @@ def get_publications_for_author(
 
 
 @api_router.get("/papers", response_model=PaperWithOAPathway)
-def get_paper(doi: str, issn=str):
-    paper = Paper(doi=doi, issn=issn)
+def get_paper(doi: str, issn: str):
+    # TODO: Fetch ISSN based on DOI
 
-    return PaperWithOAPathway(oa_status="not_oa", oa_pathway="nocost", **paper.dict())
+    paper = Paper(doi=doi, issn=issn)
+    paper_with_status = oa_status(paper)
+    paper_with_pathway = oa_pathway(paper_with_status)
+
+    return paper_with_pathway
