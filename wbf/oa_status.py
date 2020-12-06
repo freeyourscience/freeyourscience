@@ -1,14 +1,16 @@
 import os
-from typing import Optional
+from typing import Optional, Tuple
 
 import requests
 
 from wbf.schemas import OAStatus, Paper, PaperWithOAStatus
 
 
-def unpaywall_status_api(doi: str, email: Optional[str] = None) -> OAStatus:
-    """Fetch information about the availability of an open access version for a given
-    DOI from the unpaywall API (api.unpaywall.org)
+def unpaywall_status_api(
+    doi: str, email: Optional[str] = None
+) -> Tuple[OAStatus, Optional[str]]:
+    """Fetch information about the availability of an open access version as well as
+    the ISSN for a given DOI from the unpaywall API (api.unpaywall.org)
 
     Raises
     ------
@@ -25,18 +27,17 @@ def unpaywall_status_api(doi: str, email: Optional[str] = None) -> OAStatus:
 
     response = requests.get(f"https://api.unpaywall.org/v2/{doi}?email={email}")
     if not response.ok:
-        return OAStatus.not_found
+        return OAStatus.not_found, None
 
     data = response.json()
-    return OAStatus.oa if data["is_oa"] else OAStatus.not_oa
+    oa_status = OAStatus.oa if data["is_oa"] else OAStatus.not_oa
+    return oa_status, data["journal_issn_l"]
 
 
 def oa_status(paper: Paper) -> PaperWithOAStatus:
     """Enrich a given paper with information about the availability of an open access
     copy collected from the an unpaywall data dump or the unpaywall API.
-
-    TODO: Use unpaywall dump as first resource and only fall back to API
     """
-    oa_status = unpaywall_status_api(paper.doi)
+    oa_status, _ = unpaywall_status_api(paper.doi)
 
     return PaperWithOAStatus(oa_status=oa_status, **paper.dict())
