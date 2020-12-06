@@ -3,7 +3,8 @@ from typing import Optional
 from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import HTMLResponse
 
-from wbf.schemas import PaperWithOAPathway, Paper, PaperWithOAStatus
+from wbf.author_papers import dois_from_semantic_scholar_author_api
+from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus
 from wbf.oa_status import unpaywall_status_api
 from wbf.oa_pathway import oa_pathway
 
@@ -21,23 +22,12 @@ def get_publications_for_author(
     semantic_scholar_id: str, accept: Optional[str] = Header("text/html")
 ):
     # TODO: Consider allowing override of accept headers via url parameter
-    papers = [
-        PaperWithOAPathway(
-            oa_status="not_oa",
-            doi="10.1007/s00580-005-0536-8",
-            issn="1618-5641",
-            oa_pathway="nocost",
-        ),
-        PaperWithOAPathway(
-            oa_status="not_oa",
-            doi="10.2307/2438925",
-            issn="0002-9122",
-            oa_pathway="nocost",
-        ),
-    ]
+
+    dois = dois_from_semantic_scholar_author_api(semantic_scholar_id)
+    papers = [get_paper(doi) for doi in dois]
 
     if "text/html" in accept:
-        return HTMLResponse("<html>Publications with OA status go here.</html>")
+        return HTMLResponse(f"<html>{papers}</html>")
     elif "application/json" in accept or "*/*" in accept:
         return papers
     else:
@@ -50,6 +40,7 @@ def get_publications_for_author(
 
 @api_router.get("/papers", response_model=PaperWithOAPathway)
 def get_paper(doi: str):
+    # TODO: Introduce settings like API token/email as FastAPI Depends argument
     oa_status, issn = unpaywall_status_api(doi)
     paper_with_status = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
     paper_with_pathway = oa_pathway(paper_with_status)
