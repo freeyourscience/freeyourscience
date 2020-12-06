@@ -1,6 +1,5 @@
 import gzip
 import json
-import tarfile
 
 UNPAYWALL_SNAPSHOT_PATH = "/mnt/data/wbf/unpaywall.jsonl.gz"
 
@@ -20,12 +19,6 @@ def load_unpaywall_snapshot(jsonl_gzip_path):
     """Yields records from unpaywall snapshot jsonl.gzip"""
     with gzip.open(jsonl_gzip_path) as file:
         for line in file:
-            yield json.loads(line)
-
-
-def load_jsonl(filepath):
-    with open(filepath, "r") as fh:
-        for line in fh:
             yield json.loads(line)
 
 

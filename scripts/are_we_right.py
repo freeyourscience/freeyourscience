@@ -5,8 +5,8 @@ from contextlib import contextmanager
 from functools import partial
 from typing import List
 
+from wbf.data import load_jsonl
 from wbf.oa_pathway import oa_pathway
-from wbf.load_from_snapshot import load_jsonl
 from wbf.schemas import (
     OAPathway,
     OAStatus,
