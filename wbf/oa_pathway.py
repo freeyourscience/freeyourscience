@@ -7,6 +7,12 @@ import requests
 from wbf.schemas import OAStatus, OAPathway, PaperWithOAStatus, PaperWithOAPathway
 
 
+# TODO: Consider for service version that nocost is currently assigned to pathways with
+# additional prerequisites (e.g. specific funders or funders mandating OA)
+# TODO: For service version, check if embargo still preventing OA and don't recommend
+# embargoed papers for re-publication
+
+
 def has_no_cost_oa_policy(policy: dict) -> bool:
     if policy["open_access_prohibited"] != "no":
         return False
