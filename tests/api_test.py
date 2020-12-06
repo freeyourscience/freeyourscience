@@ -28,7 +28,7 @@ def test_get_publications_for_author(client: TestClient) -> None:
 
 
 def test_get_paper(client: TestClient) -> None:
-    r = client.get("/papers?doi=10.1007/s00580-005-0536-8")
+    r = client.get("/papers?doi=10.1007/s00580-005-0536-8&issn=1618-5641")
     assert r.ok
 
     r = client.get("/papers")

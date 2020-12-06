@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import HTMLResponse
 
-from wbf.schemas import PaperWithOAPathway
+from wbf.schemas import PaperWithOAPathway, Paper
 
 api_router = APIRouter()
 
@@ -46,10 +46,7 @@ def get_publications_for_author(
 
 
 @api_router.get("/papers", response_model=PaperWithOAPathway)
-def get_paper(doi: str):
-    return PaperWithOAPathway(
-        oa_status="not_oa",
-        doi="10.1007/s00580-005-0536-8",
-        issn="1618-5641",
-        oa_pathway="nocost",
-    )
+def get_paper(doi: str, issn=str):
+    paper = Paper(doi=doi, issn=issn)
+
+    return PaperWithOAPathway(oa_status="not_oa", oa_pathway="nocost", **paper.dict())
