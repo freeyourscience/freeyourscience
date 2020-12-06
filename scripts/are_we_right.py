@@ -3,16 +3,10 @@ import json
 import argparse
 from contextlib import contextmanager
 from functools import partial
-from typing import List
 
-from wbf.data import load_jsonl
+from wbf.data import load_jsonl, calculate_metrics
 from wbf.oa_pathway import oa_pathway
-from wbf.schemas import (
-    OAPathway,
-    OAStatus,
-    PaperWithOAPathway,
-    PaperWithOAStatus,
-)
+from wbf.schemas import PaperWithOAStatus
 
 
 @contextmanager
@@ -28,25 +22,6 @@ def json_filesystem_cache(name):
         print(f"Cached {len(pathway_cache)} ISSN to OA pathway mappings")
         with open(args.pathway_cache, "w") as fh:
             json.dump(pathway_cache, fh, indent=2)
-
-
-def calculate_metrics(papers: List[PaperWithOAPathway]):
-    n_oa = 0
-    n_pathway_nocost = 0
-    n_pathway_other = 0
-    n_unknown = 0
-
-    for p in papers:
-        if p.oa_status is OAStatus.oa:
-            n_oa += 1
-        elif p.oa_pathway is OAPathway.nocost:
-            n_pathway_nocost += 1
-        elif p.oa_pathway is OAPathway.other:
-            n_pathway_other += 1
-        elif p.oa_status is OAStatus.not_found or p.oa_pathway is OAPathway.not_found:
-            n_unknown += 1
-
-    return n_oa, n_pathway_nocost, n_pathway_other, n_unknown
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 import os
 import json
 
-from wbf.are_we_right import calculate_metrics
+from wbf.data import calculate_metrics
 from wbf.schemas import PaperWithOAPathway
 
 
