@@ -1,7 +1,9 @@
+import os
 from typing import Optional
 
-from fastapi import APIRouter, Header, HTTPException, Depends
+from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 from wbf.author_papers import dois_from_semantic_scholar_author_api
 from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus
@@ -10,12 +12,17 @@ from wbf.oa_pathway import oa_pathway
 from wbf.deps import get_settings, Settings
 
 
+TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templates")
+
 api_router = APIRouter()
+templates = Jinja2Templates(directory=TEMPLATE_PATH)
 
 
 @api_router.get("/", response_class=HTMLResponse)
-def get_landing_page():
-    return "<html><h1>HI!</h1></html>"
+def get_landing_page(request: Request):
+    return templates.TemplateResponse(
+        "landing_page.html", {"request": request, "n_nocost_papers": "46.796.300"}
+    )
 
 
 @api_router.get("/authors")
