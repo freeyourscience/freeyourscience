@@ -3,8 +3,8 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    sherpa_api_key: str
-    unpaywall_email: str
+    sherpa_api_key: str = None
+    unpaywall_email: str = None
 
     class Config:
         env_file = ".env"
