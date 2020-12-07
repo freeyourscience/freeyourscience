@@ -9,7 +9,7 @@ from wbf.author_papers import (
     # TODO: Switch back to official API once stable
     crawl_dois_from_semantic_scholar_author_page as dois_from_semantic_scholar_author_api,
 )
-from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus
+from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway
 from wbf.oa_status import unpaywall_status_api
 from wbf.oa_pathway import oa_pathway
 from wbf.deps import get_settings, Settings
@@ -19,6 +19,21 @@ TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templa
 
 api_router = APIRouter()
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
+
+
+def _get_paper(
+    doi: str, unpaywall_email: str, sherpa_api_key: str
+) -> Optional[PaperWithOAPathway]:
+
+    oa_status, issn = unpaywall_status_api(doi=doi, email=unpaywall_email)
+    if issn is None:
+        return None
+
+    paper_with_status = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
+
+    paper_with_pathway = oa_pathway(paper=paper_with_status, api_key=sherpa_api_key)
+
+    return paper_with_pathway
 
 
 @api_router.get("/", response_class=HTMLResponse)
@@ -40,7 +55,15 @@ def get_publications_for_author(
     # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
     #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
     dois = dois_from_semantic_scholar_author_api(semantic_scholar_id)
-    papers = [get_paper(doi, settings=settings) for doi in dois]
+    papers = [
+        _get_paper(
+            doi=doi,
+            sherpa_api_key=settings.sherpa_api_key,
+            unpaywall_email=settings.unpaywall_email,
+        )
+        for doi in dois
+    ]
+    papers = [p for p in papers if p is not None and p.oa_pathway is OAPathway.nocost]
 
     if "text/html" in accept:
         return templates.TemplateResponse(
@@ -60,12 +83,16 @@ def get_publications_for_author(
 @api_router.get("/papers", response_model=PaperWithOAPathway)
 def get_paper(doi: str, settings: Settings = Depends(get_settings)):
     """Get paper with OpenAccess status and pathway for a given DOI."""
-    oa_status, issn = unpaywall_status_api(doi=doi, email=settings.unpaywall_email)
 
-    paper_with_status = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
-
-    paper_with_pathway = oa_pathway(
-        paper=paper_with_status, api_key=settings.sherpa_api_key
+    paper = _get_paper(
+        doi=doi,
+        sherpa_api_key=settings.sherpa_api_key,
+        unpaywall_email=settings.unpaywall_email,
     )
 
-    return paper_with_pathway
+    if paper is None or paper.oa_pathway is not OAPathway.nocost:
+        raise HTTPException(
+            404, f"No paper found with DOI {doi} that can be re-published without fees."
+        )
+
+    return paper
