@@ -4,6 +4,9 @@ from typing import Optional
 from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 from wbf.author_papers import dois_from_semantic_scholar_author_api
 from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus
@@ -16,6 +19,20 @@ TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templa
 
 api_router = APIRouter()
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
+
+
+def _get_retry_client():
+    retry_strategy = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504],
+        method_whitelist=["HEAD", "GET", "OPTIONS"],
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    http = requests.Session()
+    http.mount("https://", adapter)
+    http.mount("http://", adapter)
+    return http
 
 
 @api_router.get("/", response_class=HTMLResponse)
@@ -34,7 +51,9 @@ def get_publications_for_author(
 ):
     # TODO: Consider allowing override of accept headers via url parameter
 
-    dois = dois_from_semantic_scholar_author_api(semantic_scholar_id)
+    dois = dois_from_semantic_scholar_author_api(
+        semantic_scholar_id, client=_get_retry_client()
+    )
     papers = [get_paper(doi, settings=settings) for doi in dois]
 
     if "text/html" in accept:
