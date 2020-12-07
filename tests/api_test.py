@@ -1,6 +1,15 @@
 from fastapi.testclient import TestClient
 
 from wbf.schemas import OAPathway, OAStatus, PaperWithOAPathway
+from wbf import main
+from wbf.deps import Settings, get_settings
+
+
+def get_settings_override():
+    return Settings(sherpa_api_key="DUMMY-API-KEY", unpaywall_email="TEST@MAIL.LOCAL")
+
+
+main.app.dependency_overrides[get_settings] = get_settings_override
 
 
 def test_get_landing_page(client: TestClient) -> None:
