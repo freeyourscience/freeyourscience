@@ -30,8 +30,10 @@ class Paper(BaseModel):
     # Regex taken from:
     # https://en.wikipedia.org/wiki/International_Standard_Serial_Number
     # TODO: Check if regex is applicable
+    # TODO: Check if None is ok or if separate schemas are needed for data pipeline and
+    #       REST API
     issn: str = Field(
-        ...,  # regex="^[0-9]{4}-[0-9]{3}[0-9xX]$"
+        None,  # regex="^[0-9]{4}-[0-9]{3}[0-9xX]$"
     )
 
 

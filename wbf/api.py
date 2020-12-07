@@ -5,7 +5,10 @@ from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from wbf.author_papers import dois_from_semantic_scholar_author_api
+from wbf.author_papers import (
+    # TODO: Switch back to official API once stable
+    crawl_dois_from_semantic_scholar_author_page as dois_from_semantic_scholar_author_api,
+)
 from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus
 from wbf.oa_status import unpaywall_status_api
 from wbf.oa_pathway import oa_pathway
@@ -34,6 +37,8 @@ def get_publications_for_author(
 ):
     # TODO: Consider allowing override of accept headers via url parameter
 
+    # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
+    #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
     dois = dois_from_semantic_scholar_author_api(semantic_scholar_id)
     papers = [get_paper(doi, settings=settings) for doi in dois]
 
