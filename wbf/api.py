@@ -1,12 +1,13 @@
 from typing import Optional
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Header, HTTPException, Depends
 from fastapi.responses import HTMLResponse
 
 from wbf.author_papers import dois_from_semantic_scholar_author_api
 from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus
 from wbf.oa_status import unpaywall_status_api
 from wbf.oa_pathway import oa_pathway
+from wbf.deps import get_settings, Settings
 
 
 api_router = APIRouter()
@@ -39,10 +40,14 @@ def get_publications_for_author(
 
 
 @api_router.get("/papers", response_model=PaperWithOAPathway)
-def get_paper(doi: str):
-    # TODO: Introduce settings like API token/email as FastAPI Depends argument
-    oa_status, issn = unpaywall_status_api(doi)
+def get_paper(doi: str, settings: Settings = Depends(get_settings)):
+    """Get paper with OpenAccess status and pathway for a given DOI."""
+    oa_status, issn = unpaywall_status_api(doi=doi, email=settings.unpaywall_email)
+
     paper_with_status = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
-    paper_with_pathway = oa_pathway(paper_with_status)
+
+    paper_with_pathway = oa_pathway(
+        paper=paper_with_status, api_key=settings.sherpa_api_key
+    )
 
     return paper_with_pathway

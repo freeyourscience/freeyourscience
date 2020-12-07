@@ -61,7 +61,7 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     )
     monkeypatch.setattr(
         "wbf.api.oa_pathway",
-        lambda paper: PaperWithOAPathway(oa_pathway=oa_pathway, **paper.dict()),
+        lambda paper, **kw: PaperWithOAPathway(oa_pathway=oa_pathway, **paper.dict()),
     )
 
     r = client.get(f"/papers?doi={doi}")

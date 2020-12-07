@@ -5,7 +5,7 @@ setup(
     version="0.0.1",
     packages=find_packages(),
     python_requires=">=3.7, <4",
-    install_requires=["requests", "pydantic", "fastapi", "uvicorn", "gunicorn"],
+    install_requires=["requests", "pydantic[dotenv]", "fastapi", "uvicorn", "gunicorn"],
     extras_require={
         "dev": ["black", "pytest", "pytest-cov", "pytest-mock"],
     },
