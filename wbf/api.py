@@ -27,15 +27,21 @@ def get_landing_page(request: Request):
 
 @api_router.get("/authors")
 def get_publications_for_author(
-    semantic_scholar_id: str, accept: Optional[str] = Header("text/html")
+    semantic_scholar_id: str,
+    request: Request,
+    accept: Optional[str] = Header("text/html"),
+    settings: Settings = Depends(get_settings),
 ):
     # TODO: Consider allowing override of accept headers via url parameter
 
     dois = dois_from_semantic_scholar_author_api(semantic_scholar_id)
-    papers = [get_paper(doi) for doi in dois]
+    papers = [get_paper(doi, settings=settings) for doi in dois]
 
     if "text/html" in accept:
-        return HTMLResponse(f"<html>{papers}</html>")
+        return templates.TemplateResponse(
+            "publications_for_author.html",
+            {"request": request, "papers": [p for p in papers]},
+        )
     elif "application/json" in accept or "*/*" in accept:
         return papers
     else:
