@@ -15,7 +15,7 @@ from wbf.schemas import (
 from wbf.unpaywall import get_oa_status_and_issn
 from wbf.oa_pathway import oa_pathway
 from wbf.deps import get_settings, Settings
-from wbf.semantic_scholar import get_author_with_papers
+from wbf.semantic_scholar import get_author_with_papers, AuthorWithPapers
 
 
 TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templates")
@@ -43,9 +43,9 @@ def _get_non_oa_no_cost_paper(
     return paper
 
 
-def _get_non_oa_no_cost_papers(
+def _get_author_with_non_oa_no_cost_papers(
     author_id: str, unpaywall_email: str, sherpa_api_key: str
-):
+) -> AuthorWithPapers:
     author = get_author_with_papers(author_id)
     papers = [p for p in author.papers if p.doi is not None]
     papers = [
@@ -58,7 +58,8 @@ def _get_non_oa_no_cost_papers(
         for base_p, oa_p in papers
         if oa_p is not None and oa_p.oa_pathway is OAPathway.nocost
     ]
-    return papers
+    author.papers = papers
+    return author
 
 
 @api_router.get("/", response_class=HTMLResponse)
@@ -79,7 +80,7 @@ def get_publications_for_author(
 
     # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
     #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
-    papers = _get_non_oa_no_cost_papers(
+    author = _get_author_with_non_oa_no_cost_papers(
         author_id=semantic_scholar_id,
         unpaywall_email=settings.unpaywall_email,
         sherpa_api_key=settings.sherpa_api_key,
@@ -88,14 +89,14 @@ def get_publications_for_author(
     if "text/html" in accept:
         return templates.TemplateResponse(
             "publications_for_author.html",
-            {"request": request, "papers": papers},
+            {"request": request, "author": author},
         )
     elif "application/json" in accept or "*/*" in accept:
-        if len(papers) == 0:
+        if len(author.papers) == 0:
             raise HTTPException(
                 404, "No papers found that can be re-published without fees."
             )
-        return papers
+        return author
     else:
         raise HTTPException(
             406,

@@ -1,7 +1,9 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import requests
 from pydantic import BaseModel
+
+from wbf.schemas import DetailedPaper
 
 # TODO: Add API key for prod setting
 
@@ -44,7 +46,7 @@ class Author(BaseModel):
 
 
 class AuthorWithPapers(Author):
-    papers: List[Paper]
+    papers: Union[List[Paper], List[DetailedPaper]]
 
 
 def get_paper(paper_id: str) -> Optional[Paper]:

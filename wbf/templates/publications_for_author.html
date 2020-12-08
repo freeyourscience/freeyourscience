@@ -3,7 +3,11 @@
 {% import 'oa_permissions.html' as oa_permissions %}
 {% extends "base.html" %}
 {% block content %}
-{% for paper in papers %}
+<h2>Author: {{ author.name }}</h2>
+<div class="container">
+    <a href="{{ author.url }}" target="_blank">Semantic Scholar Profile</a>
+</div>
+{% for paper in author.papers %}
 <div class="container">
     Title: {{ paper.title }}<br />
     DOI: {{ paper.doi }}<br />
