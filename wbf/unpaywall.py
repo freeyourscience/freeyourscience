@@ -19,8 +19,8 @@ class Paper(BaseModel):
     is_oa: bool
     journal_is_in_doaj: bool
     journal_is_oa: bool
-    journal_issns: str
-    journal_issn_l: str
+    journal_issns: Optional[str] = None
+    journal_issn_l: Optional[str] = None
     journal_name: str
     oa_locations: List[dict]
     first_oa_location: Optional[dict] = None
