@@ -34,6 +34,19 @@ class Paper(BaseModel):
     year: Optional[int] = None
 
 
+class Author(BaseModel):
+    aliases: Optional[List[str]] = None
+    authorId: str  # could be int?
+    influentialCitationCount: Optional[int] = None
+    name: Optional[str] = None
+    papers: Optional[List[dict]] = None
+    url: Optional[str] = None
+
+
+class AuthorWithPapers(Author):
+    papers: List[Paper]
+
+
 def get_paper(paper_id: str) -> Optional[Paper]:
     r = requests.get(f"https://api.semanticscholar.org/v1/paper/{paper_id}")
 
@@ -41,20 +54,29 @@ def get_paper(paper_id: str) -> Optional[Paper]:
         # TODO: Log and/or handle differently.
         return None
 
-    paper = Paper(**r.json())
-    return paper
+    return Paper(**r.json())
 
 
-def get_author(author_id: str) -> dict:
+def get_author(author_id: str) -> Optional[Author]:
     r = requests.get(f"https://api.semanticscholar.org/v1/author/{author_id}")
-    author = r.json()
-    return author
+
+    if not r.ok:
+        # TODO: Log and/or handle differently.
+        return None
+
+    return Author(**r.json())
+
+
+def get_author_with_papers(author_id: str) -> AuthorWithPapers:
+    author = get_author(author_id)
+
+    papers = [get_paper(paper["paperId"]) for paper in author.papers]
+    author.papers = [p for p in papers if p is not None]
+
+    return AuthorWithPapers(**author.dict())
 
 
 def get_dois(author_id: str) -> List[str]:
-    author = get_author(author_id)
-    papers = [get_paper(paper["paperId"]) for paper in author["papers"]]
-    dois = [
-        paper.doi for paper in papers if paper is not None and paper.doi is not None
-    ]
+    author = get_author_with_papers(author_id)
+    dois = [paper.doi for paper in author.papers if paper.doi is not None]
     return dois
