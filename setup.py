@@ -11,7 +11,6 @@ setup(
         "fastapi",
         "uvicorn",
         "gunicorn",
-        "beautifulsoup4",
         "jinja2",
         "aiofiles",
     ],
