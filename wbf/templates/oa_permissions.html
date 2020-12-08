@@ -1,0 +1,15 @@
+{% macro plaintext(permissions) -%}
+{% for permitted_oa in permissions %}
+<li>
+    Conditions: {{ permitted_oa["conditions"] }}<br />
+    Additional OA Fees: {{ permitted_oa["additional_oa_fee_phrases"][0]["phrase"] }}<br />
+    Article Versions: {{ permitted_oa["article_version"] }}<br />
+    Licenses:
+    {% for license in permitted_oa["license"] %}
+    {{ license["license"] }}
+    {% endfor %}
+    <br />
+    Locations: {{ permitted_oa["location"]["location"] }}
+</li>
+{% endfor %}
+{%- endmacro %}
