@@ -5,11 +5,11 @@ from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from wbf.author_papers import dois_from_semantic_scholar_author_api
 from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway
 from wbf.oa_status import unpaywall_status_api
 from wbf.oa_pathway import oa_pathway
 from wbf.deps import get_settings, Settings
+from wbf.semantic_scholar import get_dois
 
 
 TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templates")
@@ -51,7 +51,7 @@ def get_publications_for_author(
 
     # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
     #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
-    dois = dois_from_semantic_scholar_author_api(semantic_scholar_id)
+    dois = get_dois(semantic_scholar_id)
     papers = [
         _get_paper(
             doi=doi,

@@ -20,10 +20,7 @@ def test_get_landing_page(client: TestClient) -> None:
 def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
     url = "/authors?semantic_scholar_id=51453144"
 
-    monkeypatch.setattr(
-        "wbf.api.dois_from_semantic_scholar_author_api",
-        lambda *a, **kw: ["123/123.123"],
-    )
+    monkeypatch.setattr("wbf.api.get_dois", lambda *a, **kw: ["123/123.123"])
     monkeypatch.setattr(
         "wbf.api.get_paper",
         lambda *a, **kw: PaperWithOAPathway(
