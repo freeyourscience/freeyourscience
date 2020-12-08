@@ -22,6 +22,8 @@ republished as OpenAccess without additional cost.
 
 ## Setup & Test
 
+### Python
+
 Install the package in development mode in a Python 3.7 or 3.8 environment from the root
 of the repository as follows
 
@@ -33,4 +35,15 @@ and then run the tests with
 
 ```bash
 pytest tests/
+```
+
+### Docker
+
+To build the Docker image use the following in the repository root
+```
+docker build -t wbf .
+```
+which can then be run via
+```
+docker run -d --name wbf -p 80:80 wbf
 ```
