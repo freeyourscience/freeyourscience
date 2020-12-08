@@ -1,4 +1,6 @@
+from typing import List, Optional
 from enum import Enum
+
 from pydantic import BaseModel, Field
 
 
@@ -42,6 +44,7 @@ class PaperWithOAStatus(Paper):
 
 class PaperWithOAPathway(PaperWithOAStatus):
     oa_pathway: OAPathway = Field(...)
+    oa_pathway_details: Optional[List[dict]] = None
 
 
 class DetailedPaper(PaperWithOAPathway):

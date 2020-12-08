@@ -32,7 +32,7 @@ def test_get_pathway_successes(issn, pathway, monkeypatch):
 
     monkeypatch.setattr("wbf.sherpa.requests.get", mock_get_publisher)
 
-    sherpa_pathway = get_pathway(
+    sherpa_pathway, _ = get_pathway(
         issn=issn,
         api_key="DUMMY-KEY",
     )
@@ -47,7 +47,7 @@ def test_get_pathway_request_error(monkeypatch):
 
     monkeypatch.setattr("wbf.sherpa.requests.get", mock_get_publisher)
 
-    pathway = get_pathway(
+    pathway, _ = get_pathway(
         issn="1234-1234",
         api_key="DUMMY-KEY",
     )

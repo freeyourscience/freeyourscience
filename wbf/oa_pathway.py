@@ -17,6 +17,7 @@ def oa_pathway(
 
     Cache can be anything that exposes ``get(key, default)`` and ``__setitem__``
     """
+    details = None
     if paper.oa_status is OAStatus.oa:
         pathway = OAPathway.already_oa
     elif paper.oa_status is OAStatus.not_found:
@@ -25,9 +26,11 @@ def oa_pathway(
         if cache is not None:
             pathway = cache.get(paper.issn, None)
             if not pathway:
-                pathway = sherpa_pathway_api(paper.issn, api_key)
+                pathway, details = sherpa_pathway_api(paper.issn, api_key)
                 cache[paper.issn] = pathway
         else:
-            pathway = sherpa_pathway_api(paper.issn, api_key)
+            pathway, details = sherpa_pathway_api(paper.issn, api_key)
 
-    return PaperWithOAPathway(oa_pathway=pathway, **paper.dict())
+    return PaperWithOAPathway(
+        oa_pathway=pathway, oa_pathway_details=details, **paper.dict()
+    )

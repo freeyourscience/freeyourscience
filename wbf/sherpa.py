@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Optional
+from typing import Optional, Tuple, List
 
 import requests
 
@@ -26,7 +26,9 @@ def has_no_cost_oa_policy(policy: dict) -> bool:
         return False
 
 
-def get_pathway(issn: str, api_key: Optional[str] = None) -> OAPathway:
+def get_pathway(
+    issn: str, api_key: Optional[str] = None
+) -> Tuple[OAPathway, List[dict]]:
     """Fetch information about the available open access pathways for the publisher that
     owns a given ISSN from the Sherpa API (v2.sherpa.ac.uk)
 
@@ -49,7 +51,7 @@ def get_pathway(issn: str, api_key: Optional[str] = None) -> OAPathway:
         + f'filter=[["issn","equals","{issn}"]]'
     )
     if not response.ok:
-        return OAPathway.not_found
+        return OAPathway.not_found, None
 
     publications = response.json()
     try:
@@ -58,16 +60,16 @@ def get_pathway(issn: str, api_key: Optional[str] = None) -> OAPathway:
             or not publications["items"]
             or not publications["items"][0]["publisher_policy"]
         ):
-            return OAPathway.not_found
+            return OAPathway.not_found, None
     except Exception as e:
         print("ERROR with publications:", json.dumps(publications), e)
-        return OAPathway.not_found
+        return OAPathway.not_found, None
 
     # TODO: How to handle multiple publishers found for ISSN?
     oa_policies_no_cost = list(
         filter(has_no_cost_oa_policy, publications["items"][0]["publisher_policy"])
     )
     if not oa_policies_no_cost:
-        return OAPathway.other
+        return OAPathway.other, None
 
-    return OAPathway.nocost
+    return OAPathway.nocost, oa_policies_no_cost
