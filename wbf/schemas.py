@@ -42,3 +42,7 @@ class PaperWithOAStatus(Paper):
 
 class PaperWithOAPathway(PaperWithOAStatus):
     oa_pathway: OAPathway = Field(...)
+
+
+class DetailedPaper(PaperWithOAPathway):
+    title: str

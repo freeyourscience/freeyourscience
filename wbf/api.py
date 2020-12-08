@@ -5,11 +5,11 @@ from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway
+from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway, DetailedPaper
 from wbf.unpaywall import get_oa_status_and_issn
 from wbf.oa_pathway import oa_pathway
 from wbf.deps import get_settings, Settings
-from wbf.semantic_scholar import get_dois
+from wbf.semantic_scholar import get_author_with_papers
 
 
 TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templates")
@@ -27,10 +27,29 @@ def _get_paper(
         return None
 
     paper_with_status = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
+    # TODO: Return None in case the paper doesn't have not_oa as status
 
     paper_with_pathway = oa_pathway(paper=paper_with_status, api_key=sherpa_api_key)
 
     return paper_with_pathway
+
+
+def _get_non_oa_no_cost_papers(
+    author_id: str, unpaywall_email: str, sherpa_api_key: str
+):
+    author = get_author_with_papers(author_id)
+    papers = [p for p in author.papers if p.doi is not None]
+    papers = [
+        (p, _get_paper(p.doi, unpaywall_email, sherpa_api_key))
+        for p in papers
+        if p.doi is not None
+    ]
+    papers = [
+        DetailedPaper(title=base_p.title, **oa_p.dict())
+        for base_p, oa_p in papers
+        if oa_p is not None and oa_p.oa_pathway is OAPathway.nocost
+    ]
+    return papers
 
 
 @api_router.get("/", response_class=HTMLResponse)
@@ -51,23 +70,22 @@ def get_publications_for_author(
 
     # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
     #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
-    dois = get_dois(semantic_scholar_id)
-    papers = [
-        _get_paper(
-            doi=doi,
-            sherpa_api_key=settings.sherpa_api_key,
-            unpaywall_email=settings.unpaywall_email,
-        )
-        for doi in dois
-    ]
-    papers = [p for p in papers if p is not None and p.oa_pathway is OAPathway.nocost]
+    papers = _get_non_oa_no_cost_papers(
+        author_id=semantic_scholar_id,
+        unpaywall_email=settings.unpaywall_email,
+        sherpa_api_key=settings.sherpa_api_key,
+    )
 
     if "text/html" in accept:
         return templates.TemplateResponse(
             "publications_for_author.html",
-            {"request": request, "papers": [p for p in papers]},
+            {"request": request, "papers": papers},
         )
     elif "application/json" in accept or "*/*" in accept:
+        if len(papers) == 0:
+            raise HTTPException(
+                404, "No papers found that can be re-published without fees."
+            )
         return papers
     else:
         raise HTTPException(

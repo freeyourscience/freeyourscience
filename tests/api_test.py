@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from wbf.schemas import OAPathway, OAStatus, PaperWithOAPathway
+from wbf.schemas import OAPathway, OAStatus, PaperWithOAPathway, DetailedPaper
 from wbf import main
 from wbf.deps import Settings, get_settings
 
@@ -20,15 +20,17 @@ def test_get_landing_page(client: TestClient) -> None:
 def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
     url = "/authors?semantic_scholar_id=51453144"
 
-    monkeypatch.setattr("wbf.api.get_dois", lambda *a, **kw: ["123/123.123"])
     monkeypatch.setattr(
-        "wbf.api.get_paper",
-        lambda *a, **kw: PaperWithOAPathway(
-            issn="1618-5641",
-            doi="10.1007/s00580-005-0536-8",
-            oa_status=OAStatus.not_oa.value,
-            oa_pathway=OAPathway.nocost.value,
-        ),
+        "wbf.api._get_non_oa_no_cost_papers",
+        lambda *a, **kw: [
+            DetailedPaper(
+                issn="1618-5641",
+                doi="10.1007/s00580-005-0536-8",
+                oa_status=OAStatus.not_oa.value,
+                oa_pathway=OAPathway.nocost.value,
+                title="Best Paper Ever!",
+            )
+        ],
     )
 
     r = client.get(url)
@@ -47,6 +49,16 @@ def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
     r = client.get("/authors")
     assert not r.ok
     assert r.status_code == 422
+
+
+def test_no_publications_for_author(monkeypatch, client: TestClient) -> None:
+    url = "/authors?semantic_scholar_id=51453144"
+
+    monkeypatch.setattr("wbf.api._get_non_oa_no_cost_papers", lambda *a, **kw: [])
+
+    r = client.get(url)
+    assert not r.ok
+    assert r.status_code == 404
 
 
 def test_get_paper_missing_args(client: TestClient) -> None:
