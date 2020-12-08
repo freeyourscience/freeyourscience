@@ -27,7 +27,32 @@ def test_get_oa_status_and_issn(is_oa, oa_status, issn, monkeypatch):
         else:
             response.status_code = 200
             response._content = json.dumps(
-                {"is_oa": is_oa, "journal_issn_l": issn}
+                {
+                    "doi": "10.1080/555222222",
+                    "doi_url": "https://doi.org/10.1080/asda23123",
+                    "title": "Some Title",
+                    "genre": "journal-article",
+                    "is_paratext": False,
+                    "published_date": "2020-03-01",
+                    "year": 1986,
+                    "journal_name": "Distance Education",
+                    "journal_issns": "0158-7919,1475-0198",
+                    "journal_issn_l": issn,
+                    "journal_is_oa": False,
+                    "journal_is_in_doaj": False,
+                    "publisher": "Information Publisher",
+                    "is_oa": is_oa,
+                    "oa_status": "gold" if is_oa else "closed",
+                    "has_repository_copy": False,
+                    "best_oa_location": None,
+                    "first_oa_location": None,
+                    "oa_locations": [],
+                    "updated": "2020-09-09T21:11:51.319309",
+                    "data_standard": 2,
+                    "z_authors": [
+                        {"sequence": "first", "given": "Erling", "family": "Erlang"}
+                    ],
+                }
             ).encode("utf-8")
         return response
 
