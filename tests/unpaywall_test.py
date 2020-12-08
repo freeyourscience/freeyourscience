@@ -4,7 +4,7 @@ import json
 import pytest
 from requests import Response
 
-from wbf.oa_status import unpaywall_status_api
+from wbf.unpaywall import get_oa_status_and_issn
 from wbf.schemas import OAStatus
 
 
@@ -19,7 +19,7 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
         (None, OAStatus.not_found, None),
     ],
 )
-def test_unpaywall_status_api(is_oa, oa_status, issn, monkeypatch):
+def test_get_oa_status_and_issn(is_oa, oa_status, issn, monkeypatch):
     def mock_get_doi(*args, **kwargs):
         response = Response()
         if is_oa is None:
@@ -31,10 +31,10 @@ def test_unpaywall_status_api(is_oa, oa_status, issn, monkeypatch):
             ).encode("utf-8")
         return response
 
-    monkeypatch.setattr("wbf.oa_status.requests.get", mock_get_doi)
+    monkeypatch.setattr("wbf.unpaywall.requests.get", mock_get_doi)
 
     irrelevant_dummy_doi = "10.1011/111111"
-    unpaywall_status, unpaywall_issn = unpaywall_status_api(
+    unpaywall_status, unpaywall_issn = get_oa_status_and_issn(
         irrelevant_dummy_doi, "dummy@local.test"
     )
 
@@ -42,11 +42,11 @@ def test_unpaywall_status_api(is_oa, oa_status, issn, monkeypatch):
     assert unpaywall_issn == issn
 
 
-def test_unpaywall_status_api_with_no_email():
+def test_get_oa_status_and_issn_with_no_email():
     email = os.environ.pop("UNPAYWALL_EMAIL", False)
 
     with pytest.raises(RuntimeError):
-        unpaywall_status_api("10.1011/111111")
+        get_oa_status_and_issn("10.1011/111111")
 
     if email:
         os.environ["UNPAYWALL_EMAIL"] = email
