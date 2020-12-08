@@ -10,27 +10,28 @@ class Paper(BaseModel):
     """Unofficial schema, reconstructed from API response at
     https://api.semanticscholar.org/v1/paper/
 
-    TODO: Inquire about official schema documentation.
+    TODO: Inquire about official schema documentation and remove Optional for mandatory
+    fields.
     """
 
-    abstract: str
+    abstract: Optional[str] = None
     arxivId: Optional[str] = None
-    authors: List[dict]
-    citationVelocity: int
-    citations: List[dict]
-    corpusId: int
-    doi: str
-    fieldsOfStudy: List[str]
-    influentialCitationCount: int
-    is_open_access: bool
-    is_publisher_licensed: bool
-    paperId: str
-    references: List[dict]
-    title: str
-    topics: List[dict]
-    url: str
-    venue: str
-    year: int
+    authors: List[Optional[dict]] = None
+    citationVelocity: Optional[int] = None
+    citations: List[Optional[dict]] = None
+    corpusId: Optional[int] = None
+    doi: Optional[str] = None
+    fieldsOfStudy: List[Optional[str]] = None
+    influentialCitationCount: Optional[int] = None
+    is_open_access: Optional[bool] = None
+    is_publisher_licensed: Optional[bool] = None
+    paperId: Optional[str] = None
+    references: List[Optional[dict]] = None
+    title: Optional[str] = None
+    topics: List[Optional[dict]] = None
+    url: Optional[str] = None
+    venue: Optional[str] = None
+    year: Optional[int] = None
 
 
 def get_paper(paper_id: str) -> Optional[Paper]:
@@ -53,5 +54,7 @@ def get_author(author_id: str) -> dict:
 def get_dois(author_id: str) -> List[str]:
     author = get_author(author_id)
     papers = [get_paper(paper["paperId"]) for paper in author["papers"]]
-    dois = [paper.doi for paper in papers if paper is not None]
+    dois = [
+        paper.doi for paper in papers if paper is not None and paper.doi is not None
+    ]
     return dois
