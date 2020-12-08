@@ -5,7 +5,13 @@ from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway, DetailedPaper
+from wbf.schemas import (
+    PaperWithOAPathway,
+    PaperWithOAStatus,
+    OAPathway,
+    DetailedPaper,
+    OAStatus,
+)
 from wbf.unpaywall import get_oa_status_and_issn
 from wbf.oa_pathway import oa_pathway
 from wbf.deps import get_settings, Settings
@@ -18,7 +24,7 @@ api_router = APIRouter()
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
 
 
-def _get_paper(
+def _get_non_oa_no_cost_paper(
     doi: str, unpaywall_email: str, sherpa_api_key: str
 ) -> Optional[PaperWithOAPathway]:
 
@@ -26,12 +32,15 @@ def _get_paper(
     if issn is None:
         return None
 
-    paper_with_status = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
-    # TODO: Return None in case the paper doesn't have not_oa as status
+    paper = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
+    if paper.oa_status is not OAStatus.not_oa:
+        return None
 
-    paper_with_pathway = oa_pathway(paper=paper_with_status, api_key=sherpa_api_key)
+    paper = oa_pathway(paper=paper, api_key=sherpa_api_key)
+    if paper.oa_pathway is not OAPathway.nocost:
+        return None
 
-    return paper_with_pathway
+    return paper
 
 
 def _get_non_oa_no_cost_papers(
@@ -40,9 +49,9 @@ def _get_non_oa_no_cost_papers(
     author = get_author_with_papers(author_id)
     papers = [p for p in author.papers if p.doi is not None]
     papers = [
-        (p, _get_paper(p.doi, unpaywall_email, sherpa_api_key))
+        (p, _get_non_oa_no_cost_paper(p.doi, unpaywall_email, sherpa_api_key))
         for p in papers
-        if p.doi is not None
+        if p.doi is not None and not p.is_open_access
     ]
     papers = [
         DetailedPaper(title=base_p.title, **oa_p.dict())
@@ -99,13 +108,13 @@ def get_publications_for_author(
 def get_paper(doi: str, settings: Settings = Depends(get_settings)):
     """Get paper with OpenAccess status and pathway for a given DOI."""
 
-    paper = _get_paper(
+    paper = _get_non_oa_no_cost_paper(
         doi=doi,
         sherpa_api_key=settings.sherpa_api_key,
         unpaywall_email=settings.unpaywall_email,
     )
 
-    if paper is None or paper.oa_pathway is not OAPathway.nocost:
+    if paper is None:
         raise HTTPException(
             404, f"No paper found with DOI {doi} that can be re-published without fees."
         )
