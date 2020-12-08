@@ -62,7 +62,7 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     oa_pathway = OAPathway.nocost.value
 
     monkeypatch.setattr(
-        "wbf.api.unpaywall_status_api",
+        "wbf.api.get_oa_status_and_issn",
         lambda *a, **kw: (oa_status, issn),
     )
     monkeypatch.setattr(

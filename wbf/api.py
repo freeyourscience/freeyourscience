@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway
-from wbf.oa_status import unpaywall_status_api
+from wbf.unpaywall import get_oa_status_and_issn
 from wbf.oa_pathway import oa_pathway
 from wbf.deps import get_settings, Settings
 from wbf.semantic_scholar import get_dois
@@ -22,7 +22,7 @@ def _get_paper(
     doi: str, unpaywall_email: str, sherpa_api_key: str
 ) -> Optional[PaperWithOAPathway]:
 
-    oa_status, issn = unpaywall_status_api(doi=doi, email=unpaywall_email)
+    oa_status, issn = get_oa_status_and_issn(doi=doi, email=unpaywall_email)
     if issn is None:
         return None
 
