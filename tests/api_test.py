@@ -28,6 +28,7 @@ def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
                 doi="10.1007/s00580-005-0536-8",
                 oa_status=OAStatus.not_oa.value,
                 oa_pathway=OAPathway.nocost.value,
+                oa_pathway_details=[],
                 title="Best Paper Ever!",
             )
         ],

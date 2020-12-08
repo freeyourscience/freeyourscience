@@ -1,6 +1,32 @@
+{# TODO: Make sure only english phrases and not just the first are displayed. #}
+{# TODO: Do someting like the Routes to OA section at https://v2.sherpa.ac.uk/id/publisher_policy/2252 #}
 {% extends "base.html" %}
 {% block content %}
 {% for paper in papers %}
-<li>{{ paper }}</li>
+<div class="container">
+    Title: {{ paper.title }}<br />
+    DOI: {{ paper.doi }}<br />
+    Open Access: {{ paper.oa_status }}<br />
+    Publisher policies potentially allowing open access re-publication:
+    <ul>
+        {% for details in paper.oa_pathway_details %}
+        <li>Open Access Prohibited: {{ details["open_access_prohibited_phrases"][0]["phrase"] }}</li>
+        {% for permitted_oa in details["permitted_oa"] %}
+        <li>
+            Conditions: {{ permitted_oa["conditions"] }}<br />
+            Additional OA Fees: {{ permitted_oa["additional_oa_fee_phrases"][0]["phrase"] }}<br />
+            Article Versions: {{ permitted_oa["article_version"] }}<br />
+            Licenses:
+            {% for license in permitted_oa["license"] %}
+            {{ license["license"] }}
+            {% endfor %}
+            <br />
+            Locations: {{ permitted_oa["location"]["location"] }}
+        </li>
+        {% endfor %}
+        <li><a href='{{ details["uri"] }}' target="_blank">Publisher Policy Details</a></li>
+        {% endfor %}
+    </ul>
+</div>
 {% endfor %}
 {% endblock %}
