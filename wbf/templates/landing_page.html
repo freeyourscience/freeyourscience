@@ -11,13 +11,20 @@
 		everyone in the world. However, many authors don't know of this opportunity or don't leverage it.
 		<br><br>
 		Find out which of your papers you are allowed to re-publish today:
-		<br>
+	</p>
 
 	<form method="GET" action="/authors">
 		<input type="text" name="semantic_scholar_id" placeholder="Semantic Scholar Profile ID">
 		<input type="submit" class="btn btn-light" value="Search">
 	</form>
+	<br />
+	<p style="font-size:130%">
+		... or check by DOI if a paper can be re-published:
 	</p>
+	<form method="GET" action="/papers">
+		<input type="text" name="doi" placeholder="DOI (e.g. 10.1000/1010101)">
+		<input type="submit" class="btn btn-light" value="Search">
+	</form>
 	<br>
 	<p>
 		This project is built on the datasets and API available by https://unpaywall.org/ as well as the API at
