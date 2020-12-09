@@ -2,7 +2,7 @@ on:
   push:
 
 env:
-  IMAGE_TAG: gcr.io/paywall-dot-lol/wbf:${{ github.sha }}
+  IMAGE_TAG: gcr.io/${{ secrets.GCP_PROJECT_ID }}/wbf:${{ github.sha }}
 
 jobs:
   ci:
