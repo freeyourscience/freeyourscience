@@ -3,6 +3,8 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
+# TODO: Unify paper models
+
 
 class OAStatus(str, Enum):
     oa = "oa"
@@ -49,3 +51,12 @@ class PaperWithOAPathway(PaperWithOAStatus):
 
 class DetailedPaper(PaperWithOAPathway):
     title: str
+
+
+class FullPaper(BaseModel):
+    doi: str
+    title: Optional[str] = None
+    issn: Optional[str] = None
+    oa_status: Optional[OAStatus] = None
+    oa_pathway: Optional[OAPathway] = None
+    oa_pathway_details: Optional[List[dict]] = None

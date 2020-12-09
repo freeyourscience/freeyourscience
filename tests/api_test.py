@@ -1,6 +1,12 @@
 from fastapi.testclient import TestClient
 
-from wbf.schemas import OAPathway, OAStatus, PaperWithOAPathway, DetailedPaper
+from wbf.schemas import (
+    OAPathway,
+    OAStatus,
+    PaperWithOAPathway,
+    DetailedPaper,
+    FullPaper,
+)
 from wbf import main
 from wbf.deps import Settings, get_settings
 from wbf.semantic_scholar import Author
@@ -82,8 +88,8 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     oa_pathway = OAPathway.nocost.value
 
     monkeypatch.setattr(
-        "wbf.api.get_oa_status_and_issn",
-        lambda *a, **kw: (oa_status, issn),
+        "wbf.api.unpaywall_get_paper",
+        lambda *a, **kw: FullPaper(doi=doi, issn=issn, oa_status=oa_status),
     )
     monkeypatch.setattr(
         "wbf.api.oa_pathway",

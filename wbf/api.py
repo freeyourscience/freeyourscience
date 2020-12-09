@@ -12,7 +12,7 @@ from wbf.schemas import (
     DetailedPaper,
     OAStatus,
 )
-from wbf.unpaywall import get_oa_status_and_issn
+from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.oa_pathway import oa_pathway
 from wbf.oa_status import validate_oa_status_from_s2
 from wbf.deps import get_settings, Settings
@@ -29,11 +29,11 @@ def _get_non_oa_no_cost_paper(
     doi: str, unpaywall_email: str, sherpa_api_key: str
 ) -> Optional[PaperWithOAPathway]:
 
-    oa_status, issn = get_oa_status_and_issn(doi=doi, email=unpaywall_email)
-    if issn is None:
+    paper = unpaywall_get_paper(doi=doi, email=unpaywall_email)
+    if paper is None or paper.issn is None:
         return None
 
-    paper = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
+    paper = PaperWithOAStatus(doi=doi, issn=paper.issn, oa_status=paper.oa_status)
     paper = validate_oa_status_from_s2(paper)
     if paper.oa_status is not OAStatus.not_oa:
         return None

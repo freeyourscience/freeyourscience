@@ -1,10 +1,10 @@
 import os
-from typing import Optional, Tuple, List
+from typing import Optional, List
 
 import requests
 from pydantic import BaseModel
 
-from wbf.schemas import OAStatus
+from wbf.schemas import OAStatus, FullPaper
 
 
 class Paper(BaseModel):
@@ -33,7 +33,7 @@ class Paper(BaseModel):
     z_authors: Optional[List[dict]] = None
 
 
-def get_paper(doi: str, email: Optional[str] = None) -> Optional[Paper]:
+def _get_paper(doi: str, email: Optional[str] = None) -> Optional[Paper]:
     """Fetch paper information, most notable information about the availability of an
     open access version as well as the ISSN for a given DOI from the unpaywall API
     (api.unpaywall.org)
@@ -60,14 +60,17 @@ def get_paper(doi: str, email: Optional[str] = None) -> Optional[Paper]:
     return paper
 
 
-def get_oa_status_and_issn(
-    doi: str, email: Optional[str] = None
-) -> Tuple[OAStatus, Optional[str]]:
-    """Get paper from unpaywall API and extract OAStatus as well as ISSN."""
-    paper = get_paper(doi, email)
-
+def get_paper(doi: str, email: Optional[str] = None) -> Optional[FullPaper]:
+    paper = _get_paper(doi, email)
     if paper is None:
-        return OAStatus.not_found, None
+        return None
 
-    oa_status = OAStatus.oa if paper.is_oa else OAStatus.not_oa
-    return oa_status, paper.journal_issn_l
+    oa_status = OAStatus.not_found
+    if paper.is_oa:
+        oa_status = OAStatus.oa
+    elif not paper.is_oa:
+        oa_status = OAStatus.not_oa
+
+    return FullPaper(
+        doi=doi, issn=paper.journal_issn_l, oa_status=oa_status, title=paper.title
+    )

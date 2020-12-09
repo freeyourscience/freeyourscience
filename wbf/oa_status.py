@@ -1,5 +1,5 @@
 from wbf.schemas import Paper, PaperWithOAStatus, OAStatus
-from wbf.unpaywall import get_oa_status_and_issn as unpaywall_status_api
+from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.semantic_scholar import get_paper as s2_get_paper
 
 
@@ -16,9 +16,11 @@ def oa_status(paper: Paper) -> PaperWithOAStatus:
     """Enrich a given paper with information about the availability of an open access
     copy collected from the an unpaywall data dump or the unpaywall API.
     """
-    oa_status, _ = unpaywall_status_api(paper.doi)
+    unpaywall_paper = unpaywall_get_paper(paper.doi)
 
-    paper_with_status = PaperWithOAStatus(oa_status=oa_status, **paper.dict())
+    paper_with_status = PaperWithOAStatus(
+        oa_status=unpaywall_paper.oa_status, **paper.dict()
+    )
     paper_with_status = validate_oa_status_from_s2(paper_with_status)
 
     return paper_with_status
