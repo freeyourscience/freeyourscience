@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Optional, List
+from typing import Optional
 
 from wbf.schemas import OAPathway, PaperWithOAStatus, PaperWithOAPathway
 from wbf.sherpa import get_pathway as sherpa_pathway_api

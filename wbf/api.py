@@ -48,7 +48,7 @@ def _filter_non_oa_no_cost_papers(
     papers = [
         (p, _get_non_oa_no_cost_paper(p.doi, unpaywall_email, sherpa_api_key))
         for p in papers
-        if p.doi is not None and p.is_open_access == False
+        if p.doi is not None and p.is_open_access is False
     ]
     papers = [
         FullPaper(title=base_p.title, **oa_p.dict())
