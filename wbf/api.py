@@ -9,10 +9,8 @@ from wbf.schemas import (
     PaperWithOAPathway,
     PaperWithOAStatus,
     OAPathway,
-    DetailedPaper,
     FullPaper,
     OAStatus,
-    Author,
 )
 from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.oa_pathway import oa_pathway

@@ -1,9 +1,9 @@
-from typing import List, Optional, Union
+from typing import List, Optional
 
 import requests
 from pydantic import BaseModel
 
-from wbf.schemas import DetailedPaper, FullPaper, OAStatus, Author
+from wbf.schemas import FullPaper, OAStatus, Author
 
 # TODO: Add API key for prod setting
 

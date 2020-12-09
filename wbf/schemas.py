@@ -51,10 +51,6 @@ class PaperWithOAPathway(PaperWithOAStatus):
     oa_pathway_details: Optional[List[dict]] = None
 
 
-class DetailedPaper(PaperWithOAPathway):
-    title: str
-
-
 class FullPaper(BaseModel):
     doi: str
     title: Optional[str] = None
