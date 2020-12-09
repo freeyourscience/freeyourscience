@@ -27,10 +27,10 @@ class Paper(BaseModel):
     oa_status: str
     published_date: Optional[str] = None
     publisher: str
-    title: str
+    title: Optional[str] = None
     updated: str
     year: Optional[int] = None
-    z_authors: List[dict]
+    z_authors: Optional[List[dict]] = None
 
 
 def get_paper(doi: str, email: Optional[str] = None) -> Optional[Paper]:
