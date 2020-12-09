@@ -11,6 +11,8 @@ jobs:
         with:
           python-version: 3
 
-      - run: pip3 install .[dev]
-      - run: black --check
-      - run: pytest
+      - name: Test
+        run: |
+          pip3 install .[dev]
+          black --check
+          pytest
