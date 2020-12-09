@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 import requests
 from pydantic import BaseModel
 
-from wbf.schemas import DetailedPaper
+from wbf.schemas import DetailedPaper, FullPaper, OAStatus
 
 # TODO: Add API key for prod setting
 
@@ -49,7 +49,7 @@ class AuthorWithPapers(Author):
     papers: Union[List[Paper], List[DetailedPaper]]
 
 
-def get_paper(paper_id: str) -> Optional[Paper]:
+def _get_paper(paper_id: str) -> Optional[Paper]:
     r = requests.get(f"https://api.semanticscholar.org/v1/paper/{paper_id}")
 
     if not r.ok:
@@ -57,6 +57,21 @@ def get_paper(paper_id: str) -> Optional[Paper]:
         return None
 
     return Paper(**r.json())
+
+
+def get_paper(paper_id: str) -> Optional[FullPaper]:
+    paper = _get_paper(paper_id)
+    if paper is None:
+        return None
+
+    if paper.is_open_access is None:
+        oa_status = OAStatus.not_found
+    elif paper.is_open_access:
+        oa_status = OAStatus.oa
+    elif not paper.is_open_access:
+        oa_status = OAStatus.not_oa
+
+    return FullPaper(doi=paper.doi, oa_status=oa_status, title=paper.title)
 
 
 def get_author(author_id: str) -> Optional[Author]:

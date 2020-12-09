@@ -6,7 +6,7 @@ from wbf.semantic_scholar import get_paper as s2_get_paper
 def validate_oa_status_from_s2(paper: PaperWithOAStatus) -> PaperWithOAStatus:
     if paper.oa_status is not OAStatus.oa:
         s2_paper = s2_get_paper(paper.doi)
-        if s2_paper is not None and s2_paper.is_open_access:
+        if s2_paper is not None and s2_paper.oa_status is OAStatus.oa:
             paper.oa_status = OAStatus.oa
 
     return paper

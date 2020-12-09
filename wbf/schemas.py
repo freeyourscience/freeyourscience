@@ -7,6 +7,8 @@ from pydantic import BaseModel, Field
 
 
 class OAStatus(str, Enum):
+    # TODO: Consider using None instead of not found and refactor oa_status: OAStatus
+    #       fields to is_oa: bool
     oa = "oa"
     not_oa = "not_oa"
     not_found = "not_found"
