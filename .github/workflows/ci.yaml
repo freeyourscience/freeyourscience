@@ -33,5 +33,5 @@ jobs:
 
       - name: Push Image
         run: |
-          gcloud auth configure-docker
+          gcloud auth configure-docker gcr.io
           docker push $IMAGE_TAG
