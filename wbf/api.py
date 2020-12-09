@@ -14,6 +14,7 @@ from wbf.schemas import (
 )
 from wbf.unpaywall import get_oa_status_and_issn
 from wbf.oa_pathway import oa_pathway
+from wbf.oa_status import validate_oa_status_from_s2
 from wbf.deps import get_settings, Settings
 from wbf.semantic_scholar import get_author_with_papers, AuthorWithPapers
 
@@ -33,6 +34,7 @@ def _get_non_oa_no_cost_paper(
         return None
 
     paper = PaperWithOAStatus(doi=doi, issn=issn, oa_status=oa_status)
+    paper = validate_oa_status_from_s2(paper)
     if paper.oa_status is not OAStatus.not_oa:
         return None
 
