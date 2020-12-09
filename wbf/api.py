@@ -5,13 +5,7 @@ from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from wbf.schemas import (
-    PaperWithOAPathway,
-    PaperWithOAStatus,
-    OAPathway,
-    FullPaper,
-    OAStatus,
-)
+from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway, FullPaper
 from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.oa_pathway import oa_pathway
 from wbf.oa_status import validate_oa_status_from_s2
@@ -33,9 +27,11 @@ def _get_non_oa_no_cost_paper(
     if paper is None or paper.issn is None:
         return None
 
-    paper = PaperWithOAStatus(doi=doi, issn=paper.issn, oa_status=paper.oa_status)
+    paper = PaperWithOAStatus(
+        doi=doi, issn=paper.issn, is_open_access=paper.is_open_access
+    )
     paper = validate_oa_status_from_s2(paper)
-    if paper.oa_status is not OAStatus.not_oa:
+    if paper.is_open_access or paper.is_open_access is None:
         return None
 
     paper = oa_pathway(paper=paper, api_key=sherpa_api_key)
@@ -52,7 +48,7 @@ def _filter_non_oa_no_cost_papers(
     papers = [
         (p, _get_non_oa_no_cost_paper(p.doi, unpaywall_email, sherpa_api_key))
         for p in papers
-        if p.doi is not None and p.oa_status is OAStatus.not_oa
+        if p.doi is not None and p.is_open_access == False
     ]
     papers = [
         FullPaper(title=base_p.title, **oa_p.dict())

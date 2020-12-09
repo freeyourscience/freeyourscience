@@ -6,14 +6,6 @@ from pydantic import BaseModel, Field
 # TODO: Unify paper models
 
 
-class OAStatus(str, Enum):
-    # TODO: Consider using None instead of not found and refactor oa_status: OAStatus
-    #       fields to is_oa: bool
-    oa = "oa"
-    not_oa = "not_oa"
-    not_found = "not_found"
-
-
 class OAPathway(str, Enum):
     already_oa = "already_oa"
     not_attempted = "not_attempted"
@@ -43,7 +35,7 @@ class Paper(BaseModel):
 
 
 class PaperWithOAStatus(Paper):
-    oa_status: OAStatus = Field(...)
+    is_open_access: Optional[bool] = None
 
 
 class PaperWithOAPathway(PaperWithOAStatus):
@@ -55,7 +47,7 @@ class FullPaper(BaseModel):
     doi: str
     title: Optional[str] = None
     issn: Optional[str] = None
-    oa_status: Optional[OAStatus] = None
+    is_open_access: Optional[bool] = None
     oa_pathway: Optional[OAPathway] = None
     oa_pathway_details: Optional[List[dict]] = None
 

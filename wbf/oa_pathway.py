@@ -1,6 +1,6 @@
 from typing import Optional
 
-from wbf.schemas import OAStatus, OAPathway, PaperWithOAStatus, PaperWithOAPathway
+from wbf.schemas import OAPathway, PaperWithOAStatus, PaperWithOAPathway
 from wbf.sherpa import get_pathway as sherpa_pathway_api
 
 # TODO: Consider for service version that nocost is currently assigned to pathways with
@@ -18,9 +18,9 @@ def oa_pathway(
     Cache can be anything that exposes ``get(key, default)`` and ``__setitem__``
     """
     details = None
-    if paper.oa_status is OAStatus.oa:
+    if paper.is_open_access:
         pathway = OAPathway.already_oa
-    elif paper.oa_status is OAStatus.not_found:
+    elif paper.is_open_access is None:
         pathway = OAPathway.not_attempted
     else:
         if cache is not None:

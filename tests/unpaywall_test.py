@@ -5,17 +5,16 @@ import pytest
 from requests import Response
 
 from wbf.unpaywall import get_paper
-from wbf.schemas import OAStatus
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
 
 
 @pytest.mark.parametrize(
-    "is_oa,oa_status,issn",
-    [(True, OAStatus.oa, "1234-1234"), (False, OAStatus.not_oa, "1234-1234")],
+    "is_oa,expected_is_oa,issn",
+    [(True, True, "1234-1234"), (False, False, "1234-1234")],
 )
-def test_get_paper(is_oa, oa_status, issn, monkeypatch):
+def test_get_paper(is_oa, expected_is_oa, issn, monkeypatch):
     def mock_get_doi(*args, **kwargs):
         response = Response()
         response.status_code = 200
@@ -53,7 +52,7 @@ def test_get_paper(is_oa, oa_status, issn, monkeypatch):
 
     paper = get_paper("10.1011/irrelevant.dummy", "dummy@local.test")
 
-    assert paper.oa_status is oa_status
+    assert paper.is_open_access == expected_is_oa
     assert paper.issn == issn
 
 

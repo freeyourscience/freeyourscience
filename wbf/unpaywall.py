@@ -4,7 +4,7 @@ from typing import Optional, List
 import requests
 from pydantic import BaseModel
 
-from wbf.schemas import OAStatus, FullPaper
+from wbf.schemas import FullPaper
 
 
 class Paper(BaseModel):
@@ -65,12 +65,9 @@ def get_paper(doi: str, email: Optional[str] = None) -> Optional[FullPaper]:
     if paper is None:
         return None
 
-    oa_status = OAStatus.not_found
-    if paper.is_oa:
-        oa_status = OAStatus.oa
-    elif not paper.is_oa:
-        oa_status = OAStatus.not_oa
-
     return FullPaper(
-        doi=doi, issn=paper.journal_issn_l, oa_status=oa_status, title=paper.title
+        doi=doi,
+        issn=paper.journal_issn_l,
+        is_open_access=paper.is_oa,
+        title=paper.title,
     )

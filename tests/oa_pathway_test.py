@@ -2,12 +2,7 @@ import os
 
 import wbf.oa_pathway as oa_pathway_module
 from wbf.oa_pathway import oa_pathway
-from wbf.schemas import (
-    Paper,
-    PaperWithOAStatus,
-    OAPathway,
-    OAStatus,
-)
+from wbf.schemas import Paper, PaperWithOAStatus, OAPathway
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -19,11 +14,11 @@ def test_oa_pathway(monkeypatch):
         issn="1234-1234",
     )
 
-    paper = PaperWithOAStatus(oa_status=OAStatus.oa, **base_paper.dict())
+    paper = PaperWithOAStatus(is_open_access=True, **base_paper.dict())
     updated_paper = oa_pathway(paper=paper)
     assert updated_paper.oa_pathway is OAPathway.already_oa
 
-    paper = PaperWithOAStatus(oa_status=OAStatus.not_found, **base_paper.dict())
+    paper = PaperWithOAStatus(is_open_access=None, **base_paper.dict())
     updated_paper = oa_pathway(paper=paper)
     assert updated_paper.oa_pathway is OAPathway.not_attempted
 
@@ -32,7 +27,7 @@ def test_oa_pathway(monkeypatch):
 
     monkeypatch.setattr("wbf.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api)
 
-    paper = PaperWithOAStatus(oa_status=OAStatus.not_oa, **base_paper.dict())
+    paper = PaperWithOAStatus(is_open_access=False, **base_paper.dict())
     updated_paper = oa_pathway(paper=paper)
     assert updated_paper.oa_pathway is OAPathway.already_oa
 
@@ -43,7 +38,7 @@ def test_oa_pathway_doesnt_call_api_when_cached(mocker):
     cache = {issn: OAPathway.nocost}
 
     oa_pathway(
-        PaperWithOAStatus(doi="10.1011/111111", issn=issn, oa_status=OAStatus.not_oa),
+        PaperWithOAStatus(doi="10.1011/111111", issn=issn, is_open_access=False),
         cache=cache,
     )
 
@@ -61,7 +56,7 @@ def test_oa_pathway_chaches_after_api_call(monkeypatch):
     monkeypatch.setattr("wbf.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api)
 
     oa_pathway(
-        PaperWithOAStatus(doi="10.1011/111111", issn=issn, oa_status=OAStatus.not_oa),
+        PaperWithOAStatus(doi="10.1011/111111", issn=issn, is_open_access=False),
         cache=cache,
     )
 

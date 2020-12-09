@@ -3,7 +3,7 @@ from functools import partial
 
 from wbf.cache import json_filesystem_cache
 from wbf.data import load_jsonl
-from wbf.schemas import PaperWithOAPathway, Paper, OAStatus
+from wbf.schemas import PaperWithOAPathway, Paper
 from wbf.oa_status import oa_status
 from wbf.oa_pathway import oa_pathway
 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
         PaperWithOAPathway(
             doi=paper["doi"],
             issn=paper["journal_issn_l"],
-            oa_status=OAStatus.oa if paper["is_oa"] else OAStatus.not_oa,
+            is_open_access=paper["is_oa"],
             oa_pathway=paper["oa_pathway"],
         )
         for paper in load_jsonl(

@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from wbf.schemas import OAPathway, OAStatus, PaperWithOAPathway, FullPaper
+from wbf.schemas import OAPathway, PaperWithOAPathway, FullPaper
 from wbf import main
 from wbf.deps import Settings, get_settings
 from wbf.semantic_scholar import Author
@@ -32,7 +32,7 @@ def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
             FullPaper(
                 issn="1618-5641",
                 doi="10.1007/s00580-005-0536-8",
-                oa_status=OAStatus.not_oa.value,
+                oa_status=False,
                 oa_pathway=OAPathway.nocost.value,
                 oa_pathway_details=[],
                 title="Best Paper Ever!",
@@ -89,12 +89,12 @@ def test_get_paper_missing_args(client: TestClient) -> None:
 def test_get_paper(monkeypatch, client: TestClient) -> None:
     issn = "1618-5641"
     doi = "10.1007/s00580-005-0536-8"
-    oa_status = OAStatus.not_oa.value
+    is_open_access = False
     oa_pathway = OAPathway.nocost.value
 
     monkeypatch.setattr(
         "wbf.api.unpaywall_get_paper",
-        lambda *a, **kw: FullPaper(doi=doi, issn=issn, oa_status=oa_status),
+        lambda *a, **kw: FullPaper(doi=doi, issn=issn, is_open_access=is_open_access),
     )
     monkeypatch.setattr(
         "wbf.api.oa_pathway",
@@ -104,7 +104,7 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     r = client.get(f"/papers?doi={doi}")
     assert r.ok
     paper = r.json()
-    assert paper["oa_status"] == oa_status
+    assert paper["is_open_access"] == is_open_access
     assert paper["oa_pathway"] == oa_pathway
     assert paper["doi"] == doi
     assert paper["issn"] == issn

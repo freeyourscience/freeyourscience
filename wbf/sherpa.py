@@ -28,7 +28,7 @@ def has_no_cost_oa_policy(policy: dict) -> bool:
 
 def get_pathway(
     issn: str, api_key: Optional[str] = None
-) -> Tuple[OAPathway, List[dict]]:
+) -> Tuple[OAPathway, Optional[List[dict]]]:
     """Fetch information about the available open access pathways for the publisher that
     owns a given ISSN from the Sherpa API (v2.sherpa.ac.uk)
 

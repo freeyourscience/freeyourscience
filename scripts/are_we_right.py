@@ -35,7 +35,7 @@ if __name__ == "__main__":
         PaperWithOAStatus(
             doi=paper["doi"],
             issn=paper["journal_issn_l"],
-            oa_status=("oa" if paper["is_oa"] else "not_oa"),
+            is_open_access=paper["is_oa"],
         )
         for paper in load_jsonl(dataset_file_path)
         if paper["journal_issn_l"] is not None

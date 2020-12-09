@@ -3,7 +3,7 @@ from typing import List, Optional
 import requests
 from pydantic import BaseModel
 
-from wbf.schemas import FullPaper, OAStatus, Author
+from wbf.schemas import FullPaper, Author
 
 # TODO: Add API key for prod setting
 
@@ -60,14 +60,9 @@ def get_paper(paper_id: str) -> Optional[FullPaper]:
     if paper is None or paper.doi is None:
         return None
 
-    if paper.is_open_access is None:
-        oa_status = OAStatus.not_found
-    elif paper.is_open_access:
-        oa_status = OAStatus.oa
-    elif not paper.is_open_access:
-        oa_status = OAStatus.not_oa
-
-    return FullPaper(doi=paper.doi, oa_status=oa_status, title=paper.title)
+    return FullPaper(
+        doi=paper.doi, is_open_access=paper.is_open_access, title=paper.title
+    )
 
 
 def _get_author(author_id: str) -> Optional[S2Author]:
