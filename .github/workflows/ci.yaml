@@ -35,4 +35,5 @@ jobs:
       - name: Push Image
         run: |
           gcloud auth configure-docker gcr.io
-          docker push $IMAGE_NAME:${{ github.sha }} $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:${{ github.sha }}
+          docker push $IMAGE_NAME:latest
