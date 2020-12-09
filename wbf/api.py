@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 
 from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway, FullPaper
 from wbf.unpaywall import get_paper as unpaywall_get_paper
-from wbf.oa_pathway import oa_pathway
+from wbf.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
 from wbf.oa_status import validate_oa_status_from_s2
 from wbf.deps import get_settings, Settings
 from wbf.semantic_scholar import get_author_with_papers
@@ -58,6 +58,16 @@ def _filter_non_oa_no_cost_papers(
     return papers
 
 
+def _remove_costly_oa_paths_from_oa_pathway_details(paper: FullPaper) -> FullPaper:
+    if paper.oa_pathway_details is None:
+        return paper
+
+    paper.oa_pathway_details = [
+        remove_costly_oa_from_publisher_policy(pwd) for pwd in paper.oa_pathway_details
+    ]
+    return paper
+
+
 @api_router.get("/", response_class=HTMLResponse)
 def get_landing_page(request: Request):
     return templates.TemplateResponse(
@@ -86,6 +96,9 @@ def get_publications_for_author(
         unpaywall_email=settings.unpaywall_email,
         sherpa_api_key=settings.sherpa_api_key,
     )
+    author.papers = [
+        _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
+    ]
 
     if "text/html" in accept:
         return templates.TemplateResponse(

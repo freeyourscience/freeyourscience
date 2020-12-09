@@ -1,4 +1,5 @@
-from typing import Optional
+from copy import deepcopy
+from typing import Optional, List
 
 from wbf.schemas import OAPathway, PaperWithOAStatus, PaperWithOAPathway
 from wbf.sherpa import get_pathway as sherpa_pathway_api
@@ -34,3 +35,14 @@ def oa_pathway(
     return PaperWithOAPathway(
         oa_pathway=pathway, oa_pathway_details=details, **paper.dict()
     )
+
+
+def remove_costly_oa_from_publisher_policy(policy: dict) -> dict:
+    """A potential input is ``FullPaper.oa_pathway_details[i]``"""
+    _policy = deepcopy(policy)
+
+    _policy["permitted_oa"] = [
+        poa for poa in _policy["permitted_oa"] if poa["additional_oa_fee"] == "no"
+    ]
+
+    return _policy
