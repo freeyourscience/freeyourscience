@@ -62,3 +62,9 @@ class FullPaper(BaseModel):
     oa_status: Optional[OAStatus] = None
     oa_pathway: Optional[OAPathway] = None
     oa_pathway_details: Optional[List[dict]] = None
+
+
+class Author(BaseModel):
+    name: str
+    profile_url: Optional[str] = None
+    papers: Optional[List[FullPaper]] = None

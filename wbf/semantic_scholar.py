@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 import requests
 from pydantic import BaseModel
 
-from wbf.schemas import DetailedPaper, FullPaper, OAStatus
+from wbf.schemas import DetailedPaper, FullPaper, OAStatus, Author
 
 # TODO: Add API key for prod setting
 
@@ -18,35 +18,31 @@ class Paper(BaseModel):
 
     abstract: Optional[str] = None
     arxivId: Optional[str] = None
-    authors: List[Optional[dict]] = None
+    authors: Optional[List[dict]] = None
     citationVelocity: Optional[int] = None
-    citations: List[Optional[dict]] = None
+    citations: Optional[List[dict]] = None
     corpusId: Optional[int] = None
     doi: Optional[str] = None
-    fieldsOfStudy: List[Optional[str]] = None
+    fieldsOfStudy: Optional[List[str]] = None
     influentialCitationCount: Optional[int] = None
     is_open_access: Optional[bool] = None
     is_publisher_licensed: Optional[bool] = None
     paperId: Optional[str] = None
-    references: List[Optional[dict]] = None
+    references: Optional[List[dict]] = None
     title: Optional[str] = None
-    topics: List[Optional[dict]] = None
+    topics: Optional[List[dict]] = None
     url: Optional[str] = None
     venue: Optional[str] = None
     year: Optional[int] = None
 
 
-class Author(BaseModel):
+class S2Author(BaseModel):
     aliases: Optional[List[str]] = None
     authorId: str  # could be int?
     influentialCitationCount: Optional[int] = None
     name: Optional[str] = None
     papers: Optional[List[dict]] = None
     url: Optional[str] = None
-
-
-class AuthorWithPapers(Author):
-    papers: Union[List[Paper], List[DetailedPaper]]
 
 
 def _get_paper(paper_id: str) -> Optional[Paper]:
@@ -61,7 +57,7 @@ def _get_paper(paper_id: str) -> Optional[Paper]:
 
 def get_paper(paper_id: str) -> Optional[FullPaper]:
     paper = _get_paper(paper_id)
-    if paper is None:
+    if paper is None or paper.doi is None:
         return None
 
     if paper.is_open_access is None:
@@ -74,26 +70,33 @@ def get_paper(paper_id: str) -> Optional[FullPaper]:
     return FullPaper(doi=paper.doi, oa_status=oa_status, title=paper.title)
 
 
-def get_author(author_id: str) -> Optional[Author]:
+def _get_author(author_id: str) -> Optional[S2Author]:
     r = requests.get(f"https://api.semanticscholar.org/v1/author/{author_id}")
 
     if not r.ok:
         # TODO: Log and/or handle differently.
         return None
 
-    return Author(**r.json())
+    return S2Author(**r.json())
 
 
-def get_author_with_papers(author_id: str) -> AuthorWithPapers:
-    author = get_author(author_id)
+def get_author_with_papers(author_id: str) -> Optional[Author]:
+    author = _get_author(author_id)
+    if author is None:
+        return None
 
+    author.papers = [] if author.papers is None else author.papers
     papers = [get_paper(paper["paperId"]) for paper in author.papers]
-    author.papers = [p for p in papers if p is not None]
+    papers = [p for p in papers if p is not None]
 
-    return AuthorWithPapers(**author.dict())
+    return Author(name=author.name, profile_url=author.url, papers=papers)
 
 
 def get_dois(author_id: str) -> List[str]:
     author = get_author_with_papers(author_id)
+    if author is None:
+        return []
+
+    author.papers = [] if author.papers is None else author.papers
     dois = [paper.doi for paper in author.papers if paper.doi is not None]
     return dois

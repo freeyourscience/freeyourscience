@@ -21,7 +21,7 @@ class Paper(BaseModel):
     journal_is_oa: bool
     journal_issns: Optional[str] = None
     journal_issn_l: Optional[str] = None
-    journal_name: str
+    journal_name: Optional[str] = None
     oa_locations: List[dict]
     first_oa_location: Optional[dict] = None
     oa_status: str

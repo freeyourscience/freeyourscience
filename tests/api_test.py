@@ -1,12 +1,6 @@
 from fastapi.testclient import TestClient
 
-from wbf.schemas import (
-    OAPathway,
-    OAStatus,
-    PaperWithOAPathway,
-    DetailedPaper,
-    FullPaper,
-)
+from wbf.schemas import OAPathway, OAStatus, PaperWithOAPathway, FullPaper
 from wbf import main
 from wbf.deps import Settings, get_settings
 from wbf.semantic_scholar import Author
@@ -28,20 +22,22 @@ def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
     url = "/authors?semantic_scholar_id=51453144"
 
     monkeypatch.setattr(
-        "wbf.api._get_author_with_non_oa_no_cost_papers",
-        lambda *a, **kw: Author(
-            authorId="12345",
-            papers=[
-                DetailedPaper(
-                    issn="1618-5641",
-                    doi="10.1007/s00580-005-0536-8",
-                    oa_status=OAStatus.not_oa.value,
-                    oa_pathway=OAPathway.nocost.value,
-                    oa_pathway_details=[],
-                    title="Best Paper Ever!",
-                )
-            ],
-        ),
+        "wbf.api.get_author_with_papers",
+        lambda *a, **kw: Author(name="Dummy Author", papers=[]),
+    )
+
+    monkeypatch.setattr(
+        "wbf.api._filter_non_oa_no_cost_papers",
+        lambda *a, **kw: [
+            FullPaper(
+                issn="1618-5641",
+                doi="10.1007/s00580-005-0536-8",
+                oa_status=OAStatus.not_oa.value,
+                oa_pathway=OAPathway.nocost.value,
+                oa_pathway_details=[],
+                title="Best Paper Ever!",
+            )
+        ],
     )
 
     r = client.get(url)
@@ -62,17 +58,26 @@ def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
     assert r.status_code == 422
 
 
-def test_no_publications_for_author(monkeypatch, client: TestClient) -> None:
+def test_no_author(monkeypatch, client: TestClient) -> None:
     url = "/authors?semantic_scholar_id=51453144"
 
-    monkeypatch.setattr(
-        "wbf.api._get_author_with_non_oa_no_cost_papers",
-        lambda *a, **kw: Author(authorId="12345", papers=[]),
-    )
+    monkeypatch.setattr("wbf.api.get_author_with_papers", lambda *a, **kw: None)
 
     r = client.get(url)
     assert not r.ok
     assert r.status_code == 404
+
+
+def test_no_publications_for_author(monkeypatch, client: TestClient) -> None:
+    url = "/authors?semantic_scholar_id=51453144"
+
+    monkeypatch.setattr(
+        "wbf.api.get_author_with_papers",
+        lambda *a, **kw: Author(name="Dummy Author", papers=[]),
+    )
+
+    r = client.get(url)
+    assert r.ok
 
 
 def test_get_paper_missing_args(client: TestClient) -> None:

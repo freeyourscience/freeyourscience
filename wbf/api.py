@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
@@ -10,13 +10,15 @@ from wbf.schemas import (
     PaperWithOAStatus,
     OAPathway,
     DetailedPaper,
+    FullPaper,
     OAStatus,
+    Author,
 )
 from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.oa_pathway import oa_pathway
 from wbf.oa_status import validate_oa_status_from_s2
 from wbf.deps import get_settings, Settings
-from wbf.semantic_scholar import get_author_with_papers, AuthorWithPapers
+from wbf.semantic_scholar import get_author_with_papers
 
 
 TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templates")
@@ -45,23 +47,21 @@ def _get_non_oa_no_cost_paper(
     return paper
 
 
-def _get_author_with_non_oa_no_cost_papers(
-    author_id: str, unpaywall_email: str, sherpa_api_key: str
-) -> AuthorWithPapers:
-    author = get_author_with_papers(author_id)
-    papers = [p for p in author.papers if p.doi is not None]
+def _filter_non_oa_no_cost_papers(
+    papers: List[FullPaper], unpaywall_email: str, sherpa_api_key: str
+) -> List[FullPaper]:
+    papers = [p for p in papers if p.doi is not None]
     papers = [
         (p, _get_non_oa_no_cost_paper(p.doi, unpaywall_email, sherpa_api_key))
         for p in papers
-        if p.doi is not None and not p.is_open_access
+        if p.doi is not None and p.oa_status is OAStatus.not_oa
     ]
     papers = [
-        DetailedPaper(title=base_p.title, **oa_p.dict())
+        FullPaper(title=base_p.title, **oa_p.dict())
         for base_p, oa_p in papers
         if oa_p is not None and oa_p.oa_pathway is OAPathway.nocost
     ]
-    author.papers = papers
-    return author
+    return papers
 
 
 @api_router.get("/", response_class=HTMLResponse)
@@ -75,15 +75,20 @@ def get_landing_page(request: Request):
 def get_publications_for_author(
     semantic_scholar_id: str,
     request: Request,
-    accept: Optional[str] = Header("text/html"),
+    accept: str = Header("text/html"),
     settings: Settings = Depends(get_settings),
 ):
     # TODO: Consider allowing override of accept headers via url parameter
 
     # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
     #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
-    author = _get_author_with_non_oa_no_cost_papers(
-        author_id=semantic_scholar_id,
+    author = get_author_with_papers(semantic_scholar_id)
+    if author is None:
+        raise HTTPException(404, f"No author found with ID {semantic_scholar_id}")
+
+    author.papers = [] if author.papers is None else author.papers
+    author.papers = _filter_non_oa_no_cost_papers(
+        papers=author.papers,
         unpaywall_email=settings.unpaywall_email,
         sherpa_api_key=settings.sherpa_api_key,
     )
@@ -94,10 +99,6 @@ def get_publications_for_author(
             {"request": request, "author": author},
         )
     elif "application/json" in accept or "*/*" in accept:
-        if len(author.papers) == 0:
-            raise HTTPException(
-                404, "No papers found that can be re-published without fees."
-            )
         return author
     else:
         raise HTTPException(
