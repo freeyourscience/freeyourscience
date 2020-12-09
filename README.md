@@ -45,5 +45,8 @@ docker build -t wbf .
 ```
 which can then be run via
 ```
-docker run -d --name wbf -p 80:80 wbf
+docker run -d --name wbf -p 80:80 --env-file .env wbf
 ```
+with an `.env` file containing the following variables:
+* SHERPA_API_KEY
+* UNPAYWALL_EMAIL
