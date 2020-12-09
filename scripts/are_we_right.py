@@ -5,6 +5,7 @@ from functools import partial
 from wbf.cache import json_filesystem_cache
 from wbf.data import load_jsonl, calculate_metrics
 from wbf.oa_pathway import oa_pathway
+from wbf.oa_status import validate_oa_status_from_s2
 from wbf.schemas import PaperWithOAStatus
 
 
@@ -42,8 +43,11 @@ if __name__ == "__main__":
 
     with json_filesystem_cache(args.pathway_cache) as pathway_cache:
         # Enrich data
+        papers_with_s2_validated_oa_status = map(
+            validate_oa_status_from_s2, papers_with_oa_status
+        )
         papers_with_pathway = map(
-            partial(oa_pathway, cache=pathway_cache), papers_with_oa_status
+            partial(oa_pathway, cache=pathway_cache), papers_with_s2_validated_oa_status
         )
 
         # Calculate & report metrics
