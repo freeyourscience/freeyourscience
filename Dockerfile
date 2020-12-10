@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
+RUN apk add build-base
 RUN pip install --upgrade pip setuptools
 RUN pip install --no-cache-dir /usr/src/app
 
