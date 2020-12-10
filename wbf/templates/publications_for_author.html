@@ -3,23 +3,34 @@
 {% import 'oa_permissions.html' as oa_permissions %}
 {% extends "base.html" %}
 {% block content %}
-<h2>Author: {{ author.name }}</h2>
-<div class="container">
-    <a href="{{ author.url }}" target="_blank">Semantic Scholar Profile</a>
+<div class="py-5 text-center container">
+    <h1>HEADLINE</h1>
+    <h2>{{ author.name }}</h2>
+    <p>Found {{ author.papers|length }} papers with no-cost OpenAccess publisher pathways
+        but no OpenAccess copy available.<br />
+        <a href="{{ author.profile_url }}" target="_blank">Semantic Scholar Profile</a></p>
 </div>
-{% for paper in author.papers %}
-<div class="container">
-    Title: {{ paper.title }}<br />
-    DOI: {{ paper.doi }}<br />
-    Open Access: {{ paper.oa_status }}<br />
-    Publisher policies potentially allowing open access re-publication:
-    <ul>
+<div class="container bg-light">
+    {% for paper in author.papers %}
+    <div class="container">
+        <div class="paper-details">
+            Title: {{ paper.title }}<br />
+            DOI: {{ paper.doi }}<br />
+            Open Access:
+            {% if paper.is_open_access %}
+            Yes
+            {% else %}
+            No Version Found (<a href="#" class="link-secondary">incorrect?</a>)
+            {% endif %}
+        </div>
         {% for details in paper.oa_pathway_details %}
-        <li>Open Access Prohibited: {{ details["open_access_prohibited_phrases"][0]["phrase"] }}</li>
-        {{ oa_permissions.plaintext(details["permitted_oa"]) }}
-        <li><a href='{{ details["uri"] }}' target="_blank">Publisher Policy Details</a></li>
+        <div class="publisher-policy">
+            <a href='{{ details["uri"] }}' target="_blank" class="link-light">
+                View Publisher Open Access Policy Details @ Sherpa
+            </a>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
 {% endblock %}

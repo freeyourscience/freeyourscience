@@ -7,7 +7,7 @@ import uvicorn
 from wbf.api import api_router
 
 
-STATIC_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templates")
+STATIC_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "static")
 
 app = FastAPI()
 app.include_router(api_router)
