@@ -19,7 +19,7 @@ def test_get_landing_page(client: TestClient) -> None:
 
 
 def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
-    url = "/authors?semantic_scholar_id=51453144"
+    url = "/authors?semantic_scholar_profile=51453144"
 
     monkeypatch.setattr(
         "wbf.api.get_author_with_papers",
@@ -59,7 +59,7 @@ def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
 
 
 def test_no_author(monkeypatch, client: TestClient) -> None:
-    url = "/authors?semantic_scholar_id=51453144"
+    url = "/authors?semantic_scholar_profile=51453144"
 
     monkeypatch.setattr("wbf.api.get_author_with_papers", lambda *a, **kw: None)
 
@@ -69,7 +69,7 @@ def test_no_author(monkeypatch, client: TestClient) -> None:
 
 
 def test_no_publications_for_author(monkeypatch, client: TestClient) -> None:
-    url = "/authors?semantic_scholar_id=51453144"
+    url = "/authors?semantic_scholar_profile=51453144"
 
     monkeypatch.setattr(
         "wbf.api.get_author_with_papers",

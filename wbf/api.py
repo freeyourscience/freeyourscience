@@ -10,7 +10,7 @@ from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
 from wbf.oa_status import validate_oa_status_from_s2
 from wbf.deps import get_settings, Settings
-from wbf.semantic_scholar import get_author_with_papers
+from wbf.semantic_scholar import get_author_with_papers, extract_profile_id_from_url
 
 
 TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templates")
@@ -77,7 +77,7 @@ def get_landing_page(request: Request):
 
 @api_router.get("/authors")
 def get_publications_for_author(
-    semantic_scholar_id: str,
+    semantic_scholar_profile: str,
     request: Request,
     accept: str = Header("text/html"),
     settings: Settings = Depends(get_settings),
@@ -86,9 +86,10 @@ def get_publications_for_author(
 
     # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
     #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
-    author = get_author_with_papers(semantic_scholar_id)
+    author_id = extract_profile_id_from_url(semantic_scholar_profile)
+    author = get_author_with_papers(author_id)
     if author is None:
-        raise HTTPException(404, f"No author found with ID {semantic_scholar_id}")
+        raise HTTPException(404, f"No author found for {semantic_scholar_profile}")
 
     author.papers = [] if author.papers is None else author.papers
     author.papers = _filter_non_oa_no_cost_papers(

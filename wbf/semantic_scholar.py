@@ -95,3 +95,11 @@ def get_dois(author_id: str) -> List[str]:
     author.papers = [] if author.papers is None else author.papers
     dois = [paper.doi for paper in author.papers if paper.doi is not None]
     return dois
+
+
+def extract_profile_id_from_url(url: str) -> Optional[str]:
+    url = url.rstrip("/?")
+    url_without_params = url.split("?")[0]
+    url_without_params = url_without_params.rstrip("/")
+    author_id = url_without_params.split("/")[-1]
+    return author_id
