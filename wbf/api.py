@@ -1,4 +1,3 @@
-import os
 from typing import Optional, List
 
 from fastapi import APIRouter, Header, HTTPException, Depends, Request
@@ -9,11 +8,9 @@ from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway, FullPa
 from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
 from wbf.oa_status import validate_oa_status_from_s2
-from wbf.deps import get_settings, Settings
+from wbf.deps import get_settings, Settings, TEMPLATE_PATH
 from wbf.semantic_scholar import get_author_with_papers, extract_profile_id_from_url
 
-
-TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templates")
 
 api_router = APIRouter()
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
@@ -24,9 +21,10 @@ def _get_non_oa_no_cost_paper(
 ) -> Optional[FullPaper]:
 
     paper = unpaywall_get_paper(doi=doi, email=unpaywall_email)
-    title = paper.title
     if paper is None or paper.issn is None:
         return None
+
+    title = paper.title
 
     paper = PaperWithOAStatus(
         doi=doi, issn=paper.issn, is_open_access=paper.is_open_access
