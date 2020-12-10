@@ -13,6 +13,8 @@ setup(
         "gunicorn",
         "jinja2",
         "aiofiles",
+        "uvloop",
+        "httptools",
     ],
     extras_require={
         "dev": ["black", "pytest", "pytest-cov", "pytest-mock"],

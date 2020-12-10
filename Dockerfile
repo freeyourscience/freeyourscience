@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir /usr/src/app
 
 ENV PYTHONPATH=/usr/src/app/wbf
 
-CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80" ]
+CMD ["gunicorn", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:80", "wbf.main:app"]
