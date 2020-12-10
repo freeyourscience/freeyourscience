@@ -108,3 +108,17 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     assert paper["oa_pathway"] == oa_pathway
     assert paper["doi"] == doi
     assert paper["issn"] == issn
+
+
+def test_media_type_dependent_error_pages(monkeypatch, client: TestClient) -> None:
+    monkeypatch.setattr("wbf.api._get_non_oa_no_cost_paper", lambda *a, **kw: None)
+
+    unknown_doi = "doesnt/exist"
+
+    r = client.get(f"/papers?doi={unknown_doi}", headers={"accept": "text/html"})
+    assert r.status_code == 404
+    assert unknown_doi in r.content.decode()
+
+    r = client.get(f"/papers?doi={unknown_doi}", headers={"accept": "application/json"})
+    assert r.status_code == 404
+    assert "detail" in r.json()

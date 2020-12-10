@@ -1,6 +1,7 @@
 import os
 
 from fastapi import FastAPI, Request, HTTPException
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -19,12 +20,17 @@ app.mount("/static", StaticFiles(directory=STATIC_PATH), name="static")
 
 @app.exception_handler(HTTPException)
 async def human_friendly_error_pages(request: Request, exc: HTTPException):
-    response = templates.TemplateResponse(
-        "error.html",
-        {"request": request, "detail": exc.detail},
-    )
-    response.status_code = exc.status_code
-    return response
+    accept = request.headers["accept"]
+
+    if "text/html" in accept:
+        response = templates.TemplateResponse(
+            "error.html",
+            {"request": request, "detail": exc.detail},
+        )
+        response.status_code = exc.status_code
+        return response
+
+    return await http_exception_handler(request, exc)
 
 
 if __name__ == "__main__":
