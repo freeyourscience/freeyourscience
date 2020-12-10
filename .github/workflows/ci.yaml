@@ -44,4 +44,5 @@ jobs:
           gcloud beta run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE }}" \
             --image "$IMAGE_NAME:${{ github.sha }}" \
             --region "${{ secrets.GCP_REGION }}" \
-            --platform managed
+            --platform managed \
+            --allow-unauthenticated
