@@ -1,6 +1,6 @@
 {# TODO: Make sure only english phrases and not just the first are displayed. #}
 {# TODO: Do someting like the Routes to OA section at https://v2.sherpa.ac.uk/id/publisher_policy/2252 #}
-{% import 'oa_permissions.html' as oa_permissions %}
+{% import 'paper_macros.html' as paper_page %}
 {% extends "base.html" %}
 {% block content %}
 <div class="py-5 text-center container">
@@ -10,27 +10,9 @@
         but no OpenAccess copy available.<br />
         <a href="{{ author.profile_url }}" target="_blank">Semantic Scholar Profile</a></p>
 </div>
-<div class="container bg-light">
+<div class="container bg-light author-pubs">
     {% for paper in author.papers %}
-    <div class="container">
-        <div class="paper-details">
-            Title: {{ paper.title }}<br />
-            DOI: {{ paper.doi }}<br />
-            Open Access:
-            {% if paper.is_open_access %}
-            Yes
-            {% else %}
-            No Version Found (<a href="#" class="link-secondary">incorrect?</a>)
-            {% endif %}
-        </div>
-        {% for details in paper.oa_pathway_details %}
-        <div class="publisher-policy">
-            <a href='{{ details["uri"] }}' target="_blank" class="link-light">
-                View Publisher Open Access Policy Details @ Sherpa
-            </a>
-        </div>
-        {% endfor %}
-    </div>
+    {{ paper_page.minimal(paper) }}
     {% endfor %}
 </div>
 {% endblock %}

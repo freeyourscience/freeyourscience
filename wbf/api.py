@@ -21,9 +21,10 @@ templates = Jinja2Templates(directory=TEMPLATE_PATH)
 
 def _get_non_oa_no_cost_paper(
     doi: str, unpaywall_email: str, sherpa_api_key: str
-) -> Optional[PaperWithOAPathway]:
+) -> Optional[FullPaper]:
 
     paper = unpaywall_get_paper(doi=doi, email=unpaywall_email)
+    title = paper.title
     if paper is None or paper.issn is None:
         return None
 
@@ -38,6 +39,10 @@ def _get_non_oa_no_cost_paper(
     if paper.oa_pathway is not OAPathway.nocost:
         return None
 
+    # TODO: Add this title straight away, but this requires moving to support FullPaper
+    #       in all places (most notably oa_pathway)
+    paper = FullPaper(title=title, **paper.dict())
+
     return paper
 
 
@@ -46,15 +51,11 @@ def _filter_non_oa_no_cost_papers(
 ) -> List[FullPaper]:
     papers = [p for p in papers if p.doi is not None]
     papers = [
-        (p, _get_non_oa_no_cost_paper(p.doi, unpaywall_email, sherpa_api_key))
+        _get_non_oa_no_cost_paper(p.doi, unpaywall_email, sherpa_api_key)
         for p in papers
         if p.doi is not None and p.is_open_access is False
     ]
-    papers = [
-        FullPaper(title=base_p.title, **oa_p.dict())
-        for base_p, oa_p in papers
-        if oa_p is not None and oa_p.oa_pathway is OAPathway.nocost
-    ]
+    papers = [p for p in papers if p is not None and p.oa_pathway is OAPathway.nocost]
     return papers
 
 
@@ -117,7 +118,12 @@ def get_publications_for_author(
 
 
 @api_router.get("/papers", response_model=PaperWithOAPathway)
-def get_paper(doi: str, settings: Settings = Depends(get_settings)):
+def get_paper(
+    doi: str,
+    request: Request,
+    accept: str = Header("text/html"),
+    settings: Settings = Depends(get_settings),
+):
     """Get paper with OpenAccess status and pathway for a given DOI."""
 
     paper = _get_non_oa_no_cost_paper(
@@ -128,7 +134,20 @@ def get_paper(doi: str, settings: Settings = Depends(get_settings)):
 
     if paper is None:
         raise HTTPException(
-            404, f"No paper found with DOI {doi} that can be re-published without fees."
+            404,
+            f"No paywalled paper found with DOI {doi} that can be re-published without "
+            + "fees.",
         )
 
-    return paper
+    if "text/html" in accept:
+        return templates.TemplateResponse(
+            "paper.html", {"request": request, "paper": paper}
+        )
+    elif "application/json" in accept or "*/*" in accept:
+        return paper
+    else:
+        raise HTTPException(
+            406,
+            "Only text/html and application/json is available. "
+            + f"But neither of them was found in accept header {accept}",
+        )

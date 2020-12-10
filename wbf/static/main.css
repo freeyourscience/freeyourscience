@@ -4,3 +4,14 @@ div.paper-details {
 
 div.publisher-policy {
 }
+
+.author-pubs .paper-details .paper-title {
+    font-weight: bold;
+}
+
+.single-paper .paper-details .paper-title {
+    font-weight: bold;
+    font-size:150%;
+    margin-top:2em;
+    margin-bottom:1em;
+}

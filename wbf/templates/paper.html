@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% import 'paper_macros.html' as paper_page %}
+
+{% block content %}
+<div class="container single-paper">
+    {{ paper_page.minimal(paper) }}
+</div>
+{% endblock %}

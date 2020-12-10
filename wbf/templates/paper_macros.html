@@ -1,0 +1,21 @@
+{% macro minimal(paper) -%}
+<div class="container">
+    <div class="paper-details">
+        <div class="paper-title">{{ paper.title }}</div>
+        DOI: {{ paper.doi }}<br />
+        Open Access:
+        {% if paper.is_open_access %}
+        Yes
+        {% else %}
+        No Version Found (<a href="#" class="link-secondary">incorrect?</a>)
+        {% endif %}
+    </div>
+    {% for details in paper.oa_pathway_details %}
+    <div class="publisher-policy">
+        <a href='{{ details["uri"] }}' target="_blank" class="link-light">
+            View Publisher Open Access Policy Details @ Sherpa
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{%- endmacro %}
