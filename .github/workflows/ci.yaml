@@ -37,3 +37,10 @@ jobs:
           gcloud auth configure-docker gcr.io
           docker push $IMAGE_NAME:${{ github.sha }}
           docker push $IMAGE_NAME:latest
+
+      - name: Deploy
+        run: |
+          gcloud beta run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE }}" \
+            --image "$IMAGE_NAME:${{ github.sha }}" \
+            --region "${{ secrets.GCP_REGION }}" \
+            --platform managed
