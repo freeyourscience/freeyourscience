@@ -8,7 +8,7 @@ from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway, FullPa
 from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
 from wbf.oa_status import validate_oa_status_from_s2
-from wbf import orcid, semantic_scholar
+from wbf import orcid, semantic_scholar, crossref
 from wbf.deps import get_settings, Settings, TEMPLATE_PATH
 
 
@@ -88,10 +88,14 @@ def get_publications_for_author(
     if orcid.is_orcid(profile):
         author = orcid.get_author_with_papers(profile)
     else:
-        # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
-        #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
         author_id = semantic_scholar.extract_profile_id_from_url(profile)
-        author = semantic_scholar.get_author_with_papers(author_id)
+        if author_id.isnumeric():
+            # TODO: Semantic scholar only seems to have the DOI of the preprint and not
+            #       the finally published paper's DOI
+            #       (see e.g. semantic scholar ID 51453144)
+            author = semantic_scholar.get_author_with_papers(author_id)
+        else:
+            author = crossref.get_author_with_papers(profile)
 
     if author is None:
         raise HTTPException(404, f"No author found for {profile}")

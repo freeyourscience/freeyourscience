@@ -24,6 +24,7 @@ def test_get_landing_page(client: TestClient) -> None:
     [
         (51453144, "semantic_scholar.get_author_with_papers"),
         ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
+        ("firstname lastname", "crossref.get_author_with_papers"),
     ],
 )
 def test_get_publications_for_author(
@@ -72,6 +73,7 @@ def test_get_publications_for_author(
     [
         (51453144, "semantic_scholar.get_author_with_papers"),
         ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
+        ("firstname lastname", "crossref.get_author_with_papers"),
     ],
 )
 def test_no_author(profile, provider, monkeypatch, client: TestClient) -> None:
@@ -89,6 +91,7 @@ def test_no_author(profile, provider, monkeypatch, client: TestClient) -> None:
     [
         (51453144, "semantic_scholar.get_author_with_papers"),
         ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
+        ("firstname lastname", "crossref.get_author_with_papers"),
     ],
 )
 def test_no_publications_for_author(
