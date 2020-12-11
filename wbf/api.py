@@ -3,6 +3,7 @@ from typing import Optional, List
 from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from loguru import logger
 
 from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway, FullPaper
 from wbf.unpaywall import get_paper as unpaywall_get_paper
@@ -109,6 +110,14 @@ def get_publications_for_author(
     author.papers = [
         _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
     ]
+
+    logger.debug(
+        {
+            "profile": profile,
+            "provider": author.provider,
+            "n_papers": len(author.papers),
+        }
+    )
 
     if "text/html" in accept:
         return templates.TemplateResponse(

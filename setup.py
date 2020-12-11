@@ -15,6 +15,7 @@ setup(
         "aiofiles",
         "uvloop",
         "httptools",
+        "loguru",
     ],
     extras_require={
         "dev": ["black", "pytest", "pytest-cov", "pytest-mock"],
