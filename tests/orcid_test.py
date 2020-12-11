@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from fastapi import Response
+from requests import Response
 from wbf.orcid import get_author_with_papers, is_orcid
 
 
@@ -13,9 +13,8 @@ def test_get_author_with_papers(monkeypatch):
         with open(os.path.join(ASSETS_PATH, "orcid_author.xml"), "r") as fh:
             xml = fh.read()
         r = Response()
-        r.content = xml.encode()
+        r._content = xml.encode()
         r.status_code = 200
-        r.ok = True
         return r
 
     monkeypatch.setattr("wbf.orcid.requests.get", mock_get)
