@@ -33,21 +33,22 @@ def test_get_publications_for_author(
     url = f"/authors?profile={profile}"
 
     monkeypatch.setattr(
-        f"wbf.api.{provider}", lambda *a, **kw: Author(name="Dummy Author", papers=[])
+        f"wbf.api.{provider}",
+        lambda *a, **kw: Author(
+            name="Dummy Author", papers=[FullPaper(doi="10.1007/s00580-005-0536-0")]
+        ),
     )
 
     monkeypatch.setattr(
-        "wbf.api._filter_non_oa_no_cost_papers",
-        lambda *a, **kw: [
-            FullPaper(
-                issn="1618-5641",
-                doi="10.1007/s00580-005-0536-8",
-                oa_status=False,
-                oa_pathway=OAPathway.nocost.value,
-                oa_pathway_details=[],
-                title="Best Paper Ever!",
-            )
-        ],
+        "wbf.api._construct_paper",
+        lambda *a, **kw: FullPaper(
+            issn="1618-5641",
+            doi="10.1007/s00580-005-0536-0",
+            oa_status=False,
+            oa_pathway=OAPathway.nocost.value,
+            oa_pathway_details=[],
+            title="Best Paper Ever!",
+        ),
     )
 
     r = client.get(url)
@@ -138,7 +139,7 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
 
 
 def test_media_type_dependent_error_pages(monkeypatch, client: TestClient) -> None:
-    monkeypatch.setattr("wbf.api._get_non_oa_no_cost_paper", lambda *a, **kw: None)
+    monkeypatch.setattr("wbf.api._construct_paper", lambda *a, **kw: None)
 
     unknown_doi = "doesnt/exist"
 

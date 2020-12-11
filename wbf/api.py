@@ -1,11 +1,11 @@
-from typing import Optional, List
+from typing import Optional
 
 from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
-from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway, FullPaper
+from wbf.schemas import PaperWithOAStatus, OAPathway, FullPaper
 from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
 from wbf.oa_status import validate_oa_status_from_s2
@@ -19,7 +19,7 @@ templates = Jinja2Templates(directory=TEMPLATE_PATH)
 # TODO: Sanitize user input
 
 
-def _get_non_oa_no_cost_paper(
+def _construct_paper(
     doi: str, unpaywall_email: str, sherpa_api_key: str
 ) -> Optional[FullPaper]:
 
@@ -32,13 +32,11 @@ def _get_non_oa_no_cost_paper(
     paper = PaperWithOAStatus(
         doi=doi, issn=paper.issn, is_open_access=paper.is_open_access
     )
+    # TODO: Don't do this twice if the author papers already have the s2 status
+    #       Potentially move towards an enrich as opposed to a construct approach
     paper = validate_oa_status_from_s2(paper)
-    if paper.is_open_access or paper.is_open_access is None:
-        return None
 
     paper = oa_pathway(paper=paper, api_key=sherpa_api_key)
-    if paper.oa_pathway is not OAPathway.nocost:
-        return None
 
     # TODO: Add this title straight away, but this requires moving to support FullPaper
     #       in all places (most notably oa_pathway)
@@ -47,17 +45,12 @@ def _get_non_oa_no_cost_paper(
     return paper
 
 
-def _filter_non_oa_no_cost_papers(
-    papers: List[FullPaper], unpaywall_email: str, sherpa_api_key: str
-) -> List[FullPaper]:
-    papers = [p for p in papers if p.doi is not None]
-    papers = [
-        _get_non_oa_no_cost_paper(p.doi, unpaywall_email, sherpa_api_key)
-        for p in papers
-        if p.doi is not None and not p.is_open_access
-    ]
-    papers = [p for p in papers if p is not None and p.oa_pathway is OAPathway.nocost]
-    return papers
+def _is_paywalled_and_nocost(paper: FullPaper) -> bool:
+    return (
+        paper is not None
+        and paper.is_open_access is False
+        and paper.oa_pathway is OAPathway.nocost
+    )
 
 
 def _remove_costly_oa_paths_from_oa_pathway_details(paper: FullPaper) -> FullPaper:
@@ -102,11 +95,11 @@ def get_publications_for_author(
         raise HTTPException(404, f"No author found for {profile}")
 
     author.papers = [] if author.papers is None else author.papers
-    author.papers = _filter_non_oa_no_cost_papers(
-        papers=author.papers,
-        unpaywall_email=settings.unpaywall_email,
-        sherpa_api_key=settings.sherpa_api_key,
-    )
+    author.papers = [
+        _construct_paper(p.doi, settings.unpaywall_email, settings.sherpa_api_key)
+        for p in author.papers
+    ]
+    author.papers = filter(_is_paywalled_and_nocost, author.papers)
     author.papers = [
         _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
     ]
@@ -134,7 +127,7 @@ def get_publications_for_author(
         )
 
 
-@api_router.get("/papers", response_model=PaperWithOAPathway)
+@api_router.get("/papers", response_model=FullPaper)
 def get_paper(
     doi: str,
     request: Request,
@@ -142,14 +135,13 @@ def get_paper(
     settings: Settings = Depends(get_settings),
 ):
     """Get paper with OpenAccess status and pathway for a given DOI."""
-
-    paper = _get_non_oa_no_cost_paper(
+    paper = _construct_paper(
         doi=doi,
         sherpa_api_key=settings.sherpa_api_key,
         unpaywall_email=settings.unpaywall_email,
     )
 
-    if paper is None:
+    if not _is_paywalled_and_nocost(paper):
         raise HTTPException(
             404,
             f"No paywalled paper found with DOI {doi} that can be re-published without "
