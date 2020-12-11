@@ -45,4 +45,5 @@ jobs:
             --image "$IMAGE_NAME:${{ github.sha }}" \
             --region "${{ secrets.GCP_REGION }}" \
             --platform managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --set-env-vars "UNPAYWALL_EMAIL=${{ secrets.API_EMAIL }},SHERPA_API_KEY=${{ secrets.SHERPA_API_KEY }}"
