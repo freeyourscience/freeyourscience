@@ -56,3 +56,4 @@ class Author(BaseModel):
     name: str
     profile_url: Optional[str] = None
     papers: Optional[List[FullPaper]] = None
+    provider: Optional[str] = None

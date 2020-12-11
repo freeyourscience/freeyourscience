@@ -8,7 +8,7 @@
     <h2>{{ author.name }}</h2>
     <p>Found {{ author.papers|length }} papers with no-cost OpenAccess publisher pathways
         but no OpenAccess copy available.<br />
-        <a href="{{ author.profile_url }}" target="_blank">Semantic Scholar Profile</a></p>
+        <a href="{{ author.profile_url }}" target="_blank">Visit Source Profile</a></p>
 </div>
 <div class="container bg-light author-pubs">
     {% for paper in author.papers %}

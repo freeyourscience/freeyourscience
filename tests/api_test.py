@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from wbf.schemas import OAPathway, PaperWithOAPathway, FullPaper
@@ -18,12 +19,20 @@ def test_get_landing_page(client: TestClient) -> None:
     assert r.ok
 
 
-def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
-    url = "/authors?semantic_scholar_profile=51453144"
+@pytest.mark.parametrize(
+    "profile,provider",
+    [
+        (51453144, "semantic_scholar.get_author_with_papers"),
+        ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
+    ],
+)
+def test_get_publications_for_author(
+    profile, provider, monkeypatch, client: TestClient
+) -> None:
+    url = f"/authors?profile={profile}"
 
     monkeypatch.setattr(
-        "wbf.api.get_author_with_papers",
-        lambda *a, **kw: Author(name="Dummy Author", papers=[]),
+        f"wbf.api.{provider}", lambda *a, **kw: Author(name="Dummy Author", papers=[])
     )
 
     monkeypatch.setattr(
@@ -58,22 +67,37 @@ def test_get_publications_for_author(monkeypatch, client: TestClient) -> None:
     assert r.status_code == 422
 
 
-def test_no_author(monkeypatch, client: TestClient) -> None:
-    url = "/authors?semantic_scholar_profile=51453144"
+@pytest.mark.parametrize(
+    "profile,provider",
+    [
+        (51453144, "semantic_scholar.get_author_with_papers"),
+        ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
+    ],
+)
+def test_no_author(profile, provider, monkeypatch, client: TestClient) -> None:
+    url = f"/authors?profile={profile}"
 
-    monkeypatch.setattr("wbf.api.get_author_with_papers", lambda *a, **kw: None)
+    monkeypatch.setattr(f"wbf.api.{provider}", lambda *a, **kw: None)
 
     r = client.get(url)
     assert not r.ok
     assert r.status_code == 404
 
 
-def test_no_publications_for_author(monkeypatch, client: TestClient) -> None:
-    url = "/authors?semantic_scholar_profile=51453144"
+@pytest.mark.parametrize(
+    "profile,provider",
+    [
+        (51453144, "semantic_scholar.get_author_with_papers"),
+        ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
+    ],
+)
+def test_no_publications_for_author(
+    profile, provider, monkeypatch, client: TestClient
+) -> None:
+    url = f"/authors?profile={profile}"
 
     monkeypatch.setattr(
-        "wbf.api.get_author_with_papers",
-        lambda *a, **kw: Author(name="Dummy Author", papers=[]),
+        f"wbf.api.{provider}", lambda *a, **kw: Author(name="Dummy Author", papers=[])
     )
 
     r = client.get(url)

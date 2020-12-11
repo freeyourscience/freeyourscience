@@ -84,7 +84,12 @@ def get_author_with_papers(author_id: str) -> Optional[Author]:
     papers = [get_paper(paper["paperId"]) for paper in author.papers]
     papers = [p for p in papers if p is not None]
 
-    return Author(name=author.name, profile_url=author.url, papers=papers)
+    return Author(
+        name=author.name,
+        provider="semantic_scholar",
+        profile_url=author.url,
+        papers=papers,
+    )
 
 
 def get_dois(author_id: str) -> List[str]:

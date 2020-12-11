@@ -8,12 +8,14 @@ from wbf.schemas import PaperWithOAPathway, PaperWithOAStatus, OAPathway, FullPa
 from wbf.unpaywall import get_paper as unpaywall_get_paper
 from wbf.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
 from wbf.oa_status import validate_oa_status_from_s2
+from wbf import orcid, semantic_scholar
 from wbf.deps import get_settings, Settings, TEMPLATE_PATH
-from wbf.semantic_scholar import get_author_with_papers, extract_profile_id_from_url
 
 
 api_router = APIRouter()
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
+
+# TODO: Sanitize user input
 
 
 def _get_non_oa_no_cost_paper(
@@ -51,7 +53,7 @@ def _filter_non_oa_no_cost_papers(
     papers = [
         _get_non_oa_no_cost_paper(p.doi, unpaywall_email, sherpa_api_key)
         for p in papers
-        if p.doi is not None and p.is_open_access is False
+        if p.doi is not None and not p.is_open_access
     ]
     papers = [p for p in papers if p is not None and p.oa_pathway is OAPathway.nocost]
     return papers
@@ -76,19 +78,23 @@ def get_landing_page(request: Request):
 
 @api_router.get("/authors")
 def get_publications_for_author(
-    semantic_scholar_profile: str,
+    profile: str,
     request: Request,
     accept: str = Header("text/html"),
     settings: Settings = Depends(get_settings),
 ):
     # TODO: Consider allowing override of accept headers via url parameter
 
-    # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
-    #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
-    author_id = extract_profile_id_from_url(semantic_scholar_profile)
-    author = get_author_with_papers(author_id)
+    if orcid.is_orcid(profile):
+        author = orcid.get_author_with_papers(profile)
+    else:
+        # TODO: Semantic scholar only seems to have the DOI of the preprint and not the
+        #       finally published paper's DOI (see e.g. semantic scholar ID 51453144)
+        author_id = semantic_scholar.extract_profile_id_from_url(profile)
+        author = semantic_scholar.get_author_with_papers(author_id)
+
     if author is None:
-        raise HTTPException(404, f"No author found for {semantic_scholar_profile}")
+        raise HTTPException(404, f"No author found for {profile}")
 
     author.papers = [] if author.papers is None else author.papers
     author.papers = _filter_non_oa_no_cost_papers(
