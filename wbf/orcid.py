@@ -1,3 +1,4 @@
+import re
 from typing import List, Optional, Tuple
 
 import requests
@@ -14,7 +15,7 @@ EXT_ID_VALUE = "{http://www.orcid.org/ns/common}external-id-value"
 
 def _get_dois_with_issn_from_works(
     orcid: str,
-) -> Optional[List[Tuple(str, Optional[str])]]:
+) -> Optional[List[Tuple[str, Optional[str]]]]:
     r = requests.get(f"https://pub.orcid.org/{orcid}/works")
     if not r.ok:
         # TODO: Log and/or handle differently
@@ -42,3 +43,7 @@ def get_papers(orcid: str) -> Optional[List[FullPaper]]:
     dois_with_issn = _get_dois_with_issn_from_works(orcid)
     papers = [FullPaper(doi=doi, issn=issn) for doi, issn in dois_with_issn]
     return papers
+
+
+def is_orcid(orcid: str) -> bool:
+    return re.match("[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}", orcid) is not None
