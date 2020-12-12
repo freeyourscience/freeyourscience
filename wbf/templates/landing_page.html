@@ -1,52 +1,71 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container text-center">
-	<br>
-	<h1>Liberate Science</h1>
-	<br>
-	<h2>More than {{ n_nocost_papers }} academic publications<br>can be made freely accessible today.</h2>
-	<br>
-	<p style="font-size:130%">
-		Publishers that keep papers behind a paywall often allow re-publishing the paper freely accessible for
-		everyone in the world. However, many authors don't know of this opportunity or don't leverage it.
-		<br><br>
-		Find out which of your papers you are allowed to re-publish today:
-	</p>
+	<br />
+	<br />
 
+	<h1 class="fs-2">
+		46.7 million publications<br />can be made open access.<br />
+		For free.<br />
+		Today.
+	</h1>
+	<br />
+	<br />
+
+	<h2 class="fs-4">
+		Find papers to free
+	</h2>
 	<form method="GET" action="/authors">
+		By Author <input type="radio" name="search-type" value="author" />
+		By DOI <input type="radio" name="search-type" value="doi" /><br />
 		<input type="text" name="profile" placeholder="ORCID or Semantic Scholar Profile">
-		<input type="submit" class="btn btn-light" value="Search">
+		<input type="submit" class="btn btn-light" value="Search"><br />
+		<small>The search might take a minute.</small>
 	</form>
 	<br />
-	<p style="font-size:130%">
-		... or check by DOI if a paper can be re-published:
+
+	<h2 class="fs-4">
+		Why is this allowed?
+	</h2>
+	<p class="fs-5">
+		- contrast expectation
+		- allowed to re-publish
+		- re-publish in free archives / locations
+		- open access works separate from the journals (but with consent/conditions); directly linked to original pub,
+		citations stay, but more accessible to the world
+		- often no cost
 	</p>
-	<form method="GET" action="/papers">
-		<input type="text" name="doi" placeholder="DOI (e.g. 10.1000/1010101)">
-		<input type="submit" class="btn btn-light" value="Search">
-	</form>
-	<br>
+
+	<h2 class="fs-4">
+		Technical Background
+	</h2>
 	<p>
-		This project is built on the datasets and API available by https://unpaywall.org/ as well as the API at
-		https://v2.sherpa.ac.uk/api/ and is thereby dependent on the validity of the information collected at
-		these services.
-		Note, that the information presented on liberate.science is not legal advice or a legal guarantee.
-		Specifically does it not relieve any author of the obligations originating from the contract(s) signed
-		with respective publishers.
-		<br>
-		The number 2.000.000 in the header is a conservative estimate, determined via a data analysis pipeline
-		that is publically available at https://github.com/erkannt/wissenschaftsbefreiungsfront
-		<br>
-		Should you be interested in an exchange, coorporation, specific features or support: please contact us
-		at info@liberate.science
-		<!-- TODO: Instruct authors on how to re-publish appropriately (findable, etc.) -->
+		- existing services, amazing
+		- combine existing information
+		- not a lawyer
+		- how we arrive at the number in the header
+		- offer this page, but also work on a machine readable interface to give back to open science api ecosystem
 	</p>
+
+	<h2 class="fs-4">
+		Our Motivation
+	</h2>
+	<p>
+		- background:
+		-- enjoy collaborative spirit of globally networked academic communities
+		-- foster accessibility and collaboration
+		-- can't stand when information that should be freely accessible is unnecessarily hidden behind paywalls
+		- strategy:
+		-- tbd
+		- for authors:
+		-- enable to discover the potential they have with past publications
+		- for institutions:
+		-- call us
+	</p>
+
+	<small>
+		This project is built and run by Daniel Harhoff and Lukas Grossberger.<br />
+		Contact us via <a href="mailto:team@freeyourscience.org">team@freeyourscience.org</a>
+	</small>
 </div>
-<hr>
-<p>
-<blockquote>
-	Cite this project as:<br>
-	Daniel Harhoff &amp; Lukas Grossberger, 2020, Liberate Science: A web service to demonstrate the potential
-	for re-publishing open access papers. https://doi.org/239.123/123.1222</blockquote>
-</p>
 {% endblock %}
