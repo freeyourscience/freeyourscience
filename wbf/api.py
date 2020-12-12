@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -26,6 +24,9 @@ def _construct_paper(doi: str, unpaywall_email: str, sherpa_api_key: str) -> Ful
         return FullPaper(doi=doi, issn=paper.issn)
 
     title = paper.title
+    journal = paper.journal
+    year = paper.year
+    authors = paper.authors
 
     paper = PaperWithOAStatus(
         doi=doi, issn=paper.issn, is_open_access=paper.is_open_access
@@ -38,7 +39,9 @@ def _construct_paper(doi: str, unpaywall_email: str, sherpa_api_key: str) -> Ful
 
     # TODO: Add this title straight away, but this requires moving to support FullPaper
     #       in all places (most notably oa_pathway)
-    paper = FullPaper(title=title, **paper.dict())
+    paper = FullPaper(
+        title=title, journal=journal, authors=authors, year=year, **paper.dict()
+    )
 
     return paper
 
@@ -100,6 +103,12 @@ def get_publications_for_author(
     author.papers = [
         _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
     ]
+
+    author.papers = sorted(
+        author.papers,
+        key=lambda p: float("inf") if p.year is None else p.year,
+        reverse=True,
+    )
 
     papers_not_oa_nocost = []
     papers_other_policies = []

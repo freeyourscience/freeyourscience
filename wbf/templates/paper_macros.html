@@ -7,6 +7,7 @@
         Unknown Title
         {% endif %}
     </div>
+    {{ paper.authors }} ({{ paper.year }}) in {{ paper.journal }}<br />
     DOI: {{ paper.doi }}<br />
     Open Access:
     {% if paper.is_open_access %}

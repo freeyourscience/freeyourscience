@@ -46,6 +46,9 @@ class PaperWithOAPathway(PaperWithOAStatus):
 class FullPaper(BaseModel):
     doi: str
     title: Optional[str] = None
+    journal: Optional[str] = None
+    authors: Optional[str] = None
+    year: Optional[int] = None
     issn: Optional[str] = None
     is_open_access: Optional[bool] = None
     oa_pathway: Optional[OAPathway] = None

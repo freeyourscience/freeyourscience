@@ -48,7 +48,7 @@
             <h2>Papers we had issues with</h2>
             <div class="container author-pubs">
                 {% for paper in papers_with_issues %}
-                {{ paper_page.minimal(paper) }}
+                <div class="paper-details">DOI: {{ paper.doi }}</div>
                 {% endfor %}
             </div>
         </section>
