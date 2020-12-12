@@ -19,13 +19,11 @@ templates = Jinja2Templates(directory=TEMPLATE_PATH)
 # TODO: Sanitize user input
 
 
-def _construct_paper(
-    doi: str, unpaywall_email: str, sherpa_api_key: str
-) -> Optional[FullPaper]:
+def _construct_paper(doi: str, unpaywall_email: str, sherpa_api_key: str) -> FullPaper:
 
     paper = unpaywall_get_paper(doi=doi, email=unpaywall_email)
     if paper is None or paper.issn is None:
-        return None
+        return FullPaper(doi=doi, issn=paper.issn)
 
     title = paper.title
 
@@ -99,10 +97,23 @@ def get_publications_for_author(
         _construct_paper(p.doi, settings.unpaywall_email, settings.sherpa_api_key)
         for p in author.papers
     ]
-    author.papers = filter(_is_paywalled_and_nocost, author.papers)
     author.papers = [
         _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
     ]
+
+    papers_not_oa_nocost = []
+    papers_other_policies = []
+    papers_already_oa = []
+    papers_with_issues = []
+    for p in author.papers:
+        if _is_paywalled_and_nocost(p):
+            papers_not_oa_nocost.append(p)
+        elif p.is_open_access:
+            papers_already_oa.append(p)
+        elif p.oa_pathway is OAPathway.other:
+            papers_other_policies.append(p)
+        else:
+            papers_with_issues.append(p)
 
     logger.debug(
         {
@@ -115,7 +126,14 @@ def get_publications_for_author(
     if "text/html" in accept:
         return templates.TemplateResponse(
             "publications_for_author.html",
-            {"request": request, "author": author},
+            {
+                "request": request,
+                "author": author,
+                "papers_not_oa_nocost": papers_not_oa_nocost,
+                "papers_other_policies": papers_other_policies,
+                "papers_already_oa": papers_already_oa,
+                "papers_with_issues": papers_with_issues,
+            },
         )
     elif "application/json" in accept or "*/*" in accept:
         return author

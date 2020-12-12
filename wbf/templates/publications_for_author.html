@@ -3,16 +3,55 @@
 {% import 'paper_macros.html' as paper_page %}
 {% extends "base.html" %}
 {% block content %}
-<div class="py-5 text-center container">
-    <h1><a href="/">HEADLINE</a></h1>
-    <h2>{{ author.name }}</h2>
-    <p>Found {{ author.papers|length }} papers with no-cost OpenAccess publisher pathways
-        but no OpenAccess copy available.<br />
-        <a href="{{ author.profile_url }}" target="_blank">Visit Source Profile</a></p>
-</div>
-<div class="container bg-light author-pubs">
-    {% for paper in author.papers %}
-    {{ paper_page.minimal(paper) }}
-    {% endfor %}
+<div class="container fs-5">
+    <header class="container text-center lh-sm mt-5 mb-5">
+        <h1><a href="/">HEADLINE</a></h1>
+        <h2>{{ author.name }}</h2>
+        <p>Found {{ author.papers|length }} papers of which {{ papers_not_oa_nocost|length}} do not seem to have an open
+            access copy available<br />
+            but do have no-cost OpenAccess publisher pathways.<br />
+            <a href="{{ author.profile_url }}" target="_blank">Visit Source Profile</a>
+        </p>
+    </header>
+
+    <main>
+        <section>
+            <h2>Paywalled but Free OA Pathways</h2>
+            <div class="container author-pubs">
+                {% for paper in papers_not_oa_nocost %}
+                {{ paper_page.minimal(paper) }}
+                {{ paper_page.pathway_details(paper) }}
+                {% endfor %}
+            </div>
+        </section>
+
+        <section>
+            <h2>Other OA Policies</h2>
+            <div class="container author-pubs">
+                {% for paper in papers_other_policies %}
+                {{ paper_page.minimal(paper) }}
+                {{ paper_page.pathway_details(paper) }}
+                {% endfor %}
+            </div>
+        </section>
+
+        <section>
+            <h2>OA Papers</h2>
+            <div class="container author-pubs">
+                {% for paper in papers_already_oa %}
+                {{ paper_page.minimal(paper) }}
+                {% endfor %}
+            </div>
+        </section>
+
+        <section>
+            <h2>Papers we had issues with</h2>
+            <div class="container author-pubs">
+                {% for paper in papers_with_issues %}
+                {{ paper_page.minimal(paper) }}
+                {% endfor %}
+            </div>
+        </section>
+    </main>
 </div>
 {% endblock %}
