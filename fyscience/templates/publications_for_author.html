@@ -2,6 +2,11 @@
 {# TODO: Do someting like the Routes to OA section at https://v2.sherpa.ac.uk/id/publisher_policy/2252 #}
 {% import 'paper_macros.html' as paper_page %}
 {% extends "base.html" %}
+
+{% block title %}
+Free Your Science | {{ author.name }}
+{% endblock %}
+
 {% block content %}
 <div class="container fs-5">
     <header class="container text-center lh-sm mt-5 mb-4">
@@ -20,22 +25,20 @@
                 yet<br />
                 but do have no-cost Open Access publisher policies<br />
             </h2>
+            {% if papers_not_oa_nocost %}
             <div class="row mb-3 author-pubs">
-                {% if papers_not_oa_nocost %}
                 {% for paper in papers_not_oa_nocost %}
                 <div class="col-lg-6 mb-3">
                     {{ paper_page.minimal(paper) }}
                     {{ paper_page.pathway_details(paper) }}
                 </div>
                 {% endfor %}
-                {% else %}
-                <p>No papers found in this category.</p>
-                {% endif %}
             </div>
+            {% endif %}
         </section>
 
         <section>
-            <h2 class="mb-3">Other OA Policies</h2>
+            <h2 class="mb-3">Papers with non-free publisher policies</h2>
             <div class="row mb-3 author-pubs">
                 {% if papers_other_policies %}
                 {% for paper in papers_other_policies %}
@@ -51,7 +54,7 @@
         </section>
 
         <section>
-            <h2 class="mb-3">OA Papers</h2>
+            <h2 class="mb-3">Open Access papers</h2>
             <div class="row mb-3 author-pubs">
                 {% if papers_already_oa %}
                 {% for paper in papers_already_oa %}
