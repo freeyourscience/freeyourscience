@@ -40,6 +40,7 @@ class PaperWithOAStatus(Paper):
 
 class PaperWithOAPathway(PaperWithOAStatus):
     oa_pathway: OAPathway = Field(...)
+    oa_pathway_uri: Optional[str] = None
     oa_pathway_details: Optional[List[dict]] = None
 
 
@@ -52,6 +53,7 @@ class FullPaper(BaseModel):
     issn: Optional[str] = None
     is_open_access: Optional[bool] = None
     oa_pathway: Optional[OAPathway] = None
+    oa_pathway_uri: Optional[str] = None
     oa_pathway_details: Optional[List[dict]] = None
 
 

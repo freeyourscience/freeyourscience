@@ -5,18 +5,21 @@
 {% block content %}
 <div class="container fs-5">
     <header class="container text-center lh-sm mt-5 mb-4">
-        <h1><a href="/" class="link-dark text-decoration-none" alt="Back to landing page">Free Your Science</a></h1>
-        <h2>{{ author.name }}</h2>
-        <small><a href="{{ author.profile_url }}" target="_blank" class="link-dark">Visit Source Profile</a></small>
+        <h1>
+            <a href="/" class="link-dark text-decoration-none" alt="Back to landing page">
+                Free Your Science
+            </a><br />
+            {{ author.name }}
+        </h1>
     </header>
 
     <main>
         <section>
-            <h3 class="text-center mb-4">
-                {{ papers_not_oa_nocost|length}} of {{ author.papers|length }} papers do not seem to have an Open Access
-                copy available<br />
-                but do have no-cost Open Access publisher pathways<br />
-            </h3>
+            <h2 class="text-center mb-4">
+                {{ papers_not_oa_nocost|length}} of {{ author.papers|length }} papers do not seem to be Open Access
+                yet<br />
+                but do have no-cost Open Access publisher policies<br />
+            </h2>
             <div class="row mb-3 author-pubs">
                 {% if papers_not_oa_nocost %}
                 {% for paper in papers_not_oa_nocost %}
@@ -32,7 +35,7 @@
         </section>
 
         <section>
-            <h3 class="mb-3">Other OA Policies</h3>
+            <h2 class="mb-3">Other OA Policies</h2>
             <div class="row mb-3 author-pubs">
                 {% if papers_other_policies %}
                 {% for paper in papers_other_policies %}
@@ -48,7 +51,7 @@
         </section>
 
         <section>
-            <h3 class="mb-3">OA Papers</h3>
+            <h2 class="mb-3">OA Papers</h2>
             <div class="row mb-3 author-pubs">
                 {% if papers_already_oa %}
                 {% for paper in papers_already_oa %}
@@ -64,7 +67,7 @@
 
         {% if papers_with_issues %}
         <section>
-            <h3>Papers we had issues with</h3>
+            <h2>Papers we had issues with</h2>
             <div class="container author-pubs">
                 {% for paper in papers_with_issues %}
                 <div class="paper-details">
@@ -77,5 +80,11 @@
         </section>
         {% endif %}
     </main>
+    <footer class="container text-center m-4">
+        <small>
+            (<a href="{{ author.profile_url }}" target="_blank" class="link-dark">Source Profile</a>
+            that was used to retreive the author's papers.)
+        </small>
+    </footer>
 </div>
 {% endblock %}

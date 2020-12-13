@@ -4,11 +4,6 @@ from typing import Optional
 from wbf.schemas import OAPathway, PaperWithOAStatus, PaperWithOAPathway
 from wbf.sherpa import get_pathway as sherpa_pathway_api
 
-# TODO: Consider for service version that nocost is currently assigned to pathways with
-# additional prerequisites (e.g. specific funders or funders mandating OA)
-# TODO: For service version, check if embargo still preventing OA and don't recommend
-# embargoed papers for re-publication
-
 
 def oa_pathway(
     paper: PaperWithOAStatus, cache=None, api_key: Optional[str] = None
@@ -18,7 +13,7 @@ def oa_pathway(
 
     Cache can be anything that exposes ``get(key, default)`` and ``__setitem__``
     """
-    details = None
+    details, pathway_uri = None, None
     if paper.is_open_access:
         pathway = OAPathway.already_oa
     elif paper.is_open_access is None:
@@ -27,13 +22,16 @@ def oa_pathway(
         if cache is not None:
             pathway = cache.get(paper.issn, None)
             if not pathway:
-                pathway, details = sherpa_pathway_api(paper.issn, api_key)
+                pathway, pathway_uri, details = sherpa_pathway_api(paper.issn, api_key)
                 cache[paper.issn] = pathway
         else:
-            pathway, details = sherpa_pathway_api(paper.issn, api_key)
+            pathway, pathway_uri, details = sherpa_pathway_api(paper.issn, api_key)
 
     return PaperWithOAPathway(
-        oa_pathway=pathway, oa_pathway_details=details, **paper.dict()
+        oa_pathway=pathway,
+        oa_pathway_uri=pathway_uri,
+        oa_pathway_details=details,
+        **paper.dict()
     )
 
 

@@ -19,12 +19,10 @@
 
 {% macro pathway_details(paper) -%}
 <div class="container">
-    {% for details in paper.oa_pathway_details %}
     <div class="publisher-policy">
-        <a href='{{ details["uri"] }}' target="_blank" class="link-secondary">
-            View Publisher Open Access Policy Details @ Sherpa
+        <a href='{{ paper.oa_pathway_uri }}' target="_blank" class="link-secondary">
+            Learn about applicable Open Access pathways @ Sherpa
         </a>
     </div>
-    {% endfor %}
 </div>
 {%- endmacro %}

@@ -28,9 +28,15 @@ def has_no_cost_oa_policy(policy: dict) -> bool:
 
 def get_pathway(
     issn: str, api_key: Optional[str] = None
-) -> Tuple[OAPathway, Optional[List[dict]]]:
-    """Fetch information about the available open access pathways for the publisher that
-    owns a given ISSN from the Sherpa API (v2.sherpa.ac.uk)
+) -> Tuple[OAPathway, Optional[str], Optional[List[dict]]]:
+    """Fetch information about the available open access pathways for the publciation
+    (e.g. journal) with a given ISSN from the Sherpa API (v2.sherpa.ac.uk)
+
+    Returns
+    -------
+    OA Pathway
+    URI to the Sherpa publication details
+    publisher policies with no cost pathways
 
     Raises
     ------
@@ -51,7 +57,7 @@ def get_pathway(
         + f'filter=[["issn","equals","{issn}"]]'
     )
     if not response.ok:
-        return OAPathway.not_found, None
+        return OAPathway.not_found, None, None
 
     publications = response.json()
     try:
@@ -60,16 +66,22 @@ def get_pathway(
             or not publications["items"]
             or not publications["items"][0]["publisher_policy"]
         ):
-            return OAPathway.not_found, None
+            return OAPathway.not_found, None, None
     except Exception as e:
         print("ERROR with publications:", json.dumps(publications), e)
-        return OAPathway.not_found, None
+        return OAPathway.not_found, None, None
 
-    # TODO: How to handle multiple publishers found for ISSN?
+    # TODO: How to handle multiple publications found for ISSN?
+    publication = publications["items"][0]
     oa_policies_no_cost = list(
-        filter(has_no_cost_oa_policy, publications["items"][0]["publisher_policy"])
+        filter(has_no_cost_oa_policy, publication["publisher_policy"])
+    )
+    sherpa_publication_uri = (
+        publication["system_metadata"]["uri"]
+        if "system_metadata" in publication
+        else None
     )
     if not oa_policies_no_cost:
-        return OAPathway.other, None
+        return OAPathway.other, sherpa_publication_uri, None
 
-    return OAPathway.nocost, oa_policies_no_cost
+    return OAPathway.nocost, sherpa_publication_uri, oa_policies_no_cost
