@@ -20,17 +20,19 @@
 			<h2 class="fs-3">
 				Find papers to liberate
 			</h2>
-			<form method="GET" action="/authors" id="search-form">
-				<div class="container fs-6 mt-2">
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="search-type-authors" value="option1" checked>
-						<label class="form-check-label" for="search-type-authors">by Author</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="search-type-papers" value="option2">
-						<label class="form-check-label" for="search-type-papers">by DOI</label>
-					</div>
+			<div class="container fs-6 mt-2">
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="search-type" id="search-type-authors"
+						value="option1" checked>
+					<label class="form-check-label" for="search-type-authors">by Author</label>
 				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="search-type" id="search-type-papers"
+						value="option2">
+					<label class="form-check-label" for="search-type-papers">by DOI</label>
+				</div>
+			</div>
+			<form method="GET" action="/authors" id="search-form">
 				<div class="row justify-content-md-center row-cols-lg-auto mt-1">
 					<div class="col-12 p-1">
 						<label class="visually-hidden" for="search-field">Search</label>
