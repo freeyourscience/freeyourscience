@@ -21,7 +21,7 @@ def _construct_paper(doi: str, unpaywall_email: str, sherpa_api_key: str) -> Ful
 
     paper = unpaywall_get_paper(doi=doi, email=unpaywall_email)
     if paper is None or paper.issn is None:
-        return FullPaper(doi=doi, issn=paper.issn)
+        return FullPaper(doi=doi)
 
     title = paper.title
     journal = paper.journal
@@ -168,16 +168,18 @@ def get_paper(
         unpaywall_email=settings.unpaywall_email,
     )
 
-    if not _is_paywalled_and_nocost(paper):
-        raise HTTPException(
-            404,
-            f"No paywalled paper found with DOI {doi} that can be re-published without "
-            + "fees.",
-        )
+    if _is_paywalled_and_nocost(paper):
+        category = "paywalled_nocost"
+    elif paper.is_open_access:
+        category = "already_oa"
+    elif paper.oa_pathway is OAPathway.other:
+        category = "other_policies"
+    else:
+        category = "issues"
 
     if "text/html" in accept:
         return templates.TemplateResponse(
-            "paper.html", {"request": request, "paper": paper}
+            "paper.html", {"request": request, "paper": paper, "category": category}
         )
     elif "application/json" in accept or "*/*" in accept:
         return paper

@@ -101,7 +101,8 @@ def test_no_publications_for_author(
     url = f"/authors?profile={profile}"
 
     monkeypatch.setattr(
-        f"fyscience.api.{provider}", lambda *a, **kw: Author(name="Dummy Author", papers=[])
+        f"fyscience.api.{provider}",
+        lambda *a, **kw: Author(name="Dummy Author", papers=[]),
     )
 
     r = client.get(url)
@@ -138,6 +139,7 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     assert paper["issn"] == issn
 
 
+@pytest.mark.skip("Error pages are temporarily unused.")
 def test_media_type_dependent_error_pages(monkeypatch, client: TestClient) -> None:
     monkeypatch.setattr("fyscience.api._construct_paper", lambda *a, **kw: None)
 

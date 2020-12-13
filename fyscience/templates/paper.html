@@ -1,8 +1,49 @@
-{% extends "base.html" %}
 {% import 'paper_macros.html' as paper_page %}
+{% extends "base.html" %}
+
+{% block title %}
+Free Your Science | {{ paper.doi }}
+{% endblock %}
 
 {% block content %}
-<div class="container single-paper">
-    {{ paper_page.minimal(paper) }}
+<div class="container fs-5 text-center">
+    <header class="container lh-sm mt-5 mb-4">
+        <h1>
+            <a href="/" class="link-dark text-decoration-none" alt="Back to landing page">
+                Free Your Science
+            </a><br />
+            {{paper.doi}}
+        </h1>
+    </header>
+
+    <main>
+        <section class="mb-4">
+            <h2 class="mb-4">
+                {% if paper.is_open_access %}
+                ✅ This paper is already Open Access ✅
+                {% elif category == "paywalled_nocost" %}
+                This paper does not seem to be Open Access yet<br />
+                but it has no-cost Open Access publisher policies
+                {% elif category == "other_policies" %}
+                This paper does not seem to be Open Access<br />
+                and it only has non-free publisher policies
+                {% elif category == "issues" %}
+                We had issues finding information for that DOI
+                {% endif %}
+            </h2>
+            {% if category != "issues" %}
+            <div class="container single-paper">
+                {{ paper_page.minimal(paper) }}
+                {% if category == "paywalled_nocost" or category == "other_policies" %}
+                {{ paper_page.pathway_details(paper) }}
+                {% endif %}
+            </div>
+            {% endif %}
+        </section>
+        <small>
+            <a href="/" class="link-secondary">Go Back</a>
+        </small>
+
+    </main>
 </div>
 {% endblock %}
