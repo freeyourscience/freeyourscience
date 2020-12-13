@@ -8,12 +8,11 @@
         {% endif %}
     </div>
     {{ paper.authors }} ({{ paper.year }}) in {{ paper.journal }}<br />
-    DOI: {{ paper.doi }}<br />
-    Open Access:
-    {% if paper.is_open_access %}
-    Yes
-    {% else %}
-    No Version Found (<a href="#" class="link-secondary">incorrect?</a>)
+    <a href="https://doi.org/{{ paper.doi }}" class="link-secondary" target="_blank">
+        {{ paper.doi }}
+    </a><br />
+    {% if not paper.is_open_access %}
+    No Open Access Version Found (<a href="#" class="link-secondary">incorrect?</a>)
     {% endif %}
 </div>
 {%- endmacro %}

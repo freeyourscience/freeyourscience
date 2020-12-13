@@ -4,54 +4,78 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container fs-5">
-    <header class="container text-center lh-sm mt-5 mb-5">
-        <h1><a href="/">HEADLINE</a></h1>
+    <header class="container text-center lh-sm mt-5 mb-4">
+        <h1><a href="/" class="link-dark text-decoration-none" alt="Back to landing page">Free Your Science</a></h1>
         <h2>{{ author.name }}</h2>
-        <p>Found {{ author.papers|length }} papers of which {{ papers_not_oa_nocost|length}} do not seem to have an open
-            access copy available<br />
-            but do have no-cost OpenAccess publisher pathways.<br />
-            <a href="{{ author.profile_url }}" target="_blank">Visit Source Profile</a>
-        </p>
+        <small><a href="{{ author.profile_url }}" target="_blank" class="link-dark">Visit Source Profile</a></small>
     </header>
 
     <main>
         <section>
-            <h2>Paywalled but Free OA Pathways</h2>
-            <div class="container author-pubs">
+            <h3 class="text-center mb-4">
+                {{ papers_not_oa_nocost|length}} of {{ author.papers|length }} papers do not seem to have an Open Access
+                copy available<br />
+                but do have no-cost Open Access publisher pathways<br />
+            </h3>
+            <div class="row mb-3 author-pubs">
+                {% if papers_not_oa_nocost %}
                 {% for paper in papers_not_oa_nocost %}
-                {{ paper_page.minimal(paper) }}
-                {{ paper_page.pathway_details(paper) }}
+                <div class="container col-lg-6 mb-3">
+                    {{ paper_page.minimal(paper) }}
+                    {{ paper_page.pathway_details(paper) }}
+                </div>
                 {% endfor %}
+                {% else %}
+                <p>No papers found in this category.</p>
+                {% endif %}
             </div>
         </section>
 
         <section>
-            <h2>Other OA Policies</h2>
-            <div class="container author-pubs">
+            <h3 class="mb-3">Other OA Policies</h3>
+            <div class="row mb-3 author-pubs">
+                {% if papers_other_policies %}
                 {% for paper in papers_other_policies %}
-                {{ paper_page.minimal(paper) }}
-                {{ paper_page.pathway_details(paper) }}
+                <div class="container col-lg-6 mb-3">
+                    {{ paper_page.minimal(paper) }}
+                    {{ paper_page.pathway_details(paper) }}
+                </div>
                 {% endfor %}
+                {% else %}
+                <p>No papers found in this category.</p>
+                {% endif %}
             </div>
         </section>
 
         <section>
-            <h2>OA Papers</h2>
-            <div class="container author-pubs">
+            <h3 class="mb-3">OA Papers</h3>
+            <div class="row mb-3 author-pubs">
+                {% if papers_already_oa %}
                 {% for paper in papers_already_oa %}
-                {{ paper_page.minimal(paper) }}
+                <div class="container col-lg-6  mb-3">
+                    {{ paper_page.minimal(paper) }}
+                </div>
                 {% endfor %}
+                {% else %}
+                <p>No papers found in this category.</p>
+                {% endif %}
             </div>
         </section>
 
+        {% if papers_with_issues %}
         <section>
-            <h2>Papers we had issues with</h2>
+            <h3>Papers we had issues with</h3>
             <div class="container author-pubs">
                 {% for paper in papers_with_issues %}
-                <div class="paper-details">DOI: {{ paper.doi }}</div>
+                <div class="paper-details">
+                    <a href="https://doi.org/{{ paper.doi }}" class="link-secondary" target="_blank">
+                        {{ paper.doi }}
+                    </a>
+                </div>
                 {% endfor %}
             </div>
         </section>
+        {% endif %}
     </main>
 </div>
 {% endblock %}
