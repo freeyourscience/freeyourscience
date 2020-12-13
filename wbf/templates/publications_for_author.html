@@ -23,7 +23,7 @@
             <div class="row mb-3 author-pubs">
                 {% if papers_not_oa_nocost %}
                 {% for paper in papers_not_oa_nocost %}
-                <div class="container col-lg-6 mb-3">
+                <div class="col-lg-6 mb-3">
                     {{ paper_page.minimal(paper) }}
                     {{ paper_page.pathway_details(paper) }}
                 </div>
@@ -39,7 +39,7 @@
             <div class="row mb-3 author-pubs">
                 {% if papers_other_policies %}
                 {% for paper in papers_other_policies %}
-                <div class="container col-lg-6 mb-3">
+                <div class="col-lg-6 mb-3">
                     {{ paper_page.minimal(paper) }}
                     {{ paper_page.pathway_details(paper) }}
                 </div>
@@ -55,7 +55,7 @@
             <div class="row mb-3 author-pubs">
                 {% if papers_already_oa %}
                 {% for paper in papers_already_oa %}
-                <div class="container col-lg-6  mb-3">
+                <div class="col-lg-6  mb-3">
                     {{ paper_page.minimal(paper) }}
                 </div>
                 {% endfor %}
