@@ -4,7 +4,7 @@ from typing import Optional
 import requests
 import xml.etree.ElementTree as ET
 
-from wbf.schemas import FullPaper, Author
+from fyscience.schemas import FullPaper, Author
 
 # TODO: Add API key for prod setting
 

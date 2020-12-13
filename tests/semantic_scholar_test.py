@@ -1,17 +1,17 @@
 import pytest
 
-from wbf.semantic_scholar import get_paper, Paper, extract_profile_id_from_url
+from fyscience.semantic_scholar import get_paper, Paper, extract_profile_id_from_url
 
 
 def test_get_paper_no_paper(monkeypatch):
-    monkeypatch.setattr("wbf.semantic_scholar._get_paper", lambda *a, **kw: None)
+    monkeypatch.setattr("fyscience.semantic_scholar._get_paper", lambda *a, **kw: None)
     paper = get_paper("irrelevant_dummy_id")
     assert paper is None
 
 
 def test_get_paper_no_doi(monkeypatch):
     monkeypatch.setattr(
-        "wbf.semantic_scholar._get_paper", lambda *a, **kw: Paper(doi=None)
+        "fyscience.semantic_scholar._get_paper", lambda *a, **kw: Paper(doi=None)
     )
     paper = get_paper("irrelevant_dummy_id")
     assert paper is None

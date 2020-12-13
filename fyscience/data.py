@@ -1,7 +1,7 @@
 from typing import List
 import json
 
-from wbf.schemas import OAPathway, PaperWithOAPathway
+from fyscience.schemas import OAPathway, PaperWithOAPathway
 
 
 def load_jsonl(filepath):

@@ -1,10 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from wbf.schemas import OAPathway, PaperWithOAPathway, FullPaper
-from wbf import main
-from wbf.deps import Settings, get_settings
-from wbf.semantic_scholar import Author
+from fyscience.schemas import OAPathway, PaperWithOAPathway, FullPaper
+from fyscience import main
+from fyscience.deps import Settings, get_settings
+from fyscience.semantic_scholar import Author
 
 
 def get_settings_override():
@@ -33,14 +33,14 @@ def test_get_publications_for_author(
     url = f"/authors?profile={profile}"
 
     monkeypatch.setattr(
-        f"wbf.api.{provider}",
+        f"fyscience.api.{provider}",
         lambda *a, **kw: Author(
             name="Dummy Author", papers=[FullPaper(doi="10.1007/s00580-005-0536-0")]
         ),
     )
 
     monkeypatch.setattr(
-        "wbf.api._construct_paper",
+        "fyscience.api._construct_paper",
         lambda *a, **kw: FullPaper(
             issn="1618-5641",
             doi="10.1007/s00580-005-0536-0",
@@ -80,7 +80,7 @@ def test_get_publications_for_author(
 def test_no_author(profile, provider, monkeypatch, client: TestClient) -> None:
     url = f"/authors?profile={profile}"
 
-    monkeypatch.setattr(f"wbf.api.{provider}", lambda *a, **kw: None)
+    monkeypatch.setattr(f"fyscience.api.{provider}", lambda *a, **kw: None)
 
     r = client.get(url)
     assert not r.ok
@@ -101,7 +101,7 @@ def test_no_publications_for_author(
     url = f"/authors?profile={profile}"
 
     monkeypatch.setattr(
-        f"wbf.api.{provider}", lambda *a, **kw: Author(name="Dummy Author", papers=[])
+        f"fyscience.api.{provider}", lambda *a, **kw: Author(name="Dummy Author", papers=[])
     )
 
     r = client.get(url)
@@ -121,11 +121,11 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     oa_pathway = OAPathway.nocost.value
 
     monkeypatch.setattr(
-        "wbf.api.unpaywall_get_paper",
+        "fyscience.api.unpaywall_get_paper",
         lambda *a, **kw: FullPaper(doi=doi, issn=issn, is_open_access=is_open_access),
     )
     monkeypatch.setattr(
-        "wbf.api.oa_pathway",
+        "fyscience.api.oa_pathway",
         lambda paper, **kw: PaperWithOAPathway(oa_pathway=oa_pathway, **paper.dict()),
     )
 
@@ -139,7 +139,7 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
 
 
 def test_media_type_dependent_error_pages(monkeypatch, client: TestClient) -> None:
-    monkeypatch.setattr("wbf.api._construct_paper", lambda *a, **kw: None)
+    monkeypatch.setattr("fyscience.api._construct_paper", lambda *a, **kw: None)
 
     unknown_doi = "doesnt/exist"
 

@@ -2,7 +2,7 @@ import os
 
 from requests import Response
 
-from wbf.crossref import get_author_with_papers
+from fyscience.crossref import get_author_with_papers
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -19,7 +19,7 @@ def test_get_author_with_papers(monkeypatch):
         r.status_code = 200
         return r
 
-    monkeypatch.setattr("wbf.crossref.requests.get", mock_get)
+    monkeypatch.setattr("fyscience.crossref.requests.get", mock_get)
     author = get_author_with_papers(author_name)
 
     assert len(author.papers) == 20

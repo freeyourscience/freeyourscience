@@ -3,8 +3,8 @@ import json
 
 import pytest
 from requests import Response
-from wbf.sherpa import get_pathway, has_no_cost_oa_policy
-from wbf.schemas import OAPathway
+from fyscience.sherpa import get_pathway, has_no_cost_oa_policy
+from fyscience.schemas import OAPathway
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -30,7 +30,7 @@ def test_get_pathway_successes(issn, pathway, monkeypatch):
         response._content = json.dumps({"items": selected_publishers}).encode("utf-8")
         return response
 
-    monkeypatch.setattr("wbf.sherpa.requests.get", mock_get_publisher)
+    monkeypatch.setattr("fyscience.sherpa.requests.get", mock_get_publisher)
 
     sherpa_pathway, _, _ = get_pathway(
         issn=issn,
@@ -45,7 +45,7 @@ def test_get_pathway_request_error(monkeypatch):
         response.status_code = 404
         return response
 
-    monkeypatch.setattr("wbf.sherpa.requests.get", mock_get_publisher)
+    monkeypatch.setattr("fyscience.sherpa.requests.get", mock_get_publisher)
 
     pathway, _, _ = get_pathway(
         issn="1234-1234",

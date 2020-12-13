@@ -3,7 +3,7 @@ from typing import List, Optional
 import requests
 from pydantic import BaseModel
 
-from wbf.schemas import FullPaper, Author
+from fyscience.schemas import FullPaper, Author
 
 # TODO: Add API key for prod setting
 

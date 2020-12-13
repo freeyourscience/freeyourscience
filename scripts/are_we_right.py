@@ -2,11 +2,11 @@ import os
 import argparse
 from functools import partial
 
-from wbf.cache import json_filesystem_cache
-from wbf.data import load_jsonl, calculate_metrics
-from wbf.oa_pathway import oa_pathway
-from wbf.oa_status import validate_oa_status_from_s2
-from wbf.schemas import PaperWithOAStatus
+from fyscience.cache import json_filesystem_cache
+from fyscience.data import load_jsonl, calculate_metrics
+from fyscience.oa_pathway import oa_pathway
+from fyscience.oa_status import validate_oa_status_from_s2
+from fyscience.schemas import PaperWithOAStatus
 
 
 if __name__ == "__main__":

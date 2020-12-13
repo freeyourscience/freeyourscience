@@ -1,8 +1,8 @@
 import os
 
-import wbf.oa_pathway as oa_pathway_module
-from wbf.oa_pathway import oa_pathway
-from wbf.schemas import Paper, PaperWithOAStatus, OAPathway
+import fyscience.oa_pathway as oa_pathway_module
+from fyscience.oa_pathway import oa_pathway
+from fyscience.schemas import Paper, PaperWithOAStatus, OAPathway
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -25,7 +25,7 @@ def test_oa_pathway(monkeypatch):
     def mock_sherpa_pathway_api(*args, **kwargs):
         return OAPathway.already_oa, None, None
 
-    monkeypatch.setattr("wbf.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api)
+    monkeypatch.setattr("fyscience.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api)
 
     paper = PaperWithOAStatus(is_open_access=False, **base_paper.dict())
     updated_paper = oa_pathway(paper=paper)
@@ -53,7 +53,7 @@ def test_oa_pathway_chaches_after_api_call(monkeypatch):
     def mock_sherpa_pathway_api(*args, **kwargs):
         return target_pathway, "", []
 
-    monkeypatch.setattr("wbf.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api)
+    monkeypatch.setattr("fyscience.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api)
 
     oa_pathway(
         PaperWithOAStatus(doi="10.1011/111111", issn=issn, is_open_access=False),

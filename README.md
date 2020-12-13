@@ -41,12 +41,12 @@ pytest tests/
 
 To build the Docker image use the following in the repository root
 ```
-docker build -t wbf .
+docker build -t fyscience .
 ```
 which can then be run via either one of the two following commands
 ```
-docker run -d --name wbf -p 80:80 --env-file .env wbf
-docker run -t -i -p 80:80 --env-file .env wbf
+docker run -d --name fyscience -p 80:80 --env-file .env fyscience
+docker run -t -i -p 80:80 --env-file .env fyscience
 ```
 with an `.env` file containing the following variables:
 * `SHERPA_API_KEY`

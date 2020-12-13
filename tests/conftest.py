@@ -3,7 +3,7 @@ from typing import Generator
 import pytest
 from fastapi.testclient import TestClient
 
-from wbf.main import app
+from fyscience.main import app
 
 
 @pytest.fixture(scope="module")

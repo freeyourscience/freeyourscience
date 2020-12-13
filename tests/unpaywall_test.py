@@ -4,7 +4,7 @@ import json
 import pytest
 from requests import Response
 
-from wbf.unpaywall import get_paper
+from fyscience.unpaywall import get_paper
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -48,7 +48,7 @@ def test_get_paper(is_oa, expected_is_oa, issn, monkeypatch):
         ).encode("utf-8")
         return response
 
-    monkeypatch.setattr("wbf.unpaywall.requests.get", mock_get_doi)
+    monkeypatch.setattr("fyscience.unpaywall.requests.get", mock_get_doi)
 
     paper = get_paper("10.1011/irrelevant.dummy", "dummy@local.test")
 
@@ -62,7 +62,7 @@ def test_get_paper_not_found(monkeypatch):
         response.status_code = 404
         return response
 
-    monkeypatch.setattr("wbf.unpaywall.requests.get", mock_get_doi)
+    monkeypatch.setattr("fyscience.unpaywall.requests.get", mock_get_doi)
     paper = get_paper("10.1011/irrelevant.dummy", "dummy@local.test")
     assert paper is None
 

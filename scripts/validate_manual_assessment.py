@@ -1,11 +1,11 @@
 import os
 from functools import partial
 
-from wbf.cache import json_filesystem_cache
-from wbf.data import load_jsonl
-from wbf.schemas import PaperWithOAPathway, Paper
-from wbf.oa_status import oa_status
-from wbf.oa_pathway import oa_pathway
+from fyscience.cache import json_filesystem_cache
+from fyscience.data import load_jsonl
+from fyscience.schemas import PaperWithOAPathway, Paper
+from fyscience.oa_status import oa_status
+from fyscience.oa_pathway import oa_pathway
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))

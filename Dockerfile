@@ -8,4 +8,4 @@ COPY . /usr/src/app
 RUN pip install --upgrade pip setuptools
 RUN pip install --no-cache-dir /usr/src/app
 
-ENV PYTHONPATH=/usr/src/app/wbf
+ENV PYTHONPATH=/usr/src/app/fyscience

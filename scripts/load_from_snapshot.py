@@ -1,7 +1,7 @@
 import gzip
 import json
 
-UNPAYWALL_SNAPSHOT_PATH = "/mnt/data/wbf/unpaywall.jsonl.gz"
+UNPAYWALL_SNAPSHOT_PATH = "/mnt/data/fyscience/unpaywall.jsonl.gz"
 
 
 def extract_fields(json_loader):

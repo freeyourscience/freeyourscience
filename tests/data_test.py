@@ -1,8 +1,8 @@
 import os
 import json
 
-from wbf.data import calculate_metrics
-from wbf.schemas import PaperWithOAPathway
+from fyscience.data import calculate_metrics
+from fyscience.schemas import PaperWithOAPathway
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")

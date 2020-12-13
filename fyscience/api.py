@@ -3,12 +3,12 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
-from wbf.schemas import PaperWithOAStatus, OAPathway, FullPaper
-from wbf.unpaywall import get_paper as unpaywall_get_paper
-from wbf.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
-from wbf.oa_status import validate_oa_status_from_s2
-from wbf import orcid, semantic_scholar, crossref
-from wbf.deps import get_settings, Settings, TEMPLATE_PATH
+from fyscience.schemas import PaperWithOAStatus, OAPathway, FullPaper
+from fyscience.unpaywall import get_paper as unpaywall_get_paper
+from fyscience.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
+from fyscience.oa_status import validate_oa_status_from_s2
+from fyscience import orcid, semantic_scholar, crossref
+from fyscience.deps import get_settings, Settings, TEMPLATE_PATH
 
 
 api_router = APIRouter()

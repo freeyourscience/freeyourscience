@@ -4,7 +4,7 @@ from typing import Optional, Tuple, List
 
 import requests
 
-from wbf.schemas import OAPathway
+from fyscience.schemas import OAPathway
 
 
 def has_no_cost_oa_policy(policy: dict) -> bool:

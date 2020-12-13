@@ -2,7 +2,7 @@ import os
 import pytest
 
 from requests import Response
-from wbf.orcid import get_author_with_papers, is_orcid
+from fyscience.orcid import get_author_with_papers, is_orcid
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -17,7 +17,7 @@ def test_get_author_with_papers(monkeypatch):
         r.status_code = 200
         return r
 
-    monkeypatch.setattr("wbf.orcid.requests.get", mock_get)
+    monkeypatch.setattr("fyscience.orcid.requests.get", mock_get)
     author = get_author_with_papers("0000-0000-0000-0000")
 
     assert len(author.papers) == 2

@@ -1,6 +1,6 @@
 import requests
 
-from wbf.schemas import Author, FullPaper
+from fyscience.schemas import Author, FullPaper
 
 # TODO: Include the appropriate request headers and potentially API key for prod
 #       https://github.com/CrossRef/rest-api-doc

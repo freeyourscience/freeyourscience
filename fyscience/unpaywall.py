@@ -4,7 +4,7 @@ from typing import Optional, List
 import requests
 from pydantic import BaseModel
 
-from wbf.schemas import FullPaper
+from fyscience.schemas import FullPaper
 
 
 class Paper(BaseModel):

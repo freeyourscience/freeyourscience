@@ -1,6 +1,6 @@
-from wbf.schemas import Paper, PaperWithOAStatus
-from wbf.unpaywall import get_paper as unpaywall_get_paper
-from wbf.semantic_scholar import get_paper as s2_get_paper
+from fyscience.schemas import Paper, PaperWithOAStatus
+from fyscience.unpaywall import get_paper as unpaywall_get_paper
+from fyscience.semantic_scholar import get_paper as s2_get_paper
 
 
 def validate_oa_status_from_s2(paper: PaperWithOAStatus) -> PaperWithOAStatus:
