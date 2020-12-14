@@ -74,8 +74,11 @@ def get_paper(doi: str, email: Optional[str] = None) -> Optional[FullPaper]:
         journal=paper.journal_name,
     )
 
-    if paper.z_authors is not None:
-        first_author = [a for a in paper.z_authors if a["sequence"] == "first"][0]
+    if paper.z_authors:
+        if "sequence" in paper.z_authors[0]:
+            first_author = [a for a in paper.z_authors if a["sequence"] == "first"][0]
+        else:
+            first_author = paper.z_authors[0]
         full_paper.authors = f"{first_author['given']} {first_author['family']} et al."
 
     return full_paper
