@@ -101,6 +101,13 @@ def test_get_paper_with_no_email():
         ),
         (
             [
+                {"given": "Add1", "family": "Author", "sequence": "additional"},
+                {"given": "Add2", "family": "Author", "sequence": "additional"},
+            ],
+            "Add1 Author",
+        ),
+        (
+            [
                 {"given": "Dummy", "family": "Author"},
                 {"given": "Other", "family": "Author"},
             ],

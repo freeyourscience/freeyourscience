@@ -62,7 +62,8 @@ def _get_paper(doi: str, email: Optional[str] = None) -> Optional[Paper]:
 
 def _extract_authors(authors: List[dict]) -> str:
     if "sequence" in authors[0]:
-        first_author = [a for a in authors if a["sequence"] == "first"][0]
+        first_authors = [a for a in authors if a["sequence"] == "first"]
+        first_author = first_authors[0] if first_authors else authors[0]
     else:
         first_author = authors[0]
 
