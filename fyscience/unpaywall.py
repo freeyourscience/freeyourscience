@@ -14,7 +14,7 @@ class Paper(BaseModel):
     data_standard: int
     doi: str
     doi_url: str
-    genre: str
+    genre: Optional[str] = None
     is_paratext: bool
     is_oa: bool
     journal_is_in_doaj: bool
@@ -26,7 +26,7 @@ class Paper(BaseModel):
     first_oa_location: Optional[dict] = None
     oa_status: str
     published_date: Optional[str] = None
-    publisher: str
+    publisher: Optional[str] = None
     title: Optional[str] = None
     updated: str
     year: Optional[int] = None

@@ -12,15 +12,13 @@ DMUMMY_PAPER = Paper(
     data_standard=2,
     doi="10.110/dummy.doi",
     doi_url="https://doi.org/10.110/dummy.doi",
-    genre="Fiction",
     is_paratext=False,
     is_oa=False,
     journal_is_in_doaj=True,
     journal_is_oa=False,
     oa_locations=[],
     oa_status="closed",
-    publisher="Paywall Inc.",
-    updated="",
+    updated="2017-08-17T23:43:27.753663",
 )
 
 
