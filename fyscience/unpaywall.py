@@ -60,25 +60,30 @@ def _get_paper(doi: str, email: Optional[str] = None) -> Optional[Paper]:
     return paper
 
 
+def _extract_authors(authors: List[dict]) -> str:
+    if "sequence" in authors[0]:
+        first_author = [a for a in authors if a["sequence"] == "first"][0]
+    else:
+        first_author = authors[0]
+
+    extracted_author = ""
+    if "given" in first_author:
+        extracted_author = f"{first_author['given']} "
+    extracted_author += f"{first_author['family']} et al."
+    return extracted_author
+
+
 def get_paper(doi: str, email: Optional[str] = None) -> Optional[FullPaper]:
     paper = _get_paper(doi, email)
     if paper is None:
         return None
 
-    full_paper = FullPaper(
+    return FullPaper(
         doi=doi,
         issn=paper.journal_issn_l,
         is_open_access=paper.is_oa,
         title=paper.title,
         year=paper.year,
         journal=paper.journal_name,
+        authors=_extract_authors(paper.z_authors) if paper.z_authors else None,
     )
-
-    if paper.z_authors:
-        if "sequence" in paper.z_authors[0]:
-            first_author = [a for a in paper.z_authors if a["sequence"] == "first"][0]
-        else:
-            first_author = paper.z_authors[0]
-        full_paper.authors = f"{first_author['given']} {first_author['family']} et al."
-
-    return full_paper

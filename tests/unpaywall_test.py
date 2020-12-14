@@ -4,7 +4,7 @@ import json
 import pytest
 from requests import Response
 
-from fyscience.unpaywall import get_paper, Paper
+from fyscience.unpaywall import get_paper, Paper, _extract_authors
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -89,37 +89,38 @@ def test_get_paper_with_no_email():
         os.environ["UNPAYWALL_EMAIL"] = email
 
 
-def test_get_paper_author_extraction(monkeypatch):
-    authors = [
-        {"given": "Dummy", "family": "Author", "sequence": "additional"},
-        {"given": "Other", "family": "Author", "sequence": "first"},
-    ]
-
-    def mock_get_paper(*args, **kwargs):
-        paper = DMUMMY_PAPER.copy()
-        paper.z_authors = authors
-        return paper
-
-    monkeypatch.setattr("fyscience.unpaywall._get_paper", mock_get_paper)
-
-    paper = get_paper("10.100/irrelevant.doi")
-    first_author = authors[1]
-    assert paper.authors.startswith(f"{first_author['given']} {first_author['family']}")
-
-
-def test_get_paper_author_extraction_no_sequence(monkeypatch):
-    authors_without_sequence_key = [
-        {"given": "Dummy", "family": "Author"},
-        {"given": "Other", "family": "Author"},
-    ]
-
-    def mock_get_paper(*args, **kwargs):
-        paper = DMUMMY_PAPER.copy()
-        paper.z_authors = authors_without_sequence_key
-        return paper
-
-    monkeypatch.setattr("fyscience.unpaywall._get_paper", mock_get_paper)
-
-    paper = get_paper("10.100/irrelevant.doi")
-    first_author = authors_without_sequence_key[0]
-    assert paper.authors.startswith(f"{first_author['given']} {first_author['family']}")
+@pytest.mark.parametrize(
+    "authors,first_author",
+    [
+        (
+            [
+                {"given": "Dummy", "family": "Author", "sequence": "additional"},
+                {"given": "First", "family": "Author", "sequence": "first"},
+            ],
+            "First Author",
+        ),
+        (
+            [
+                {"given": "Dummy", "family": "Author"},
+                {"given": "Other", "family": "Author"},
+            ],
+            "Dummy Author",
+        ),
+        (
+            [
+                {"family": "Other Author", "sequence": "additional"},
+                {"family": "First Author", "sequence": "first"},
+            ],
+            "First Author",
+        ),
+        (
+            [
+                {"family": "Dummy Author"},
+                {"family": "Other Author"},
+            ],
+            "Dummy Author",
+        ),
+    ],
+)
+def test_extract_authors_first_author(authors, first_author):
+    assert _extract_authors(authors).startswith(first_author)
