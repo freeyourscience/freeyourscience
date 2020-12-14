@@ -96,9 +96,10 @@ def get_publications_for_author(
         raise HTTPException(404, f"No author found for {profile}")
 
     author.papers = [] if author.papers is None else author.papers
+    unique_dois = set([p.doi for p in author.papers])
     author.papers = [
-        _construct_paper(p.doi, settings.unpaywall_email, settings.sherpa_api_key)
-        for p in author.papers
+        _construct_paper(doi, settings.unpaywall_email, settings.sherpa_api_key)
+        for doi in unique_dois
     ]
     author.papers = [
         _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
