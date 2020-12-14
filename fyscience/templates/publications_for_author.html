@@ -90,4 +90,12 @@ Free Your Science | {{ author.name }}
         </small>
     </footer>
 </div>
+
+<script type="text/javascript">
+    document.querySelectorAll('.link-oa-incorrect').forEach(e => {
+        e.addEventListener('click', () => {
+            alert("Thanks for letting us know!\nWe'll make sure to correct this.")
+        })
+    });
+</script>
 {% endblock %}
