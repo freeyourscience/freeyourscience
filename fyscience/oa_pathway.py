@@ -40,7 +40,9 @@ def remove_costly_oa_from_publisher_policy(policy: dict) -> dict:
     _policy = deepcopy(policy)
 
     _policy["permitted_oa"] = [
-        poa for poa in _policy["permitted_oa"] if poa["additional_oa_fee"] == "no"
+        poa
+        for poa in _policy["permitted_oa"]
+        if "additional_oa_fee" in poa and poa["additional_oa_fee"] == "no"
     ]
 
     return _policy

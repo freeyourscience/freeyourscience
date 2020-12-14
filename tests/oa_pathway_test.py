@@ -1,8 +1,13 @@
 import os
+import json
 
 import fyscience.oa_pathway as oa_pathway_module
-from fyscience.oa_pathway import oa_pathway
-from fyscience.schemas import Paper, PaperWithOAStatus, OAPathway
+from fyscience.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
+from fyscience.schemas import (
+    Paper,
+    PaperWithOAStatus,
+    OAPathway,
+)
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -25,7 +30,9 @@ def test_oa_pathway(monkeypatch):
     def mock_sherpa_pathway_api(*args, **kwargs):
         return OAPathway.already_oa, None, None
 
-    monkeypatch.setattr("fyscience.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api)
+    monkeypatch.setattr(
+        "fyscience.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api
+    )
 
     paper = PaperWithOAStatus(is_open_access=False, **base_paper.dict())
     updated_paper = oa_pathway(paper=paper)
@@ -53,7 +60,9 @@ def test_oa_pathway_chaches_after_api_call(monkeypatch):
     def mock_sherpa_pathway_api(*args, **kwargs):
         return target_pathway, "", []
 
-    monkeypatch.setattr("fyscience.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api)
+    monkeypatch.setattr(
+        "fyscience.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api
+    )
 
     oa_pathway(
         PaperWithOAStatus(doi="10.1011/111111", issn=issn, is_open_access=False),
@@ -62,3 +71,16 @@ def test_oa_pathway_chaches_after_api_call(monkeypatch):
 
     assert issn in cache
     assert cache[issn] is target_pathway
+
+
+def test_remove_costly_oa_from_publisher_policy_without_additional_oa_fee_key():
+    """Conservatively remove permitted oa entries without cost information"""
+
+    with open(
+        os.path.join(ASSETS_PATH, "policy_without_additional_oa_fee_key.json")
+    ) as fh:
+        policy = json.load(fh)
+
+    updated_policy = remove_costly_oa_from_publisher_policy(policy)
+    assert len(policy["permitted_oa"]) == 3
+    assert len(updated_policy["permitted_oa"]) == 2

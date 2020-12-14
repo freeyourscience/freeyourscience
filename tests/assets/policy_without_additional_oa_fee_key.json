@@ -1,0 +1,252 @@
+{
+    "id": 1141,
+    "uri": "https://v2.sherpa.ac.uk/id/publisher_policy/1141",
+    "open_access_prohibited_phrases": [
+        {
+            "phrase": "No",
+            "value": "no",
+            "language": "en"
+        }
+    ],
+    "urls": [
+        {
+            "url": "http://authorservices.taylorandfrancis.com/sharing-your-work/",
+            "description": "Sharing your work"
+        },
+        {
+            "url": "https://authorservices.taylorandfrancis.com/publishing-open-access/#Repositories",
+            "description": "Institutional repositories"
+        },
+        {
+            "url": "https://authorservices.taylorandfrancis.com/publishing-open-access/oa-options-finder/",
+            "description": "Open access options"
+        }
+    ],
+    "permitted_oa": [
+        {
+            "embargo": {
+                "amount": 0
+            },
+            "location": {
+                "named_repository": [
+                    "arXiv",
+                    "bioRxiv",
+                    "SocArXiv"
+                ],
+                "location_phrases": [
+                    {
+                        "value": "academic_social_network",
+                        "language": "en",
+                        "phrase": "Academic Social Network"
+                    },
+                    {
+                        "phrase": "Author's Homepage",
+                        "value": "authors_homepage",
+                        "language": "en"
+                    },
+                    {
+                        "phrase": "Named Repository",
+                        "value": "named_repository",
+                        "language": "en"
+                    }
+                ],
+                "location": [
+                    "academic_social_network",
+                    "authors_homepage",
+                    "named_repository"
+                ]
+            },
+            "article_version": [
+                "submitted"
+            ],
+            "additional_oa_fee": "no",
+            "article_version_phrases": [
+                {
+                    "phrase": "Submitted",
+                    "language": "en",
+                    "value": "submitted"
+                }
+            ],
+            "additional_oa_fee_phrases": [
+                {
+                    "value": "no",
+                    "language": "en",
+                    "phrase": "No"
+                }
+            ],
+            "conditions": [
+                "Published source must be acknowledged",
+                "Must link to publisher version",
+                "Set statements to accompany deposits (see policy)"
+            ]
+        },
+        {
+            "embargo": {
+                "amount": 12,
+                "units_phrases": [
+                    {
+                        "value": "months",
+                        "language": "en",
+                        "phrase": "Months"
+                    }
+                ],
+                "units": "months"
+            },
+            "publisher_deposit": [
+                {
+                    "system_metadata": {
+                        "uri": "https://v2.sherpa.ac.uk/id/repository/267",
+                        "id": 267
+                    },
+                    "repository_metadata": {
+                        "name": [
+                            {
+                                "preferred": "name",
+                                "name": "PubMed Central",
+                                "language_phrases": [
+                                    {
+                                        "value": "en",
+                                        "language": "en",
+                                        "phrase": "English"
+                                    }
+                                ],
+                                "preferred_phrases": [
+                                    {
+                                        "language": "en",
+                                        "value": "name",
+                                        "phrase": "Name"
+                                    }
+                                ],
+                                "language": "en"
+                            }
+                        ],
+                        "type_phrases": [
+                            {
+                                "language": "en",
+                                "value": "disciplinary",
+                                "phrase": "Disciplinary"
+                            }
+                        ],
+                        "description": "A subject-based repository of biomedical and life sciences journal literature developed and managed by the National Center for Biotechnology Information (NCBI) at the US National Library of Medicine (NLM). \\r\\n\\r\\nContent includes articles deposited by participating journals that have applied to and been selected for the archive by NLM, as well as individual author manuscripts that have been submitted in compliance with the NIH Public Access Policy and similar policies of other research funding agencies. More than 2000 journals currently use PMC as a repository. Digitization projects have also added content from the 18th, 19th, and 20th centuries to the archive.",
+                        "url": "http://www.ncbi.nlm.nih.gov/pmc/",
+                        "type": "disciplinary"
+                    }
+                }
+            ],
+            "location": {
+                "named_academic_social_network": [
+                    "Mendeley",
+                    "ResearchGate",
+                    "Academia.edu"
+                ],
+                "location": [
+                    "academic_social_network",
+                    "institutional_repository",
+                    "named_academic_social_network",
+                    "named_repository",
+                    "subject_repository"
+                ],
+                "location_phrases": [
+                    {
+                        "phrase": "Academic Social Network",
+                        "language": "en",
+                        "value": "academic_social_network"
+                    },
+                    {
+                        "phrase": "Institutional Repository",
+                        "value": "institutional_repository",
+                        "language": "en"
+                    },
+                    {
+                        "phrase": "Named Academic Social Network",
+                        "language": "en",
+                        "value": "named_academic_social_network"
+                    },
+                    {
+                        "value": "named_repository",
+                        "language": "en",
+                        "phrase": "Named Repository"
+                    },
+                    {
+                        "phrase": "Subject Repository",
+                        "language": "en",
+                        "value": "subject_repository"
+                    }
+                ],
+                "named_repository": [
+                    "PubMed Central"
+                ]
+            },
+            "article_version_phrases": [
+                {
+                    "phrase": "Accepted",
+                    "value": "accepted",
+                    "language": "en"
+                }
+            ],
+            "additional_oa_fee_phrases": [
+                {
+                    "phrase": "No",
+                    "value": "no",
+                    "language": "en"
+                }
+            ],
+            "additional_oa_fee": "no",
+            "article_version": [
+                "accepted"
+            ],
+            "conditions": [
+                "Published source must be acknowledged",
+                "Must link to publisher version",
+                "Set statements to accompany deposits (see policy)",
+                "The publisher will deposit in on behalf of authors to a designated institutional repository, where a deposit agreement exists with the repository"
+            ]
+        },
+        {
+            "embargo": {
+                "amount": 0
+            },
+            "article_version": [
+                "accepted"
+            ],
+            "location": {
+                "location": [
+                    "authors_homepage",
+                    "named_academic_social_network"
+                ],
+                "location_phrases": [
+                    {
+                        "language": "en",
+                        "value": "authors_homepage",
+                        "phrase": "Author's Homepage"
+                    },
+                    {
+                        "phrase": "Named Academic Social Network",
+                        "value": "named_academic_social_network",
+                        "language": "en"
+                    }
+                ],
+                "named_academic_social_network": [
+                    "Facebook",
+                    "Google",
+                    "LinkedIn",
+                    "Twitter"
+                ]
+            },
+            "article_version_phrases": [
+                {
+                    "phrase": "Accepted",
+                    "value": "accepted",
+                    "language": "en"
+                }
+            ],
+            "conditions": [
+                "Must link to publisher version with DOI",
+                "Must link to publisher version with set statement"
+            ]
+        }
+    ],
+    "internal_moniker": "STM, Behavioural Science and Public Health Titles (12m)",
+    "publication_count": 748,
+    "open_access_prohibited": "no"
+}
