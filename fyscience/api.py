@@ -75,6 +75,7 @@ def get_author_with_papers(profile: str, settings: Settings = Depends(get_settin
     searched for with the Crossref meta-data search.
     The returned ``Author.papers`` contains a list of papers provided by the chosen
     search method, which is not fully populated with all information.
+    To fetch fully populated papers, use ``GET api/papers?doi=...``
     """
     if orcid.is_orcid(profile):
         author = orcid.get_author_with_papers(profile)
@@ -102,6 +103,19 @@ def get_author_with_papers(profile: str, settings: Settings = Depends(get_settin
     return author
 
 
+@api_router.get("/api/papers", response_model=FullPaper)
+def get_paper(doi: str, settings: Settings = Depends(get_settings)):
+    """Get paper with OpenAccess status and pathway for a given DOI."""
+    paper = _construct_paper(
+        doi=doi,
+        sherpa_api_key=settings.sherpa_api_key,
+        unpaywall_email=settings.unpaywall_email,
+        s2_api_key=settings.s2_api_key,
+    )
+
+    return paper
+
+
 @api_router.get("/", response_class=HTMLResponse)
 def get_landing_page(request: Request):
     return templates.TemplateResponse(
@@ -109,19 +123,14 @@ def get_landing_page(request: Request):
     )
 
 
-@api_router.get("/authors")
-def get_author_with_full_papers(
-    profile: str,
-    request: Request,
-    accept: str = Header("text/html"),
-    settings: Settings = Depends(get_settings),
+@api_router.get("/authors", response_class=HTMLResponse)
+def get_author_with_full_papers_html(
+    profile: str, request: Request, settings: Settings = Depends(get_settings)
 ):
     """Similar behaviour as with ``/api/authors`` but missing information for the
-    author's papers is filled in from all available data sources.
-    Also, this endpoint allows rendering a HTML response, following the accept header.
+    author's papers is filled in from all available data sources and the author page
+    is rendered as HTML.
     """
-    # TODO: Consider allowing override of accept headers via url parameter
-
     author = get_author_with_papers(profile, settings)
     author.papers = [
         _construct_paper(
@@ -164,42 +173,25 @@ def get_author_with_full_papers(
         }
     )
 
-    if "text/html" in accept:
-        return templates.TemplateResponse(
-            "publications_for_author.html",
-            {
-                "request": request,
-                "author": author,
-                "papers_not_oa_nocost": papers_not_oa_nocost,
-                "papers_other_policies": papers_other_policies,
-                "papers_already_oa": papers_already_oa,
-                "papers_with_issues": papers_with_issues,
-            },
-        )
-    elif "application/json" in accept or "*/*" in accept:
-        return author
-    else:
-        raise HTTPException(
-            406,
-            "Only text/html and application/json is available. "
-            + f"But neither of them was found in accept header {accept}",
-        )
+    return templates.TemplateResponse(
+        "publications_for_author.html",
+        {
+            "request": request,
+            "author": author,
+            "papers_not_oa_nocost": papers_not_oa_nocost,
+            "papers_other_policies": papers_other_policies,
+            "papers_already_oa": papers_already_oa,
+            "papers_with_issues": papers_with_issues,
+        },
+    )
 
 
-@api_router.get("/papers", response_model=FullPaper)
-def get_paper(
-    doi: str,
-    request: Request,
-    accept: str = Header("text/html"),
-    settings: Settings = Depends(get_settings),
+@api_router.get("/papers", response_class=HTMLResponse)
+def get_paper_html(
+    doi: str, request: Request, settings: Settings = Depends(get_settings)
 ):
     """Get paper with OpenAccess status and pathway for a given DOI."""
-    paper = _construct_paper(
-        doi=doi,
-        sherpa_api_key=settings.sherpa_api_key,
-        unpaywall_email=settings.unpaywall_email,
-        s2_api_key=settings.s2_api_key,
-    )
+    paper = get_paper(doi=doi, settings=settings)
 
     if _is_paywalled_and_nocost(paper):
         category = "paywalled_nocost"
@@ -210,15 +202,6 @@ def get_paper(
     else:
         category = "issues"
 
-    if "text/html" in accept:
-        return templates.TemplateResponse(
-            "paper.html", {"request": request, "paper": paper, "category": category}
-        )
-    elif "application/json" in accept or "*/*" in accept:
-        return paper
-    else:
-        raise HTTPException(
-            406,
-            "Only text/html and application/json is available. "
-            + f"But neither of them was found in accept header {accept}",
-        )
+    return templates.TemplateResponse(
+        "paper.html", {"request": request, "paper": paper, "category": category}
+    )

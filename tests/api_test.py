@@ -54,16 +54,6 @@ def test_get_publications_for_author(
     r = client.get(url)
     assert r.ok
 
-    r = client.get(url, headers={"accept": "text/html"})
-    assert r.ok
-
-    r = client.get(url, headers={"accept": "application/json"})
-    assert r.ok
-
-    r = client.get(url, headers={"accept": "unspported/type"})
-    assert not r.ok
-    assert r.status_code == 406
-
     r = client.get("/authors")
     assert not r.ok
     assert r.status_code == 422
@@ -130,25 +120,10 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
         lambda paper, **kw: PaperWithOAPathway(oa_pathway=oa_pathway, **paper.dict()),
     )
 
-    r = client.get(f"/papers?doi={doi}")
+    r = client.get(f"/api/papers?doi={doi}")
     assert r.ok
     paper = r.json()
     assert paper["is_open_access"] == is_open_access
     assert paper["oa_pathway"] == oa_pathway
     assert paper["doi"] == doi
     assert paper["issn"] == issn
-
-
-@pytest.mark.skip("Error pages are temporarily unused.")
-def test_media_type_dependent_error_pages(monkeypatch, client: TestClient) -> None:
-    monkeypatch.setattr("fyscience.api._construct_paper", lambda *a, **kw: None)
-
-    unknown_doi = "doesnt/exist"
-
-    r = client.get(f"/papers?doi={unknown_doi}", headers={"accept": "text/html"})
-    assert r.status_code == 404
-    assert unknown_doi in r.content.decode()
-
-    r = client.get(f"/papers?doi={unknown_doi}", headers={"accept": "application/json"})
-    assert r.status_code == 404
-    assert "detail" in r.json()
