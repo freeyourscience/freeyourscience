@@ -1,9 +1,11 @@
+from typing import List
+
 from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 
-from fyscience.schemas import PaperWithOAStatus, OAPathway, FullPaper
+from fyscience.schemas import PaperWithOAStatus, OAPathway, FullPaper, Author
 from fyscience.unpaywall import get_paper as unpaywall_get_paper
 from fyscience.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
 from fyscience.oa_status import validate_oa_status_from_s2
@@ -66,22 +68,14 @@ def _remove_costly_oa_paths_from_oa_pathway_details(paper: FullPaper) -> FullPap
     return paper
 
 
-@api_router.get("/", response_class=HTMLResponse)
-def get_landing_page(request: Request):
-    return templates.TemplateResponse(
-        "landing_page.html", {"request": request, "n_nocost_papers": "46.796.300"}
-    )
-
-
-@api_router.get("/authors")
-def get_publications_for_author(
-    profile: str,
-    request: Request,
-    accept: str = Header("text/html"),
-    settings: Settings = Depends(get_settings),
-):
-    # TODO: Consider allowing override of accept headers via url parameter
-
+@api_router.get("/api/authors", response_model=Author)
+def get_author_with_papers(profile: str, settings: Settings = Depends(get_settings)):
+    """Get all information associated with a specific author search string, which can
+    either be an ORCID, Semantic Scholar Profile ID or URL, or an author name to be
+    searched for with the Crossref meta-data search.
+    The returned ``Author.papers`` contains a list of papers provided by the chosen
+    search method, which is not fully populated with all information.
+    """
     if orcid.is_orcid(profile):
         author = orcid.get_author_with_papers(profile)
     else:
@@ -100,12 +94,43 @@ def get_publications_for_author(
         raise HTTPException(404, f"No author found for {profile}")
 
     author.papers = [] if author.papers is None else author.papers
-    unique_dois = set([p.doi for p in author.papers])
+    # TODO: Resolve duplicate DOIs more intelligently (always choose the more recent
+    #       version, or the one with more info)
+    unique_papers = {p.doi: p for p in author.papers}
+    author.papers = unique_papers.values()
+
+    return author
+
+
+@api_router.get("/", response_class=HTMLResponse)
+def get_landing_page(request: Request):
+    return templates.TemplateResponse(
+        "landing_page.html", {"request": request, "n_nocost_papers": "46.796.300"}
+    )
+
+
+@api_router.get("/authors")
+def get_author_with_full_papers(
+    profile: str,
+    request: Request,
+    accept: str = Header("text/html"),
+    settings: Settings = Depends(get_settings),
+):
+    """Similar behaviour as with ``/api/authors`` but missing information for the
+    author's papers is filled in from all available data sources.
+    Also, this endpoint allows rendering a HTML response, following the accept header.
+    """
+    # TODO: Consider allowing override of accept headers via url parameter
+
+    author = get_author_with_papers(profile, settings)
     author.papers = [
         _construct_paper(
-            doi, settings.unpaywall_email, settings.sherpa_api_key, settings.s2_api_key
+            p.doi,
+            settings.unpaywall_email,
+            settings.sherpa_api_key,
+            settings.s2_api_key,
         )
-        for doi in unique_dois
+        for p in author.papers
     ]
     author.papers = [
         _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
