@@ -17,7 +17,9 @@ templates = Jinja2Templates(directory=TEMPLATE_PATH)
 # TODO: Sanitize user input
 
 
-def _construct_paper(doi: str, unpaywall_email: str, sherpa_api_key: str) -> FullPaper:
+def _construct_paper(
+    doi: str, unpaywall_email: str, sherpa_api_key: str, s2_api_key: str
+) -> FullPaper:
 
     paper = unpaywall_get_paper(doi=doi, email=unpaywall_email)
     if paper is None or paper.issn is None:
@@ -33,7 +35,7 @@ def _construct_paper(doi: str, unpaywall_email: str, sherpa_api_key: str) -> Ful
     )
     # TODO: Don't do this twice if the author papers already have the s2 status
     #       Potentially move towards an enrich as opposed to a construct approach
-    paper = validate_oa_status_from_s2(paper)
+    paper = validate_oa_status_from_s2(paper, s2_api_key)
 
     paper = oa_pathway(paper=paper, api_key=sherpa_api_key)
 
@@ -88,7 +90,9 @@ def get_publications_for_author(
             # TODO: Semantic scholar only seems to have the DOI of the preprint and not
             #       the finally published paper's DOI
             #       (see e.g. semantic scholar ID 51453144)
-            author = semantic_scholar.get_author_with_papers(author_id)
+            author = semantic_scholar.get_author_with_papers(
+                author_id, settings.s2_api_key
+            )
         else:
             author = crossref.get_author_with_papers(profile)
 
@@ -98,7 +102,9 @@ def get_publications_for_author(
     author.papers = [] if author.papers is None else author.papers
     unique_dois = set([p.doi for p in author.papers])
     author.papers = [
-        _construct_paper(doi, settings.unpaywall_email, settings.sherpa_api_key)
+        _construct_paper(
+            doi, settings.unpaywall_email, settings.sherpa_api_key, settings.s2_api_key
+        )
         for doi in unique_dois
     ]
     author.papers = [
@@ -167,6 +173,7 @@ def get_paper(
         doi=doi,
         sherpa_api_key=settings.sherpa_api_key,
         unpaywall_email=settings.unpaywall_email,
+        s2_api_key=settings.s2_api_key,
     )
 
     if _is_paywalled_and_nocost(paper):

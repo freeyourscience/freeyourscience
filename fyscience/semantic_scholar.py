@@ -5,8 +5,6 @@ from pydantic import BaseModel
 
 from fyscience.schemas import FullPaper, Author
 
-# TODO: Add API key for prod setting
-
 
 class Paper(BaseModel):
     """Unofficial schema, reconstructed from API response at
@@ -45,8 +43,25 @@ class S2Author(BaseModel):
     url: Optional[str] = None
 
 
-def _get_paper(paper_id: str) -> Optional[Paper]:
-    r = requests.get(f"https://api.semanticscholar.org/v1/paper/{paper_id}")
+def _get_request(relative_url: str, api_key: str, **kwargs) -> requests.Response:
+    if api_key is not None:
+        headers = kwargs.pop("headers", None)
+        if isinstance(headers, dict):
+            headers["x-api-key"] = api_key
+        else:
+            headers = {"x-api-key": api_key}
+        kwargs["headers"] = headers
+
+        url = f"https://partner.semanticscholar.org/v1/{relative_url}"
+
+    else:
+        url = f"https://api.semanticscholar.org/v1/{relative_url}"
+
+    return requests.get(url, **kwargs)
+
+
+def _get_paper(paper_id: str, api_key: str = None) -> Optional[Paper]:
+    r = _get_request(f"paper/{paper_id}", api_key)
 
     if not r.ok:
         # TODO: Log and/or handle differently.
@@ -55,8 +70,8 @@ def _get_paper(paper_id: str) -> Optional[Paper]:
     return Paper(**r.json())
 
 
-def get_paper(paper_id: str) -> Optional[FullPaper]:
-    paper = _get_paper(paper_id)
+def get_paper(paper_id: str, api_key: str = None) -> Optional[FullPaper]:
+    paper = _get_paper(paper_id, api_key)
     if paper is None or paper.doi is None:
         return None
 
@@ -65,8 +80,8 @@ def get_paper(paper_id: str) -> Optional[FullPaper]:
     )
 
 
-def _get_author(author_id: str) -> Optional[S2Author]:
-    r = requests.get(f"https://api.semanticscholar.org/v1/author/{author_id}")
+def _get_author(author_id: str, api_key: str = None) -> Optional[S2Author]:
+    r = _get_request(f"author/{author_id}", api_key)
 
     if not r.ok:
         # TODO: Log and/or handle differently.
@@ -75,13 +90,13 @@ def _get_author(author_id: str) -> Optional[S2Author]:
     return S2Author(**r.json())
 
 
-def get_author_with_papers(author_id: str) -> Optional[Author]:
-    author = _get_author(author_id)
+def get_author_with_papers(author_id: str, api_key: str = None) -> Optional[Author]:
+    author = _get_author(author_id, api_key)
     if author is None:
         return None
 
     author.papers = [] if author.papers is None else author.papers
-    papers = [get_paper(paper["paperId"]) for paper in author.papers]
+    papers = [get_paper(paper["paperId"], api_key) for paper in author.papers]
     papers = [p for p in papers if p is not None]
 
     return Author(
@@ -92,8 +107,8 @@ def get_author_with_papers(author_id: str) -> Optional[Author]:
     )
 
 
-def get_dois(author_id: str) -> List[str]:
-    author = get_author_with_papers(author_id)
+def get_dois(author_id: str, api_key: str = None) -> List[str]:
+    author = get_author_with_papers(author_id, api_key)
     if author is None:
         return []
 

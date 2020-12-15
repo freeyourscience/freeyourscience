@@ -1,6 +1,12 @@
 import pytest
+from requests import Response
 
-from fyscience.semantic_scholar import get_paper, Paper, extract_profile_id_from_url
+from fyscience.semantic_scholar import (
+    get_paper,
+    Paper,
+    extract_profile_id_from_url,
+    _get_request,
+)
 
 
 def test_get_paper_no_paper(monkeypatch):
@@ -51,3 +57,20 @@ def test_get_paper_no_doi(monkeypatch):
 def test_extract_profile_id_from_url(url, profile_id):
     extracted_id = extract_profile_id_from_url(url)
     assert extracted_id == profile_id
+
+
+def test_dev_vs_prod_endpoint(monkeypatch):
+    def mock_get_dev(url, **kwargs):
+        assert url.startswith("https://api.semanticscholar.org")
+        return None
+
+    monkeypatch.setattr("fyscience.semantic_scholar.requests.get", mock_get_dev)
+    _get_request("someEndpoint/123", api_key=None)
+
+    def mock_get_prod(url, headers, **kwargs):
+        assert url.startswith("https://partner.semanticscholar.org")
+        assert "x-api-key" in headers
+        return None
+
+    monkeypatch.setattr("fyscience.semantic_scholar.requests.get", mock_get_prod)
+    _get_request("someEndpoint/123", api_key="api_key_dummy")

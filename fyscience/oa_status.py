@@ -3,16 +3,18 @@ from fyscience.unpaywall import get_paper as unpaywall_get_paper
 from fyscience.semantic_scholar import get_paper as s2_get_paper
 
 
-def validate_oa_status_from_s2(paper: PaperWithOAStatus) -> PaperWithOAStatus:
+def validate_oa_status_from_s2(
+    paper: PaperWithOAStatus, api_key: str = None
+) -> PaperWithOAStatus:
     if not paper.is_open_access:
-        s2_paper = s2_get_paper(paper.doi)
+        s2_paper = s2_get_paper(paper.doi, api_key)
         if s2_paper is not None and s2_paper.is_open_access is not None:
             paper.is_open_access = s2_paper.is_open_access
 
     return paper
 
 
-def oa_status(paper: Paper) -> PaperWithOAStatus:
+def oa_status(paper: Paper, s2_api_key: str = None) -> PaperWithOAStatus:
     """Enrich a given paper with information about the availability of an open access
     copy collected from the an unpaywall data dump or the unpaywall API.
     """
@@ -20,6 +22,6 @@ def oa_status(paper: Paper) -> PaperWithOAStatus:
     is_open_access = None if unpaywall_paper is None else unpaywall_paper.is_open_access
 
     paper_with_status = PaperWithOAStatus(is_open_access=is_open_access, **paper.dict())
-    paper_with_status = validate_oa_status_from_s2(paper_with_status)
+    paper_with_status = validate_oa_status_from_s2(paper_with_status, s2_api_key)
 
     return paper_with_status
