@@ -51,30 +51,19 @@
 			<h2 class="fs-4">
 				Why is this allowed?
 			</h2>
-			<p class="fs-5">
-				{#
-				- contrast expectation
-				- allowed to re-publish
-				- re-publish in free archives / locations
-				- open access works separate from the journals (but with consent/conditions); directly linked to
-				original
-				pub,
-				citations stay, but more accessible to the world
-				- often no cost
-				#}
-				Still, to this day, some of the main journals require expensive subscriptions to get back to the
-				research of our colleagues and your own institution.
-				However, in many cases the publishers allow publishing a freely accessible version of the paper,
-				separate from the journal.
-				<br />
-				The papers could for example be uploaded via your institution's archive, a preprint server like
-				arXiv.org or others.
-				Usually it is required and even beneficial to link from these free versions to the paywalled journal
-				publication.
+			<p>
+				Paying a journal to make your research publications open access is not the only way you can liberate your science from paywalls and expensive journal subscriptions.
+				Many publishers actually allow publishing a freely accessible version of the paper, separate from the journal.
+			</p>
+			<p>
+				Depending on the journal's policy, you may can upload your work to an institutional archive (e.g. your university library), a preprint server like arXiv or your personal website.
+				The policies usually distinguish between the <em>submitted</em>, <em>accepted</em> and <em>published</em> version of a document.
+				Most often you are allowed to re-publish the <em>accepted</em> or <em>submitted</em> version, without having to pay the publisher.
+			</p>
+			<p>
+				Most policies require you to link the freely accessible version back to the paywalled version.
 				This helps to make sure that other publications end up citing the main version of the paper.
 				At the same time, having a free copy available, more people are able to find your research.
-				<br />
-				All this can often be done without any additional fees paid to the publisher.
 			</p>
 		</section>
 
@@ -82,43 +71,46 @@
 			<h2 class="fs-4">
 				Technical Background
 			</h2>
-			<p class="fs-5">
-				{# TODO: Ask if we can use logos of our data partners.
-				- existing services, amazing
-				- combine existing information
-				- not a lawyer
-				- how we arrive at the number in the header
-				- offer this page, but also work on a machine readable interface to give back to open science api
-				ecosystem
-				#}
-				We build on a set of wonderful existing services that try to make scientific works more accessible.
-				<br />
-				From <a href="https://unpaywall.org/" target="_blank" class="link-secondary">unpaywall.org</a>
-				we use the dataset to determine the number at the very top of the page and the API to look up if Open
-				Access versions exist for a specific DOI.
-				We use the API of
-				<a href="https://www.semanticscholar.org/" target="_blank" class="link-secondary">Semantic Scholar</a>
-				to fill in missing Open Access versions and leverage their author profiles as an entry point to get all
-				papers by author.
-				To allow search by ORCID, we leverage the
-				<a href="https://members.orcid.org/api" target="_blank" class="link-secondary">ORCID API</a>.
-				Our search by author name is powered by the API at
-				<a href="https://www.crossref.org/" target="_blank" class="link-secondary">Crossref</a>.
-				We heavily rely on their databases being correct and so appreciate the service they offer to the world.
-				Given that we've found a paper with its venue's ISSN, we use the
-				<a href="https://v2.sherpa.ac.uk/" target="_blank" class="link-secondary">Sherpa API</a>
-				to determine the Open Access friendliness of the matching publisher policy.
-				<br />
-				It is important to note that all information on freeyourscience.org is meant to facilitate, to educate
-				fellow authors about which Open Access re-publication possibilities to look into.
-				No information shown here necessarily forms any basis for legal claims towards authors, publishers or
-				any other party.
-				<br />
+			{# TODO: Ask if we can use logos of our data partners.
+			- existing services, amazing
+			- combine existing information
+			- not a lawyer
+			- how we arrive at the number in the header
+			- offer this page, but also work on a machine readable interface to give back to open science api
+			ecosystem
+			#}
+			<p>
+				Free your science builds upon a set of wonderful existing services that try to make scientific works more accessible.
+				We heavily rely on their databases being correct and appreciate the service they offer to the world.
+			</p>
+			<ul>
+				<li>
+					<a href="https://unpaywall.org/" target="_blank" class="link-secondary">unpaywall.org</a> lets us determine if Open Access version exist for a given DOI
+				</li>
+				<li>
+					<a href="https://www.semanticscholar.org/" target="_blank" class="link-secondary">Semantic Scholar</a> lets us find an authors papers and additional Open Access versions
+				</li>
+				<li>
+					<a href="https://members.orcid.org/api" target="_blank" class="link-secondary">ORCID API</a> powers our search by ORCID ID
+				</li>
+				<li>
+					<a href="https://www.crossref.org/" target="_blank" class="link-secondary">Crossref</a> lets us link papers to their ISSN, but also underpins some of the above services
+				</li>
+				<li>
+					<a href="https://v2.sherpa.ac.uk/" target="_blank" class="link-secondary">Sherpa API</a> maintains a database of publisher's Open Access policies
+				</li>
+			</ul>
+			<p>
+				It is important to note that all information on freeyourscience.org is meant to facilitate, to educate fellow authors about which Open Access re-publication possibilities to look into.
+				No information shown here necessarily forms any basis for legal claims towards authors, publishers or any other party.
+			</p>
+			<p>
 				If you are curious about how we end up at the number at the top of the page, please feel free to check
 				out the analysis pipeline we used to calculate that number in December 2020 over in the
 				<a href="https://github.com/freeyourscience/fyscience-app" target="_blank" class="link-secondary">
 					freeyourscience GitHub repository</a>.
-				<br />
+			</p>
+			<p>
 				While our main goal is to provide this web based tool for fellow humans, like authors and interested
 				people, we are also working on a machine readable interface to the information we merge from the
 				different sources.
@@ -128,6 +120,8 @@
 				<span class="font-monospace">/papers</span> endpoints with an
 				<span class="font-monospace">application/json</span> accept header to get the content as JSON instead of
 				HTML.
+			</p>
+			<p>
 				Should you want to use our API or in case you still feel like you are missing features, please contact
 				us via <a href="mailto:team@freeyourscience.org" class="link-secondary">team@freeyourscience.org</a>
 			</p>
@@ -137,31 +131,38 @@
 			<h2 class="fs-4">
 				Our Motivation
 			</h2>
-			<p class="fs-5">
-				{#
-				- background:
-				-- enjoy collaborative spirit of globally networked academic communities
-				-- foster accessibility and collaboration
-				-- can't stand when information that should be freely accessible is unnecessarily hidden behind paywalls
-				- strategy:
-				-- tbd
-				- for authors:
-				-- enable to discover the potential they have with past publications
-				- for institutions:
-				-- call us
-				#}
+			{#
+			- background:
+			-- enjoy collaborative spirit of globally networked academic communities
+			-- foster accessibility and collaboration
+			-- can't stand when information that should be freely accessible is unnecessarily hidden behind paywalls
+			- strategy:
+			-- tbd
+			- for authors:
+			-- enable to discover the potential they have with past publications
+			- for institutions:
+			-- call us
+			#}
+			<p>
 				We are two open science enthusiasts. Having worked in different positions of academia, from being an
 				author to supporting institutions with grant writing and being part of the publisher side of things, we
 				have come to appreciate the open and collaborative spirit of the academic community but also came to
-				acknowledge the constraints that still restrict the accessibility of scientific results.<br />
+				acknowledge the constraints that still restrict the accessibility of scientific results.
+			</p>
+			<p>
 				Our goal is to foster accessibility and collaboration in the beautiful, globally networked academic
 				communities.
 				Also, we just can't stand when information that should be freely accessible is unnecessarily hidden
-				behind paywalls.<br />
-				Accordingly, our strategy is to create awareness about the potential that publisher's Open Access
-				policies bear.
-				And for authors and other interested individuals, provide a tool to discover the potential that they
-				have to increase the amount of Open Access publications just based on what they already published.
+				behind paywalls.
+			</p>
+			<p>
+				Accordingly, our strategy is to:
+				<ul>
+					<li>create awareness about the potential of publisher's Open Access policies</li>
+					<li>help authors understand which research they can free from paywalls</li>
+				</ul>
+		  <p>
+				Looking forward, we hope that research institutions, funders and other interested parties can use this tool to discover the potential that they have to drastically increase the amount of Open Access publications.
 			</p>
 		</section>
 	</main>
