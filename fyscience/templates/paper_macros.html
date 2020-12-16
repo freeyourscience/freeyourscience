@@ -1,5 +1,5 @@
 {% macro minimal(paper) -%}
-<div class="paper-details">
+<div class="paper-details col-9">
     <div class="fw-bold">
         {% if paper.title %}
         {{ paper.title }}
@@ -7,22 +7,23 @@
         Unknown Title
         {% endif %}
     </div>
-    {{ paper.authors }} ({{ paper.year }}) in {{ paper.journal }}<br />
+    {{ paper.journal }}, {{ paper.authors }} ({{ paper.year }})<br />
+    DOI: {{ paper.doi }}
     <a href="https://doi.org/{{ paper.doi }}" class="link-secondary" target="_blank">
-        {{ paper.doi }}
-    </a><br />
-    {% if not paper.is_open_access %}
-    No Open Access Version Found (<a href="#" class="link-secondary link-oa-incorrect">incorrect?</a>)
-    {% endif %}
+        <img src="/static/img/box-arrow-up-right.svg" alt="" width="12" height="12" title="Bootstrap">
+    </a>
 </div>
 {%- endmacro %}
 
 {% macro pathway_details(paper) -%}
-<div class="container">
+<div class="col-3">
     <div class="publisher-policy">
-        <a href='{{ paper.oa_pathway_uri }}' target="_blank" class="link-secondary">
-            Learn about applicable Open Access pathways @ Sherpa
-        </a>
+        <a href='{{ paper.oa_pathway_uri }}' target="_blank" class="link-primary">
+            View Open Access pathways
+        </a><br />
+        {% if not paper.is_open_access %}
+        <a href="#" class="link-secondary link-oa-incorrect">Already Open Access?</a>
+        {% endif %}
     </div>
 </div>
 {%- endmacro %}

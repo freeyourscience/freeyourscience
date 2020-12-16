@@ -9,29 +9,22 @@ Free Your Science | {{ author.name }}
 
 {% block content %}
 <div class="container fs-5">
-    <header class="container text-center lh-sm mt-5 mb-4">
+    <header class="container text-center lh-sm mt-5 mb-5">
         <h1>
-            <a href="/" class="link-dark text-decoration-none" alt="Back to landing page">
-                Free Your Science
-            </a><br />
-            {{ author.name }}
+            {{ author.name }} can liberate {{ papers_not_oa_nocost|length}} articles
         </h1>
     </header>
 
     <main>
         <section>
-            <h2 class="text-center mb-4">
-                {{ papers_not_oa_nocost|length}} of {{ author.papers|length }} papers do not seem to be Open Access
-                yet<br />
-                but do have no-cost Open Access publisher policies<br />
+            <h2 class="mb-4">
+                Unnecessarily paywalled articles
             </h2>
             {% if papers_not_oa_nocost %}
-            <div class="row mb-3 author-pubs">
+            <div class="row mb-3 author-pubs gy-4">
                 {% for paper in papers_not_oa_nocost %}
-                <div class="col-lg-6 mb-3">
-                    {{ paper_page.minimal(paper) }}
-                    {{ paper_page.pathway_details(paper) }}
-                </div>
+                {{ paper_page.minimal(paper) }}
+                {{ paper_page.pathway_details(paper) }}
                 {% endfor %}
             </div>
             {% endif %}
@@ -42,7 +35,7 @@ Free Your Science | {{ author.name }}
             <div class="row mb-3 author-pubs">
                 {% if papers_other_policies %}
                 {% for paper in papers_other_policies %}
-                <div class="col-lg-6 mb-3">
+                <div class="mb-3">
                     {{ paper_page.minimal(paper) }}
                     {{ paper_page.pathway_details(paper) }}
                 </div>
@@ -58,7 +51,7 @@ Free Your Science | {{ author.name }}
             <div class="row mb-3 author-pubs">
                 {% if papers_already_oa %}
                 {% for paper in papers_already_oa %}
-                <div class="col-lg-6  mb-3">
+                <div class="mb-3">
                     {{ paper_page.minimal(paper) }}
                 </div>
                 {% endfor %}
