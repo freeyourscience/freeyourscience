@@ -116,6 +116,11 @@ def get_paper(doi: str, settings: Settings = Depends(get_settings)):
     return paper
 
 
+@api_router.get("/debug")
+def get_request_headers(request: Request):
+    return request.headers
+
+
 @api_router.get("/", response_class=HTMLResponse)
 def get_landing_page(request: Request):
     return templates.TemplateResponse(
