@@ -11,17 +11,17 @@ Free Your Science | {{ author.name }}
 <div class="container fs-5">
     <header class="container text-center lh-sm mt-5 mb-5">
         <h1>
-            {{ author.name }} can liberate {{ papers_not_oa_nocost|length}} articles
+            {{ author.name }} can liberate {{ papers_not_oa_nocost|length}} publications
         </h1>
     </header>
 
     <main>
         <section class="mb-5">
             <h2>
-                Unnecessarily paywalled articles
+                Unnecessarily paywalled publications
             </h2>
             <p class="fs-6 mb-4">
-                We found no Open Access version for the following articles.
+                We found no Open Access version for the following publications.
                 However, the publishers likely allow no-cost re-publication as Open Access.
             </p>
             {% if papers_not_oa_nocost %}
@@ -36,9 +36,9 @@ Free Your Science | {{ author.name }}
 
         {% if papers_other_policies %}
         <section class="mb-5">
-            <h2>Articles with non-free publisher policies</h2>
+            <h2>Publications with non-free publisher policies</h2>
             <p class="fs-6 mb-4">
-                The following articles do not seem to have any no-cost Open Access re-publishing pathways,
+                The following publications do not seem to have any no-cost Open Access re-publishing pathways,
                 or do not allow Open Access publishing at all.
             </p>
             {% for paper in papers_other_policies %}
@@ -51,7 +51,7 @@ Free Your Science | {{ author.name }}
         {% endif %}
 
         <section class="mb-5">
-            <h2 class="mb-3">Open Access articles</h2>
+            <h2 class="mb-3">Open Access publications</h2>
             {% if papers_already_oa %}
             {% for paper in papers_already_oa %}
             <div class="row mb-3 author-pubs mb-4 pt-3 border-top">
@@ -60,8 +60,8 @@ Free Your Science | {{ author.name }}
             {% endfor %}
             {% else %}
             <p>
-                We could not find any of your Open Access articles in the unpaywall.org database.<br />
-                In case you think there should be Open Access articles here, help
+                We could not find any of your Open Access publications in the unpaywall.org database.<br />
+                In case you think there should be Open Access publications here, help
                 <a href="https://unpaywall.org/sources" target="_blank">unpaywall.org</a>
                 to find them.
             </p>
@@ -70,7 +70,7 @@ Free Your Science | {{ author.name }}
 
         {% if papers_with_issues %}
         <section class="mb-5">
-            <h2>Articles we had issues with</h2>
+            <h2>Publications we had issues with</h2>
             <div class="container author-pubs">
                 {% for paper in papers_with_issues %}
                 <div class="paper-details">
