@@ -9,4 +9,3 @@ RUN pip install --upgrade pip setuptools
 RUN pip install --no-cache-dir /usr/src/app
 
 ENV PYTHONPATH=/usr/src/app/fyscience
-ENV GUNICORN_CONF=/usr/src/app/gunicorn_conf.py
