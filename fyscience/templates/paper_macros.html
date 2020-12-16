@@ -1,5 +1,5 @@
 {% macro minimal(paper) -%}
-<div class="paper-details col-12 col-md-9 fs-6">
+<div class="paper-details col-12 col-md-9 fs-6 mb-2 mb-md-0">
     <div class="fs-5 mb-1">
         {% if paper.title %}
         {{ paper.title }}
@@ -8,21 +8,24 @@
         {% endif %}
     </div>
     {{ paper.journal }}, {{ paper.authors }} ({{ paper.year }}),
-    DOI: {{ paper.doi }}
+    {{ paper.doi }}
     <a href="https://doi.org/{{ paper.doi }}" class="link-secondary" target="_blank">
-        <img src="/static/img/box-arrow-up-right.svg" alt="" width="12" height="12" title="Bootstrap">
+        <img src="/static/img/box-arrow-up-right.svg" alt="" width="12" height="12"
+            title="Visit article: {{ paper.title }}">
     </a>
 </div>
 {%- endmacro %}
 
 {% macro pathway_details(paper) -%}
-<div class="col-12 col-md-3 fs-6 text-end">
+<div class="col-12 col-md-3 fs-6 text-md-end">
     <div class="publisher-policy">
-        <a href='{{ paper.oa_pathway_uri }}' target="_blank" class="btn btn-success text-decoration-none">
+        <a href='{{ paper.oa_pathway_uri }}' target="_blank" class="btn btn-success text-decoration-none"
+            title="View Open Access pathways for: {{ paper.journal }}">
             View Open Access pathways
         </a><br />
         {% if not paper.is_open_access %}
-        <a href="#" class="link-secondary text-decoration-none link-oa-incorrect">Already Open Access?</a>
+        <a href="#" class="link-secondary text-decoration-none link-oa-incorrect"
+            title="Is there an Open Access version for: {{ paper.title }}">Already Open Access?</a>
         {% endif %}
     </div>
 </div>
