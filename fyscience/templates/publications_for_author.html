@@ -16,54 +16,61 @@ Free Your Science | {{ author.name }}
     </header>
 
     <main>
-        <section>
-            <h2 class="mb-4">
+        <section class="mb-5">
+            <h2>
                 Unnecessarily paywalled articles
             </h2>
+            <p class="fs-6 mb-4">
+                We found no Open Access version for the following articles.
+                However, the publishers likely allow no-cost re-publication as Open Access.
+            </p>
             {% if papers_not_oa_nocost %}
-            <div class="row mb-3 author-pubs gy-4">
-                {% for paper in papers_not_oa_nocost %}
+            {% for paper in papers_not_oa_nocost %}
+            <div class="row mb-3 author-pubs mb-4 pt-3 border-top">
                 {{ paper_page.minimal(paper) }}
                 {{ paper_page.pathway_details(paper) }}
-                {% endfor %}
             </div>
+            {% endfor %}
             {% endif %}
         </section>
 
-        <section>
-            <h2 class="mb-3">Papers with non-free publisher policies</h2>
-            <div class="row mb-3 author-pubs">
-                {% if papers_other_policies %}
-                {% for paper in papers_other_policies %}
-                <div class="mb-3">
-                    {{ paper_page.minimal(paper) }}
-                    {{ paper_page.pathway_details(paper) }}
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>No papers found in this category.</p>
-                {% endif %}
+        {% if papers_other_policies %}
+        <section class="mb-5">
+            <h2>Articles with non-free publisher policies</h2>
+            <p class="fs-6 mb-4">
+                The following articles do not seem to have any no-cost Open Access re-publishing pathways,
+                or do not allow Open Access publishing at all.
+            </p>
+            {% for paper in papers_other_policies %}
+            <div class="row mb-3 author-pubs mb-4 pt-3 border-top">
+                {{ paper_page.minimal(paper) }}
+                {{ paper_page.pathway_details(paper) }}
             </div>
+            {% endfor %}
         </section>
+        {% endif %}
 
-        <section>
-            <h2 class="mb-3">Open Access papers</h2>
-            <div class="row mb-3 author-pubs">
-                {% if papers_already_oa %}
-                {% for paper in papers_already_oa %}
-                <div class="mb-3">
-                    {{ paper_page.minimal(paper) }}
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>No papers found in this category.</p>
-                {% endif %}
+        <section class="mb-5">
+            <h2 class="mb-3">Open Access articles</h2>
+            {% if papers_already_oa %}
+            {% for paper in papers_already_oa %}
+            <div class="row mb-3 author-pubs mb-4 pt-3 border-top">
+                {{ paper_page.minimal(paper) }}
             </div>
+            {% endfor %}
+            {% else %}
+            <p>
+                We could not find any of your Open Access articles in the unpaywall.org database.<br />
+                In case you think there should be Open Access articles here, help
+                <a href="https://unpaywall.org/sources" target="_blank">unpaywall.org</a>
+                to find them.
+            </p>
+            {% endif %}
         </section>
 
         {% if papers_with_issues %}
-        <section>
-            <h2>Papers we had issues with</h2>
+        <section class="mb-5">
+            <h2>Articles we had issues with</h2>
             <div class="container author-pubs">
                 {% for paper in papers_with_issues %}
                 <div class="paper-details">
@@ -87,7 +94,7 @@ Free Your Science | {{ author.name }}
 <script type="text/javascript">
     document.querySelectorAll('.link-oa-incorrect').forEach(e => {
         e.addEventListener('click', () => {
-            alert("Thanks for letting us know!\nWe'll make sure to correct this.")
+            alert("What a nice suprise!\nWe'll look into it.")
         })
     });
 </script>
