@@ -1,9 +1,15 @@
 div.paper-details {
-    background: #ffffff;
+  background: #ffffff;
 }
 
 .single-paper .paper-details .paper-title {
-    font-size:150%;
-    margin-top:2em;
-    margin-bottom:1em;
+  font-size: 150%;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.landing-page main {
+  max-width: 960px;
+  margin-right: auto;
+  margin-left: auto;
 }
