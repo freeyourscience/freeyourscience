@@ -14,7 +14,7 @@ STATIC_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "static")
 
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
 
-app = FastAPI()
+app = FastAPI(title="Free Your Science")
 app.include_router(api_router)
 app.mount("/static", StaticFiles(directory=STATIC_PATH), name="static")
 
