@@ -53,7 +53,6 @@ secure_scheme_headers = {
     "X-FORWARDED-PROTO": "https",
     "X-FORWARDED-SSL": "on",
 }
-forwarded_allow_ips = "*"
 
 
 # For debugging and testing
@@ -67,7 +66,6 @@ log_data = {
     "errorlog": errorlog,
     "accesslog": accesslog,
     "secure_scheme_headers": secure_scheme_headers,
-    "forwarded_allow_ips": forwarded_allow_ips,
     # Additional, non-gunicorn variables
     "workers_per_core": workers_per_core,
     "use_max_workers": use_max_workers,
