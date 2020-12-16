@@ -136,24 +136,19 @@ def get_author_with_full_papers_html(
     author's papers is filled in from all available data sources and the author page
     is rendered as HTML.
     """
-    # author = get_author_with_papers(profile, settings)
-    # author.papers = [
-    #     _construct_paper(
-    #         p.doi,
-    #         settings.unpaywall_email,
-    #         settings.sherpa_api_key,
-    #         settings.s2_api_key,
-    #     )
-    #     for p in author.papers
-    # ]
-    # author.papers = [
-    #     _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
-    # ]
-
-    import pickle
-
-    with open("author.pkl", "rb") as fh:
-        author = pickle.load(fh)
+    author = get_author_with_papers(profile, settings)
+    author.papers = [
+        _construct_paper(
+            p.doi,
+            settings.unpaywall_email,
+            settings.sherpa_api_key,
+            settings.s2_api_key,
+        )
+        for p in author.papers
+    ]
+    author.papers = [
+        _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
+    ]
 
     author.papers = sorted(
         author.papers,
