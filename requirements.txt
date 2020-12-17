@@ -1,0 +1,10 @@
+requests
+pydantic[dotenv]
+fastapi
+uvicorn
+gunicorn
+jinja2
+aiofiles
+uvloop
+httptools
+loguru
