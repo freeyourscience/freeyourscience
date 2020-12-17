@@ -27,7 +27,7 @@ jobs:
         run: |
           docker tag my_awesome_image:latest $IMAGE_NAME:latest
           docker tag $IMAGE_NAME:latest $IMAGE_NAME:${{ github.sha }}
-          docker build --cache-from erkannt/wissenschaftsbefreiungsfront/freeyourscience -t dev .
+          docker build --cache-from my_awesome_image:latest -t dev .
 
       - name: Test
         run: |
