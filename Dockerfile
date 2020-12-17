@@ -1,11 +1,35 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8-alpine3.10-2020-06-06
+FROM python:alpine as base
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY . /usr/src/app
+COPY requirements.txt requirements.txt
+COPY requirements_dev.txt requirements_dev.txt
+COPY setup.py /app
 
-RUN pip install --upgrade pip setuptools
-RUN pip install --no-cache-dir /usr/src/app
 
-ENV PYTHONPATH=/usr/src/app/fyscience
+
+FROM base as dev
+RUN apk add --no-cache --virtual .build-deps gcc libc-dev make \
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir -r requirements_dev.txt \
+    && apk del .build-deps gcc libc-dev make
+
+COPY fyscience /app/fyscience
+RUN pip install -e /app
+
+EXPOSE 8080
+CMD ["uvicorn", "--reload", "--host", "0.0.0.0", "--port", "8080", "--log-level", "info", "fyscience.main:app"]
+
+
+
+FROM base as prod
+RUN apk add --no-cache --virtual .build-deps gcc libc-dev make \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apk del .build-deps gcc libc-dev make
+
+COPY fyscience /app/fyscience
+RUN pip install --no-cache /app
+
+COPY gunicorn_conf.py /app
+EXPOSE 80
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-c", "gunicorn_conf.py", "fyscience.main:app"]
