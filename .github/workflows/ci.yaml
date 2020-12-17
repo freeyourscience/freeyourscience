@@ -41,7 +41,7 @@ jobs:
       - name: Deploy
         run: |
           gcloud components install beta
-          gcloud beta run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE }}" \
+          gcloud beta run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE_DEV }}" \
             --image "$IMAGE_NAME:${{ github.sha }}" \
             --region "${{ secrets.GCP_REGION }}" \
             --platform managed \
