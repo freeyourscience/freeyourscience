@@ -27,7 +27,7 @@ def test_get_landing_page(client: TestClient) -> None:
         ("firstname lastname", "crossref.get_author_with_papers"),
     ],
 )
-def test_get_publications_for_author(
+def test_get_publications_for_author_html(
     profile, provider, monkeypatch, client: TestClient
 ) -> None:
     url = f"/authors?profile={profile}"
@@ -54,7 +54,51 @@ def test_get_publications_for_author(
     r = client.get(url)
     assert r.ok
 
+    monkeypatch.setattr(f"fyscience.api.{provider}", lambda *a, **kw: None)
+
+    r = client.get(url)
+    assert r.status_code == 404
+
+
+def test_get_publications_for_author_html_without_profile_arg(
+    client: TestClient,
+) -> None:
     r = client.get("/authors")
+    assert not r.ok
+    assert r.status_code == 422
+
+
+@pytest.mark.parametrize(
+    "profile,provider",
+    [
+        (51453144, "semantic_scholar.get_author_with_papers"),
+        ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
+        ("firstname lastname", "crossref.get_author_with_papers"),
+    ],
+)
+def test_get_publications_for_author(
+    profile, provider, monkeypatch, client: TestClient
+) -> None:
+    url = f"/api/authors?profile={profile}"
+
+    monkeypatch.setattr(
+        f"fyscience.api.{provider}",
+        lambda *a, **kw: Author(
+            name="Dummy Author", papers=[FullPaper(doi="10.1007/s00580-005-0536-0")]
+        ),
+    )
+
+    r = client.get(url)
+    assert r.ok
+
+    monkeypatch.setattr(f"fyscience.api.{provider}", lambda *a, **kw: None)
+
+    r = client.get(url)
+    assert r.status_code == 404
+
+
+def test_get_publications_for_author_without_profile_arg(client: TestClient) -> None:
+    r = client.get("/api/authors")
     assert not r.ok
     assert r.status_code == 422
 

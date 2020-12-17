@@ -98,7 +98,7 @@ def get_author_with_papers(profile: str, settings: Settings = Depends(get_settin
     # TODO: Resolve duplicate DOIs more intelligently (always choose the more recent
     #       version, or the one with more info)
     unique_papers = {p.doi: p for p in author.papers}
-    author.papers = unique_papers.values()
+    author.papers = list(unique_papers.values())
 
     return author
 
