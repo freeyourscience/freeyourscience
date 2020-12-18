@@ -1,4 +1,4 @@
-.PHONY: build-dev dev lint prod test
+.PHONY: build-dev dev lint prod release test
 
 build-dev:
 	docker build . --target dev --cache-from freeyourscience-dev -t freeyourscience-dev
@@ -15,3 +15,8 @@ lint:
 prod:
 	docker build . --target prod -t freeyourscience
 	docker run --rm -it -p 8080:80 freeyourscience
+
+release: export TAG = latest/$(shell date +%Y%m%d%H%M)
+release:
+        git tag $$TAG
+        git push origin $$TAG
