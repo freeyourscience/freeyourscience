@@ -14,11 +14,20 @@ jobs:
         with:
           python-version: 3
 
+      - name: Build dev image from cache
+        uses: whoan/docker-build-with-cache-action@v5
+        with:
+          image_name: erkannt/wissenschaftsbefreiungsfront/freeyourscience-dev
+          image_tag: ${{ github.sha }}
+          build_extra_args: "--tag=freeyourscience-dev"
+          registry: docker.pkg.github.com
+          username: erkannt
+          password: "${{ secrets.GITHUB_TOKEN }}"
+
       - name: Test
         run: |
-          pip install -r requirements_dev.txt
-          black --check
-          pytest
+          make lint
+          make test
 
       - name: Build prod image from cache
         uses: whoan/docker-build-with-cache-action@v5
