@@ -137,38 +137,6 @@ def get_author_with_full_papers_html(
     is rendered as HTML.
     """
     author = get_author_with_papers(profile, settings)
-    author.papers = [
-        _construct_paper(
-            p.doi,
-            settings.unpaywall_email,
-            settings.sherpa_api_key,
-            settings.s2_api_key,
-        )
-        for p in author.papers
-    ]
-    author.papers = [
-        _remove_costly_oa_paths_from_oa_pathway_details(p) for p in author.papers
-    ]
-
-    author.papers = sorted(
-        author.papers,
-        key=lambda p: float("inf") if p.year is None else p.year,
-        reverse=True,
-    )
-
-    papers_not_oa_nocost = []
-    papers_other_policies = []
-    papers_already_oa = []
-    papers_with_issues = []
-    for p in author.papers:
-        if _is_paywalled_and_nocost(p):
-            papers_not_oa_nocost.append(p)
-        elif p.is_open_access:
-            papers_already_oa.append(p)
-        elif p.oa_pathway is OAPathway.other:
-            papers_other_policies.append(p)
-        else:
-            papers_with_issues.append(p)
 
     logger.debug(
         {
@@ -180,14 +148,7 @@ def get_author_with_full_papers_html(
 
     return templates.TemplateResponse(
         "publications_for_author.html",
-        {
-            "request": request,
-            "author": author,
-            "papers_not_oa_nocost": papers_not_oa_nocost,
-            "papers_other_policies": papers_other_policies,
-            "papers_already_oa": papers_already_oa,
-            "papers_with_issues": papers_with_issues,
-        },
+        {"request": request, "author": author, "dois": [p.doi for p in author.papers]},
     )
 
 
