@@ -14,25 +14,21 @@ jobs:
         with:
           python-version: 3
 
-      - name: Build image from cache
+      - name: Test
+        run: |
+          pip install -r requirements_dev.txt
+          black --check
+          pytest
+
+      - name: Build prod image from cache
         uses: whoan/docker-build-with-cache-action@v5
         with:
           image_name: erkannt/wissenschaftsbefreiungsfront/freeyourscience
           image_tag: ${{ github.sha }}
+          build_extra_args: "--tag=freeyourscience"
           registry: docker.pkg.github.com
           username: erkannt
           password: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Tag Container Images
-        run: |
-          docker tag my_awesome_image:latest $IMAGE_NAME:latest
-          docker tag $IMAGE_NAME:latest $IMAGE_NAME:${{ github.sha }}
-          docker build --cache-from my_awesome_image:latest -t dev .
-
-      - name: Test
-        run: |
-          docker run dev black --check
-          docker run dev pytest
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
@@ -43,6 +39,8 @@ jobs:
 
       - name: Push Image
         run: |
+          docker tag freeyourscience:latest $IMAGE_NAME:latest
+          docker tag freeyourscience:latest $IMAGE_NAME:${{ github.sha }}
           gcloud auth configure-docker gcr.io
           docker push $IMAGE_NAME:${{ github.sha }}
           docker push $IMAGE_NAME:latest
