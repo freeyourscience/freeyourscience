@@ -6,11 +6,11 @@ dev:
 
 test:
 	docker build . --target dev -t freeyourscience-dev
-	docker run --rm -v $$(pwd):/app freeyourscience:dev pytest
+	docker run --rm -v $$(pwd):/app freeyourscience-dev pytest
 
 lint:
 	docker build . --target dev -t freeyourscience-dev
-	docker run --rm freeyourscience:dev black --check .
+	docker run --rm freeyourscience-dev black --check .
 
 prod:
 	docker build . --target prod -t freeyourscience
