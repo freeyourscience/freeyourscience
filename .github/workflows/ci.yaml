@@ -19,7 +19,7 @@ jobs:
         with:
           image_name: erkannt/wissenschaftsbefreiungsfront/freeyourscience-dev
           image_tag: ${{ github.sha }}
-          build_extra_args: "--tag=freeyourscience-dev"
+          build_extra_args: "--tag=freeyourscience-dev --target=dev"
           registry: docker.pkg.github.com
           username: erkannt
           password: "${{ secrets.GITHUB_TOKEN }}"
