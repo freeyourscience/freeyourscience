@@ -7,93 +7,24 @@
 Free Your Science | {{ author.name }}
 {% endblock %}
 
+{% block header %}
+<script src="static/authorPapers.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container fs-5">
-    <header class="container text-center lh-sm mt-5 mb-5">
-        <h1>
-            {{ author.name }} can liberate {{ papers_not_oa_nocost|length}}
-            {% if papers_not_oa_nocost|length == 1%}
-            publication
-            {% else %}
-            publications
-            {% endif %}
-        </h1>
-    </header>
-
-    <main>
-        <section class="mb-5">
-            <h2>
-                Unnecessarily paywalled publications
-            </h2>
-            <p class="fs-6 mb-4">
-                We found no Open Access version for the following publications.
-                However, the publishers likely allow no-cost re-publication as Open Access.
-            </p>
-            {% if papers_not_oa_nocost %}
-            {% for paper in papers_not_oa_nocost %}
-            <div class="row mb-3 author-pubs mb-4 pt-3 border-top">
-                {{ paper_page.minimal(paper) }}
-                {{ paper_page.pathway_details(paper) }}
-            </div>
-            {% endfor %}
-            {% endif %}
-        </section>
-
-        {% if papers_other_policies %}
-        <section class="mb-5">
-            <h2>Publications with non-free publisher policies</h2>
-            <p class="fs-6 mb-4">
-                The following publications do not seem to have any no-cost Open Access re-publishing pathways,
-                or do not allow Open Access publishing at all.
-            </p>
-            {% for paper in papers_other_policies %}
-            <div class="row mb-3 author-pubs mb-4 pt-3 border-top">
-                {{ paper_page.minimal(paper) }}
-                {{ paper_page.pathway_details(paper) }}
-            </div>
-            {% endfor %}
-        </section>
-        {% endif %}
-
-        <section class="mb-5">
-            <h2 class="mb-3">Open Access publications</h2>
-            {% if papers_already_oa %}
-            {% for paper in papers_already_oa %}
-            <div class="row mb-3 author-pubs mb-4 pt-3 border-top">
-                {{ paper_page.minimal(paper) }}
-            </div>
-            {% endfor %}
-            {% else %}
-            <p>
-                We could not find any of your Open Access publications in the unpaywall.org database.<br />
-                In case you think there should be Open Access publications here, help
-                <a href="https://unpaywall.org/sources" target="_blank">unpaywall.org</a>
-                to find them.
-            </p>
-            {% endif %}
-        </section>
-
-        {% if papers_with_issues %}
-        <section class="mb-5">
-            <h2>Publications we had issues with</h2>
-            <div class="container author-pubs">
-                {% for paper in papers_with_issues %}
-                <div class="paper-details">
-                    <a href="https://doi.org/{{ paper.doi }}" class="link-secondary" target="_blank">
-                        {{ paper.doi }}
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-        {% endif %}
-    </main>
-    <footer class="container text-center m-4">
-        <small>
-            (<a href="{{ author.profile_url }}" target="_blank" class="link-dark">Source Profile</a>
-            that was used to retreive the author's papers.)
-        </small>
-    </footer>
+    <div id="publicationsForAuthor"></div>
+    <script>
+        var app = Elm.Main.init({
+            node: document.getElementById('publicationsForAuthor'),
+            flags: {
+                "dois": {{ dois | safe }},
+                "authorName": "{{ author.name }}",
+                "authorProfileURL": "{{ author.profile_url }}",
+                "serverURL": "http://localhost:8080"
+            }
+        });
+    </script>
 </div>
 
 <script type="text/javascript">
