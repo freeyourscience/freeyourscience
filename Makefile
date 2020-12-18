@@ -1,4 +1,4 @@
-.PHONY: dev prod test
+.PHONY: dev lint prod test
 
 dev:
 	docker build . --target dev -t freeyourscience:dev
@@ -7,6 +7,10 @@ dev:
 test:
 	docker build . --target dev -t freeyourscience:dev
 	docker run --rm -it -v $$(pwd):/app -p 8080:8080 freeyourscience:dev pytest
+
+lint:
+	docker build . --target dev -t freeyourscience:dev
+	docker run --rm -it -v $$(pwd):/app -p 8080:8080 freeyourscience:dev black --check .
 
 prod:
 	docker build . --target prod -t freeyourscience
