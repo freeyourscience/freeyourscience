@@ -116,19 +116,19 @@ def get_paper(doi: str, settings: Settings = Depends(get_settings)):
     return paper
 
 
-@api_router.get("/debug")
+@api_router.get("/debug", include_in_schema=False)
 def get_request_headers(request: Request):
     return {"headers": request.headers, "url_scheme": request.url.scheme}
 
 
-@api_router.get("/", response_class=HTMLResponse)
+@api_router.get("/", response_class=HTMLResponse, include_in_schema=False)
 def get_landing_page(request: Request):
     return templates.TemplateResponse(
         "landing_page.html", {"request": request, "n_nocost_papers": "46.796.300"}
     )
 
 
-@api_router.get("/authors", response_class=HTMLResponse)
+@api_router.get("/authors", response_class=HTMLResponse, include_in_schema=False)
 def get_author_with_full_papers_html(
     profile: str, request: Request, settings: Settings = Depends(get_settings)
 ):
@@ -191,7 +191,7 @@ def get_author_with_full_papers_html(
     )
 
 
-@api_router.get("/papers", response_class=HTMLResponse)
+@api_router.get("/papers", response_class=HTMLResponse, include_in_schema=False)
 def get_paper_html(
     doi: str, request: Request, settings: Settings = Depends(get_settings)
 ):
