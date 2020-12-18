@@ -6,10 +6,10 @@ build-dev:
 dev: build-dev
 	docker run --rm -it -v $$(pwd):/app -p 8080:8080 freeyourscience-dev
 
-test: build-dev
+test:
 	docker run --rm -v $$(pwd):/app freeyourscience-dev pytest
 
-lint: build-dev
+lint:
 	docker run --rm freeyourscience-dev black --check .
 
 prod:
