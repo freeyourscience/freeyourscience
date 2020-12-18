@@ -1,5 +1,7 @@
 on:
   push:
+    branches:
+      - main
 
 env:
   IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/fyscience
