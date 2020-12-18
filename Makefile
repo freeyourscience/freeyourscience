@@ -1,15 +1,15 @@
-.PHONY: dev lint prod test
+.PHONY: build-dev dev lint prod test
 
-dev:
-	docker build . --target dev -t freeyourscience-dev
+build-dev:
+	docker build . --target dev --cache-from freeyourscience-dev -t freeyourscience-dev
+
+dev: build-dev
 	docker run --rm -it -v $$(pwd):/app -p 8080:8080 freeyourscience-dev
 
-test:
-	docker build . --target dev -t freeyourscience-dev
+test: build-dev
 	docker run --rm -v $$(pwd):/app freeyourscience-dev pytest
 
-lint:
-	docker build . --target dev -t freeyourscience-dev
+lint: build-dev
 	docker run --rm freeyourscience-dev black --check .
 
 prod:
