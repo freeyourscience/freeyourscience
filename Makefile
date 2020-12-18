@@ -18,5 +18,5 @@ prod:
 
 release: export TAG = latest/$(shell date +%Y%m%d%H%M)
 release:
-        git tag $$TAG
-        git push origin $$TAG
+	git tag $$TAG
+	git push origin $$TAG
