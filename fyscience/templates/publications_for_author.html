@@ -21,7 +21,7 @@ Free Your Science | {{ author.name }}
                 "dois": {{ dois | safe }},
                 "authorName": "{{ author.name }}",
                 "authorProfileURL": "{{ author.profile_url }}",
-                "serverURL": "https://{{ request.headers['host'] }}"
+                "serverURL": "{{ serverURL }}"
             }
         });
     </script>
