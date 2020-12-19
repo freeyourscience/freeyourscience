@@ -55,3 +55,6 @@ with an `.env` file containing the following variables:
 
 - `SHERPA_API_KEY`
 - `UNPAYWALL_EMAIL`
+
+optionally, if available you can add an `S2_API_KEY` variable for the Semantic Scholar
+API key.
