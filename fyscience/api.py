@@ -146,9 +146,19 @@ def get_author_with_full_papers_html(
         }
     )
 
+    host = request.headers["host"]
+    serverURL = (
+        "https://" + host if host.endswith("freeyourscience.org") else "http://" + host
+    )
+
     return templates.TemplateResponse(
         "publications_for_author.html",
-        {"request": request, "author": author, "dois": [p.doi for p in author.papers]},
+        {
+            "request": request,
+            "serverURL": serverURL,
+            "author": author,
+            "dois": [p.doi for p in author.papers],
+        },
     )
 
 
