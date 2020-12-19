@@ -19,7 +19,7 @@ jobs:
       - name: Build dev image from cache
         uses: whoan/docker-build-with-cache-action@v5
         with:
-          image_name: erkannt/wissenschaftsbefreiungsfront/freeyourscience-dev
+          image_name: freeyourscience/freeyourscience/freeyourscience-dev
           image_tag: ${{ github.sha }}
           build_extra_args: "--tag=freeyourscience-dev --target=dev"
           registry: docker.pkg.github.com
@@ -34,7 +34,7 @@ jobs:
       - name: Build prod image from cache
         uses: whoan/docker-build-with-cache-action@v5
         with:
-          image_name: erkannt/wissenschaftsbefreiungsfront/freeyourscience
+          image_name: freeyourscience/freeyourscience/freeyourscience
           image_tag: ${{ github.sha }}
           build_extra_args: "--tag=freeyourscience"
           registry: docker.pkg.github.com
