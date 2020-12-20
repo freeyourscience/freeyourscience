@@ -1,5 +1,6 @@
-on:
-  push:
+name: Free Your Science CI/CD
+
+on: [push]
 
 env:
   IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/fyscience
@@ -8,11 +9,19 @@ jobs:
   elm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: jorelali/setup-elm@v2
+      - name: Checkout source
+        uses: actions/checkout@v2
+      - name: Setup elm
+        uses: jorelali/setup-elm@v2
         with:
           elm-version: 0.19.1
-      - run: cd elm_frontend && elm make src/Main.elm
+      - name: Build
+        run: cd elm_frontend && elm make src/Main.elm --output authorPapers.js
+      - name: Archive Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: publications-for-authors-js
+          path: elm_frontend/authorPapers.js
 
   ci:
     needs: [ elm ] # make sure all your other jobs succeed
