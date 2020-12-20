@@ -48,7 +48,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: publications-for-authors-js
-      - run: mv elm_frontend/authorPapers.js freeyourscience/static/
+      - run: mv elm_frontend/authorPapers.js fyscience/static/
 
       - name: Test
         run: |
