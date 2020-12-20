@@ -12,7 +12,7 @@ jobs:
       - uses: jorelali/setup-elm@v2
         with:
           elm-version: 0.19.1
-      - run: cd elm && elm make src/Main.elm
+      - run: cd elm_frontend && elm make src/Main.elm
 
   ci:
     needs: [ elm ] # make sure all your other jobs succeed
