@@ -22,6 +22,7 @@ jobs:
         with:
           name: publications-for-authors-js
           path: elm_frontend/authorPapers.js
+          retention-days: 1
 
   ci:
     needs: [ elm ] # make sure all your other jobs succeed
@@ -42,6 +43,13 @@ jobs:
           registry: docker.pkg.github.com
           username: erkannt
           password: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: publications-for-authors-js
+      - run: ls -ahl
+      - run: ls -ahl elm_frontend
 
       - name: Test
         run: |
