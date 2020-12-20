@@ -43,9 +43,6 @@ init flags =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        _ =
-            Debug.log "update message:" msg
-
         updatedDOIs =
             List.drop 1 model.unfetchedDOIs
     in
