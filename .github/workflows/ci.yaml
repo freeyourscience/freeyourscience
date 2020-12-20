@@ -56,6 +56,7 @@ jobs:
           make test
 
       - name: Build prod image from cache
+        if: github.ref == 'refs/heads/main'
         uses: whoan/docker-build-with-cache-action@v5
         with:
           image_name: freeyourscience/freeyourscience/freeyourscience
@@ -66,6 +67,7 @@ jobs:
           password: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Set up Cloud SDK
+        if: github.ref == 'refs/heads/main'
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
@@ -73,6 +75,7 @@ jobs:
           export_default_credentials: true
 
       - name: Push Image
+        if: github.ref == 'refs/heads/main'
         run: |
           docker tag freeyourscience:latest $IMAGE_NAME:latest
           docker tag freeyourscience:latest $IMAGE_NAME:${{ github.sha }}
@@ -81,6 +84,7 @@ jobs:
           docker push $IMAGE_NAME:latest
 
       - name: Deploy
+        if: github.ref == 'refs/heads/main'
         run: |
           gcloud components install beta
           gcloud beta run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE_DEV }}" \
