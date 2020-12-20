@@ -16,7 +16,7 @@ jobs:
         with:
           elm-version: 0.19.1
       - name: Build
-        run: cd elm_frontend && elm make src/Main.elm --output authorPapers.js
+        run: cd elm_frontend && elm make src/Main.elm --optimize --output authorPapers.js
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -48,8 +48,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: publications-for-authors-js
-      - run: ls -ahl
-      - run: ls -ahl elm_frontend
+      - run: mv elm_frontend/authorPapers.js freeyourscience/static/
 
       - name: Test
         run: |
