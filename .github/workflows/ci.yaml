@@ -51,11 +51,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: publications-for-authors-js
-
-      - run: ls -ahl
-      - run: ls -ahl elm_frontend
-
-      - run: mv elm_frontend/authorPapers.js fyscience/static/
+          path: fyscience/static/
 
       - name: Test
         run: |
@@ -73,7 +69,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: publications-for-authors-js
-      - run: mv elm_frontend/authorPapers.js fyscience/static/
+          path: fyscience/static/
 
       - name: Build prod image from cache
         uses: whoan/docker-build-with-cache-action@v5
