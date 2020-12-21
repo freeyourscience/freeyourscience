@@ -21,7 +21,7 @@ jobs:
         run: cd elm_frontend && npm install
 
       - name: Test
-        run: cd elm_frontend && elm-test
+        run: cd elm_frontend && npx elm-test
 
       - name: Build
         run: cd elm_frontend && elm make src/Main.elm --output authorPapers.js
