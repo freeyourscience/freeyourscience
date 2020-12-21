@@ -18,7 +18,7 @@ jobs:
           elm-version: 0.19.1
 
       - name: Dependencies
-        run: sudo npm install elm-test -g
+        run: cd elm_frontend && npm install
 
       - name: Test
         run: cd elm_frontend && elm-test
