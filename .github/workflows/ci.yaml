@@ -18,13 +18,13 @@ jobs:
           elm-version: 0.19.1
 
       - name: Dependencies
-        run: cd elm_frontend && npm install
+        run: cd elm_frontend && npm install && npm install uglify-js -g
 
       - name: Test
         run: cd elm_frontend && npx elm-test
 
       - name: Build
-        run: cd elm_frontend && elm make src/Main.elm --output authorPapers.js
+        run: make elm
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
