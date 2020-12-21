@@ -160,6 +160,12 @@ renderBuggyPapers papers =
                             [ a [ href ("https://doi.org" ++ p.doi), target "_blank", class "link-secondary" ]
                                 [ text p.doi
                                 ]
+                            , case p.oaPathway of
+                                Just oaPathway ->
+                                    text (" (unknown publisher policy for: " ++ Maybe.withDefault "Unknown Journal" p.journal ++ ")")
+
+                                _ ->
+                                    text ""
                             ]
                     )
                     papers
