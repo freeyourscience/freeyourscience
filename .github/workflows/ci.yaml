@@ -11,12 +11,15 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
+
       - name: Setup elm
         uses: jorelali/setup-elm@v2
         with:
           elm-version: 0.19.1
+
       - name: Build
         run: cd elm_frontend && elm make src/Main.elm --optimize --output authorPapers.js
+
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -24,8 +27,8 @@ jobs:
           path: elm_frontend/authorPapers.js
           retention-days: 1
 
-  ci:
-    needs: [ elm ] # make sure all your other jobs succeed
+  python:
+    needs: [ elm ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -55,19 +58,22 @@ jobs:
           make lint
           make test
 
+  docker:
+    needs: [ python ]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
       - name: Build prod image from cache
-        if: github.ref == 'refs/heads/main'
         uses: whoan/docker-build-with-cache-action@v5
         with:
           image_name: freeyourscience/freeyourscience/freeyourscience
           image_tag: ${{ github.sha }}
           build_extra_args: "--tag=freeyourscience"
           registry: docker.pkg.github.com
-          username: erkannt
+          username: erkannt # TODO: Update this to a fyscience technical user
           password: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Set up Cloud SDK
-        if: github.ref == 'refs/heads/main'
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
@@ -75,7 +81,6 @@ jobs:
           export_default_credentials: true
 
       - name: Push Image
-        if: github.ref == 'refs/heads/main'
         run: |
           docker tag freeyourscience:latest $IMAGE_NAME:latest
           docker tag freeyourscience:latest $IMAGE_NAME:${{ github.sha }}
@@ -83,11 +88,45 @@ jobs:
           docker push $IMAGE_NAME:${{ github.sha }}
           docker push $IMAGE_NAME:latest
 
+  deploy-dev:
+    needs: [ docker ]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
       - name: Deploy
-        if: github.ref == 'refs/heads/main'
         run: |
           gcloud components install beta
           gcloud beta run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE_DEV }}" \
+            --image "$IMAGE_NAME:${{ github.sha }}" \
+            --region "${{ secrets.GCP_REGION }}" \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars "UNPAYWALL_EMAIL=${{ secrets.API_EMAIL }},SHERPA_API_KEY=${{ secrets.SHERPA_API_KEY }},S2_API_KEY=${{ secrets.S2_API_KEY }}" \
+            --revision-suffix ${{ github.sha }}
+
+  deploy-prod:
+    needs: [ docker ]
+    if: startsWith(github.ref, 'refs/tags/latest/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Deploy
+        run: |
+          gcloud components install beta
+          gcloud beta run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE }}" \
             --image "$IMAGE_NAME:${{ github.sha }}" \
             --region "${{ secrets.GCP_REGION }}" \
             --platform managed \
