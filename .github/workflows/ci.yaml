@@ -27,7 +27,7 @@ jobs:
           path: elm_frontend/authorPapers.js
           retention-days: 1
 
-  python:
+  python-and-docker:
     needs: [ elm ]
     runs-on: ubuntu-latest
     steps:
@@ -44,7 +44,7 @@ jobs:
           image_tag: ${{ github.sha }}
           build_extra_args: "--tag=freeyourscience-dev --target=dev"
           registry: docker.pkg.github.com
-          username: erkannt
+          username: erkannt # TODO: Update this to a fyscience technical user
           password: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Download Artifacts
@@ -58,20 +58,8 @@ jobs:
           make lint
           make test
 
-  docker:
-    needs: [ python ]
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: publications-for-authors-js
-          path: fyscience/static/
-
       - name: Build prod image from cache
+        if: github.ref == 'refs/heads/main'
         uses: whoan/docker-build-with-cache-action@v5
         with:
           image_name: freeyourscience/freeyourscience/freeyourscience
@@ -82,6 +70,7 @@ jobs:
           password: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Set up Cloud SDK
+        if: github.ref == 'refs/heads/main'
         uses: google-github-actions/setup-gcloud@master
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
@@ -89,6 +78,7 @@ jobs:
           export_default_credentials: true
 
       - name: Push Image
+        if: github.ref == 'refs/heads/main'
         run: |
           docker tag freeyourscience:latest $IMAGE_NAME:latest
           docker tag freeyourscience:latest $IMAGE_NAME:${{ github.sha }}
@@ -97,7 +87,7 @@ jobs:
           docker push $IMAGE_NAME:latest
 
   deploy-dev:
-    needs: [ docker ]
+    needs: [ python-and-docker ]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -120,7 +110,7 @@ jobs:
             --revision-suffix ${{ github.sha }}
 
   deploy-prod:
-    needs: [ docker ]
+    needs: [ python-and-docker ]
     if: startsWith(github.ref, 'refs/tags/latest/')
     runs-on: ubuntu-latest
     steps:
