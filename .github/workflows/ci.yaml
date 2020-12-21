@@ -51,6 +51,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: publications-for-authors-js
+
+      - run: ls -ahl
+      - run: ls -ahl elm_frontend
+
       - run: mv elm_frontend/authorPapers.js fyscience/static/
 
       - name: Test
