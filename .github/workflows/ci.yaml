@@ -17,6 +17,12 @@ jobs:
         with:
           elm-version: 0.19.1
 
+      - name: Dependencies
+        run: npm install elm-test -g
+
+      - name: Test
+        run: cd elm_frontend && elm-test
+
       - name: Build
         run: cd elm_frontend && elm make src/Main.elm --output authorPapers.js
 
