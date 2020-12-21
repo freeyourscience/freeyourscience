@@ -20,7 +20,7 @@ jobs:
           elm-version: 0.19.1
 
       - name: Dependencies
-        run: npm install elm-test
+        run: sudo npm install elm-test -g
         working-directory: $WORKING_DIR
 
       - name: Test
