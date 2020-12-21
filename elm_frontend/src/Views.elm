@@ -5,6 +5,13 @@ import Html.Attributes exposing (..)
 import Types exposing (..)
 
 
+renderLoadingSpinner : Html Msg
+renderLoadingSpinner =
+    div [ class "spinner-border text-primary fs-5 m-2", attribute "role" "status" ]
+        [ span [ class "visually-hidden" ] [ text "Loading..." ]
+        ]
+
+
 renderPaper : Paper -> Html Msg
 renderPaper paper =
     let
@@ -164,14 +171,13 @@ renderHeader : List DOI -> String -> List Paper -> Html Msg
 renderHeader unfetchedDOIs authorName papers =
     header [ class "container text-center lh-sm mt-5 mb-5" ]
         [ h1 []
-            [ text
-                ((if List.length unfetchedDOIs > 0 then
-                    "🔄 "
+            [ if List.length unfetchedDOIs > 0 then
+                renderLoadingSpinner
 
-                  else
-                    ""
-                 )
-                    ++ authorName
+              else
+                text ""
+            , text
+                (authorName
                     ++ " can liberate "
                     ++ String.fromInt (List.length papers)
                     ++ (if List.length papers == 1 then
@@ -180,13 +186,12 @@ renderHeader unfetchedDOIs authorName papers =
                         else
                             " publications"
                        )
-                    ++ (if List.length unfetchedDOIs > 0 then
-                            " 🔄"
-
-                        else
-                            ""
-                       )
                 )
+            , if List.length unfetchedDOIs > 0 then
+                renderLoadingSpinner
+
+              else
+                text ""
             ]
         ]
 
