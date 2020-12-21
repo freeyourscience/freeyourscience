@@ -4,7 +4,6 @@ on: [push]
 
 env:
   IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/fyscience
-  ELM_ARTIFACTS_NAME: publications-for-authors-js-${{ github.sha }}
 
 jobs:
   elm:
@@ -24,7 +23,7 @@ jobs:
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: $ELM_ARTIFACTS_NAME
+          name: publications-for-authors-js
           path: elm_frontend/authorPapers.js
           retention-days: 1
 
@@ -51,7 +50,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: $ELM_ARTIFACTS_NAME
+          name: publications-for-authors-js
       - run: mv elm_frontend/authorPapers.js fyscience/static/
 
       - name: Test
@@ -69,7 +68,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: $ELM_ARTIFACTS_NAME
+          name: publications-for-authors-js
       - run: mv elm_frontend/authorPapers.js fyscience/static/
 
       - name: Build prod image from cache
