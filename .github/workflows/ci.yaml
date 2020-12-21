@@ -65,6 +65,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: publications-for-authors-js
+      - run: mv elm_frontend/authorPapers.js fyscience/static/
+
       - name: Build prod image from cache
         uses: whoan/docker-build-with-cache-action@v5
         with:
