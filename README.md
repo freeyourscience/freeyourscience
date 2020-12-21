@@ -21,6 +21,23 @@ republished as OpenAccess without additional cost.
 
 ## Setup & Test
 
+### Elm
+
+Install Elm as described in the
+[official documentation](https://guide.elm-lang.org/install/elm.html).
+
+For development install dependencies e.g. via `npm` as follows:
+
+```
+npm install elm-test uglify-js -g
+```
+
+Build the frontend dependencies for the Python app in elm with
+
+```
+make elm
+```
+
 ### Python
 
 Install the package in development mode in a Python 3.7 or 3.8 environment from the root
