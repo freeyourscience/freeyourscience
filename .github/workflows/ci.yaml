@@ -8,8 +8,6 @@ env:
 jobs:
   elm:
     runs-on: ubuntu-latest
-    env:
-      WORKING_DIR: ./elm_frontend/
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
@@ -21,22 +19,18 @@ jobs:
 
       - name: Dependencies
         run: sudo npm install elm-test -g
-        working-directory: $WORKING_DIR
 
       - name: Test
-        run: elm-test
-        working-directory: $WORKING_DIR
+        run: cd elm_frontend && elm-test
 
       - name: Build
-        run: elm make src/Main.elm --output authorPapers.js
-        working-directory: $WORKING_DIR
+        run: cd elm_frontend && elm make src/Main.elm --output authorPapers.js
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
         with:
           name: publications-for-authors-js
-          path: authorPapers.js
-          working-directory: $WORKING_DIR
+          path: elm_frontend/authorPapers.js
           retention-days: 1
 
   python-and-docker:
