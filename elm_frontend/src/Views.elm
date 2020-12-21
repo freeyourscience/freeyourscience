@@ -41,7 +41,7 @@ renderPaper paper =
             [ div [ class "fs-5 mb-1" ]
                 [ text paperTitle
                 ]
-            , text (journal ++ ", " ++ authors ++ " (" ++ String.fromInt year ++ "), " ++ paper.doi)
+            , text (journal ++ ", " ++ authors ++ " (" ++ String.fromInt year ++ "), " ++ paper.doi ++ " ")
             , a [ href ("https://doi.org/" ++ paper.doi), class "link-secondary", target "_blank" ]
                 [ img
                     [ src "/static/img/box-arrow-up-right.svg"
