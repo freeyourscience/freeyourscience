@@ -26,7 +26,7 @@ renderPaper paper =
         oaPathwayURI =
             Maybe.withDefault "#" paper.oaPathwayURI
     in
-    li [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
+    div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div
             [ class
                 ("paper-details col-12 fs-6 mb-2 mb-md-0"
@@ -80,7 +80,6 @@ renderPaper paper =
         ]
 
 
-
 renderPaywalledNoCostPathwayPapers : List Paper -> Html Msg
 renderPaywalledNoCostPathwayPapers papers =
     section [ class "mb-5" ]
@@ -93,7 +92,7 @@ renderPaywalledNoCostPathwayPapers papers =
                     ++ "However, the publishers likely allow no-cost re-publication as Open Access."
                 )
             ]
-        , ul [] (List.map renderPaper papers)
+        , div [] (List.map renderPaper papers)
         ]
 
 
@@ -113,7 +112,7 @@ renderNonFreePolicyPapers papers =
                         ++ "re-publishing pathways, or do not allow Open Access publishing at all."
                     )
                 ]
-            , ul [] (List.map renderPaper papers)
+            , div [] (List.map renderPaper papers)
             ]
 
 
@@ -133,7 +132,7 @@ renderOpenAccessPapers papers =
                 ]
 
           else
-            ul [] (List.map renderPaper papers)
+            div [] (List.map renderPaper papers)
         ]
 
 
@@ -147,10 +146,14 @@ renderBuggyPapers papers =
             [ h2 []
                 [ text "Publications we had issues with"
                 ]
-            , ul []
+            , div [ class "container" ]
                 (List.map
                     (\p ->
-                        li [] [ a [ href ("https://doi.org" ++ p.doi), target "_blank" ] [ text p.doi ] ]
+                        div []
+                            [ a [ href ("https://doi.org" ++ p.doi), target "_blank", class "link-secondary" ]
+                                [ text p.doi
+                                ]
+                            ]
                     )
                     papers
                 )
