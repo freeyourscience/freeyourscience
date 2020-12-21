@@ -5,7 +5,7 @@ import Fuzz exposing (Fuzzer, int, list, string)
 import Http exposing (Expect)
 import Test exposing (..)
 import Types exposing (Paper)
-import Utils exposing (isPaywalledNoCostPathwayPaper)
+import Utils exposing (isNonFreePolicyPaper, isPaywalledNoCostPathwayPaper)
 
 
 fullPaper : Paper
@@ -53,5 +53,28 @@ suite =
                             { fullPaper | isOpenAccess = Just True, oaPathway = Just "other" }
                     in
                     Expect.equal False (isPaywalledNoCostPathwayPaper paper)
+            ]
+        , describe "paywalled cost or other"
+            [ test "Correctly identify other oa policy" <|
+                \_ ->
+                    let
+                        paper =
+                            { fullPaper | isOpenAccess = Just False, oaPathway = Just "other" }
+                    in
+                    Expect.equal True (isNonFreePolicyPaper paper)
+            , test "Correctly identify oa policy not found" <|
+                \_ ->
+                    let
+                        paper =
+                            { fullPaper | isOpenAccess = Just False, oaPathway = Just "not_found" }
+                    in
+                    Expect.equal False (isNonFreePolicyPaper paper)
+            , test "Correctly identify oa policy not attempted" <|
+                \_ ->
+                    let
+                        paper =
+                            { fullPaper | isOpenAccess = Just False, oaPathway = Just "not_attempted" }
+                    in
+                    Expect.equal False (isNonFreePolicyPaper paper)
             ]
         ]

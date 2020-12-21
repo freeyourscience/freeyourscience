@@ -22,7 +22,7 @@ isPaywalledNoCostPathwayPaper p =
 
 isNonFreePolicyPaper : Paper -> Bool
 isNonFreePolicyPaper p =
-    not (Maybe.withDefault True p.isOpenAccess) && not (Maybe.withDefault "unknown" p.oaPathway == "nocost")
+    not (Maybe.withDefault True p.isOpenAccess) && Maybe.withDefault "unknown" p.oaPathway == "other"
 
 
 isOpenAccessPaper : Paper -> Bool
@@ -32,4 +32,4 @@ isOpenAccessPaper p =
 
 isBuggyPaper : Paper -> Bool
 isBuggyPaper p =
-    p.isOpenAccess == Nothing || p.oaPathway == Nothing
+    p.isOpenAccess == Nothing || p.oaPathway == Nothing || Maybe.withDefault "unknown" p.oaPathway == "not_found"
