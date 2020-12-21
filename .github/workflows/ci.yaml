@@ -63,6 +63,8 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: Build prod image from cache
         uses: whoan/docker-build-with-cache-action@v5
         with:
