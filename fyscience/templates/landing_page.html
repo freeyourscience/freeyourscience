@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container landing-page">
-	<header class="container fs-2 lh-sm mt-5 mb-5 text-center">
-		<div class="row row-cols-2 justify-content-md-center">
+	<header class="container lh-sm mt-5 mb-5">
+		<div class="row row-cols-2 justify-content-md-center text-center fs-2">
 			<div class="col text-end border-end">
 				<span class="fw-bold fs-1">46.7 million</span><br />
 				publications
@@ -13,10 +13,33 @@
 				today
 			</div>
 		</div>
+		<div class="row text-center mt-4">
+			<div class="col card m-2 shadow-sm rounded p-2">
+				<h2 class="fs-3">1. Find currently paywalled publications</h2>
+				<p>
+					Find publications by author name, ORCID or DOI
+					that are currently still behind publisher paywalls.
+				</p>
+			</div>
+			<div class="col card m-2 shadow-sm rounded p-2">
+				<h2 class="fs-3">2. Learn about allowed open access pathways</h2>
+				<p>
+					Identify paywalled publications for which re-publication
+					as open access is allowed without additional cost.
+				</p>
+			</div>
+			<div class="col card m-2 shadow-sm rounded p-2">
+				<h2 class="fs-3">3. Re-publish as<br/>open access</h2>
+				<p>
+					Open up your work to the world by re-publishing
+					according to the publisher policy.
+				</p>
+			</div>
+		</div>
 	</header>
 
 	<main class="fs-5">
-		<section class="container mb-5">
+		<section class="container mb-5" id="search-pubs">
 			<h2 class="fs-3">
 				Find publications to liberate
 			</h2>
