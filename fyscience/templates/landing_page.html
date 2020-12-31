@@ -9,20 +9,6 @@
 				<p>
 					Paywalls make it harder for other researchers to use and cite your work.
 				</p>
-				<div class="row fs-6 mt-2">
-					<div class="col">
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="search-type" id="search-type-authors"
-								value="option1" checked>
-							<label class="form-check-label" for="search-type-authors">by Author</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="search-type" id="search-type-papers"
-								value="option2">
-							<label class="form-check-label" for="search-type-papers">by DOI</label>
-						</div>
-					</div>
-				</div>
 				<form method="GET" action="/authors" id="search-form">
 					<div class="row mt-1">
 						<div class="col">
@@ -30,7 +16,7 @@
 								<div class="col-12 col-md-11">
 									<label class="visually-hidden" for="search-field">Search</label>
 									<input type="text" name="profile" class="form-control" id="search-field"
-										placeholder="ORCID or Semantic Scholar Profile URL" required>
+										placeholder="Author name, ORCID or DOI" required>
 								</div>
 								<div class="col-12 col-md-1">
 									<button type="submit" class="btn btn-primary">Search</button>
@@ -38,7 +24,6 @@
 							</div>
 						</div>
 					</div>
-					<small class="fs-6">The search might take a minute.</small>
 				</form>
 			</li>
 			<li>
@@ -196,16 +181,4 @@
 	</footer>
 </div>
 
-<script type="text/javascript">
-	document.getElementById('search-type-authors').addEventListener('click', () => {
-		document.getElementById('search-field').placeholder = "ORCID or Semantic Scholar Profile URL"
-		document.getElementById('search-field').name = "profile"
-		document.getElementById('search-form').action = "/authors"
-	});
-	document.getElementById('search-type-papers').addEventListener('click', () => {
-		document.getElementById('search-field').placeholder = "e.g 10.100/1234.1234"
-		document.getElementById('search-field').name = "doi"
-		document.getElementById('search-form').action = "/papers"
-	});
-</script>
 {% endblock %}
