@@ -173,34 +173,6 @@ renderBuggyPapers papers =
             ]
 
 
-renderHeader : List DOI -> String -> List Paper -> Html Msg
-renderHeader unfetchedDOIs authorName papers =
-    header [ class "container text-center lh-sm mt-5 mb-5" ]
-        [ h1 []
-            [ if List.length unfetchedDOIs > 0 then
-                renderLoadingSpinner
-
-              else
-                text ""
-            , text
-                (authorName
-                    ++ " can liberate "
-                    ++ String.fromInt (List.length papers)
-                    ++ (if List.length papers == 1 then
-                            " publication"
-
-                        else
-                            " publications"
-                       )
-                )
-            , if List.length unfetchedDOIs > 0 then
-                renderLoadingSpinner
-
-              else
-                text ""
-            ]
-        ]
-
 
 renderFooter : String -> Html Msg
 renderFooter authorProfileURL =

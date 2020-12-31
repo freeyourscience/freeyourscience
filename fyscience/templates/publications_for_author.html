@@ -13,27 +13,6 @@ Free Your Science | {{ author.name }}
 
 {% block content %}
 <div class="container fs-5">
-    <div class="row text-center mt-4 fs-5 g-3">
-        <div class="col-12 col-md-4 card shadow-sm rounded p-2 bg-secondary">
-            <h2 class="fs-3">1. Find your paywalled publications</h2>
-            <p>
-                Paywalls make it harder for other researchers to use and cite your work.
-            </p>
-        </div>
-        <div class="col-12 col-md-4 card shadow-sm rounded p-2">
-            <h2 class="fs-3">2. Learn about Open Access pathways</h2>
-            <p>
-                Many publishers have policies that allow for no-cost re-publication.
-            </p>
-        </div>
-        <div class="col-12 col-md-4 card shadow-sm rounded p-2">
-            <h2 class="fs-3">3. Re-publish your work Open Access</h2>
-            <p>
-                Upload an additional version of your work to e.g. arXiv
-                or your library in accordance with the publisher policy.
-            </p>
-        </div>
-    </div>
     <div id="publicationsForAuthor"></div>
     <script>
         var app = Elm.Main.init({

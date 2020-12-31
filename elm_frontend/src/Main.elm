@@ -86,8 +86,7 @@ view model =
             List.filter isBuggyPaper preppedPapers
     in
     div []
-        [ renderHeader model.unfetchedDOIs model.authorName paywalledNoCostPathwayPapers
-        , main_ []
+        [ main_ []
             [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
             , renderNonFreePolicyPapers nonFreePolicyPapers
             , renderOpenAccessPapers openAccessPapers
