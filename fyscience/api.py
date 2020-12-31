@@ -181,3 +181,8 @@ def get_paper_html(
     return templates.TemplateResponse(
         "paper.html", {"request": request, "paper": paper, "category": category}
     )
+
+
+@api_router.get("/about", response_class=HTMLResponse, include_in_schema=False)
+def get_about_html(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
