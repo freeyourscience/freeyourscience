@@ -1,48 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container landing-page">
-	<header class="container mt-5 mb-5">
-		<h1>Free Your Science</h1>
-		<ol>
-			<li>
-				<h2 class="fs-3">Find your paywalled publications</h2>
-				<p>
-					Paywalls make it harder for other researchers to use and cite your work.
-				</p>
-				<form method="GET" action="/authors" id="search-form">
-					<div class="row mt-1">
-						<div class="col">
-							<div class="row g-2">
-								<div class="col-12 col-md-11">
-									<label class="visually-hidden" for="search-field">Search</label>
-									<input type="text" name="profile" class="form-control" id="search-field"
-										placeholder="Author name, ORCID or DOI" required>
-								</div>
-								<div class="col-12 col-md-1">
-									<button type="submit" class="btn btn-primary">Search</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-			</li>
-			<li>
-				<h2 class="fs-3"> Learn about Open Access pathways</h2>
-				<p>
-					Many publishers have policies that allow for no-cost re-publication.
-				</p>
-			</li>
-			<li>
-				<h2 class="fs-3">Re-publish your work Open Access</h2>
-				<p>
-					Upload an additional version of your work to e.g. arXiv
-					or your library in accordance with the publisher policy.
-				</p>
-			</li>
-		</ol>
+	<header class="container mt-5 mb-5 text-center">
+		<h1 class="fw-bold">Free Your Science</h1>
 	</header>
 
 	<main class="fs-5">
+		<section class="mb-5">
+			<ol class="list-group list-group-flush fs-6">
+				<li class="list-group-item py-3">
+					<h2 class="fs-3">Find your paywalled publications</h2>
+					<p> Paywalls make it harder for other researchers to use and cite your work. </p>
+					<form method="GET" action="/authors" id="search-form">
+						<div class="row mt-1">
+							<div class="col">
+								<div class="row g-2">
+									<div class="col-12 col-sm-11">
+										<label class="visually-hidden" for="search-field">Search</label>
+										<input type="text" name="profile" class="form-control" id="search-field"
+											placeholder="Author name, ORCID or DOI" required>
+									</div>
+									<div class="col-12 col-sm-1">
+										<button type="submit" class="btn btn-primary">Search</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</li>
+				<li class="list-group-item disabled py-3">
+					<h2 class="fs-3"> Learn about Open Access pathways</h2>
+					<p> Many publishers have policies that allow for no-cost re-publication. </p>
+				</li>
+				<li class="list-group-item disabled py-3">
+					<h2 class="fs-3">Re-publish your work Open Access</h2>
+					<p> Upload an additional version of your work to e.g. arXiv or your library in accordance with the
+						publisher policy. </p>
+				</li>
+			</ol>
+		</section>
 		<section class="container mb-5">
 			<h2 class="fs-3">
 				Why is this allowed?
