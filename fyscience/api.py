@@ -157,6 +157,7 @@ def get_author_with_full_papers_html(
             "request": request,
             "serverURL": serverURL,
             "author": author,
+            "search_string": profile,
             "dois": [p.doi for p in author.papers],
         },
     )

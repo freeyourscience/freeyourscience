@@ -15,7 +15,7 @@ Free Your Science | {{ author.name }}
 {% block content %}
 <div class="container fs-5">
     <section class="my-5">
-        {{ search.form("") }}
+        {{ search.form(search_string) }}
     </section>
     <div id="publicationsForAuthor"></div>
     <script>
