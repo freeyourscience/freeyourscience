@@ -13,3 +13,15 @@ div.paper-details {
   margin-right: auto;
   margin-left: auto;
 }
+
+.usersteps__step {
+  display: list-item;
+}
+
+.usersteps__step::marker{
+  font-size: 3rem;
+}
+
+.usersteps__step--active::marker{
+  color: #0d6efd;
+}
