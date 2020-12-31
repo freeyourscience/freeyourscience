@@ -1,5 +1,6 @@
 {# TODO: Make sure only english phrases and not just the first are displayed. #}
 {# TODO: Do someting like the Routes to OA section at https://v2.sherpa.ac.uk/id/publisher_policy/2252 #}
+{% import 'search_macros.html' as search %}
 {% import 'paper_macros.html' as paper_page %}
 {% extends "base.html" %}
 
@@ -13,14 +14,17 @@ Free Your Science | {{ author.name }}
 
 {% block content %}
 <div class="container fs-5">
+    <section class="my-5">
+        {{ search.form("") }}
+    </section>
     <div id="publicationsForAuthor"></div>
     <script>
         var app = Elm.Main.init({
             node: document.getElementById('publicationsForAuthor'),
             flags: {
                 "dois": {{ dois | safe }},
-                "authorName": "{{ author.name }}",
-                "authorProfileURL": "{{ author.profile_url }}",
+        "authorName": "{{ author.name }}",
+            "authorProfileURL": "{{ author.profile_url }}",
                 "serverURL": "{{ serverURL }}"
             }
         });
