@@ -14,16 +14,32 @@ div.paper-details {
   margin-left: auto;
 }
 
+.usersteps {
+  list-style: none;
+  counter-reset: steps-counter;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .usersteps__step {
-  display: list-item;
+  counter-increment: steps-counter;
+  margin: 0.25rem;
+  display: flex;
+  border: none;
 }
 
-.usersteps__step::marker{
-  font-size: 3rem;
-}
-
-.usersteps__step--active::marker{
+.usersteps__step--active::before{
   color: #0d6efd;
+}
+
+.usersteps__step::before {
+  content: counter(steps-counter);
+  font-size: 2.5rem;
+  line-height: 2.5rem;
+  font-weight: bold;
+  display: inline-block;
+  text-align: center;
+  margin-right: 1.5rem;
 }
 
 .progressbar__container {

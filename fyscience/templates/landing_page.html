@@ -3,20 +3,26 @@
 {% block content %}
 <div class="container landing-page">
 	<main class="fs-5 mb-5">
-		<ol class="list-group list-group-flush fs-6">
-			<li class="list-group-item my-3 pt-0 usersteps__step usersteps__step--active">
-				<h2 class="fs-3">Find your paywalled publications</h2>
-				<p> Paywalls make it harder for other researchers to use and cite your work. </p>
-				{{ search.form("") }}
+		<ol class="list-group list-group-flush fs-6 usersteps">
+			<li class="list-group-item my-3 pt-0 pb-4 usersteps__step usersteps__step--active">
+				<div>
+					<h2 class="fs-3">Find your paywalled publications</h2>
+					<p> Paywalls make it harder for other researchers to use and cite your work. </p>
+					{{ search.form("") }}
+				</div>
 			</li>
 			<li class="list-group-item my-3 pt-0 usersteps__step">
-				<h2 class="fs-3"> Learn about Open Access pathways</h2>
-				<p> Many publishers have policies that allow for no-cost re-publication. </p>
+				<div>
+					<h2 class="fs-3"> Learn about Open Access pathways</h2>
+					<p> Many publishers have policies that allow for no-cost re-publication. </p>
+				</div>
 			</li>
 			<li class="list-group-item my-3 pt-0 usersteps__step">
-				<h2 class="fs-3">Re-publish your work Open Access</h2>
-				<p> Upload an additional version of your work to e.g. arXiv or your library in accordance with the
-					publisher policy. </p>
+				<div>
+					<h2 class="fs-3">Re-publish your work Open Access</h2>
+					<p> Upload an additional version of your work to e.g. arXiv or your library in accordance with the
+						publisher policy. </p>
+				</div>
 			</li>
 		</ol>
 		<p class="text-center">
