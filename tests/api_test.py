@@ -1,11 +1,16 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from fyscience.schemas import OAPathway, PaperWithOAPathway, FullPaper
+from fyscience.schemas import (
+    OAPathway,
+    PaperWithOAPathway,
+    FullPaper,
+    PaperWithOAStatus,
+)
 from fyscience import main
 from fyscience.deps import Settings, get_settings
 from fyscience.semantic_scholar import Author
-from fyscience.api import _is_doi_simple
+from fyscience.api import _is_doi_query
 
 
 def get_settings_override():
@@ -154,10 +159,10 @@ def test_search_missing_args(client: TestClient) -> None:
         ("10.4321/s0004-061420090300002", True),
     ],
 )
-def test_is_doi_simple(
+def test_is_doi_query(
     query: str, is_doi: bool, client: TestClient, monkeypatch
 ) -> None:
-    assert _is_doi_simple(query) == is_doi
+    assert _is_doi_query(query) == is_doi
 
 
 def test_get_paper(monkeypatch, client: TestClient) -> None:
@@ -169,6 +174,12 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     monkeypatch.setattr(
         "fyscience.api.unpaywall_get_paper",
         lambda *a, **kw: FullPaper(doi=doi, issn=issn, is_open_access=is_open_access),
+    )
+    monkeypatch.setattr(
+        "fyscience.api.validate_oa_status_from_s2",
+        lambda *a, **kw: PaperWithOAStatus(
+            doi=doi, issn=issn, is_open_access=is_open_access
+        ),
     )
     monkeypatch.setattr(
         "fyscience.api.oa_pathway",
