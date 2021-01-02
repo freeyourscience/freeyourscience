@@ -1,4 +1,5 @@
 from typing import List
+import re
 
 from fastapi import APIRouter, Header, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
@@ -128,19 +129,33 @@ def get_landing_page(request: Request):
     )
 
 
-@api_router.get("/authors", response_class=HTMLResponse, include_in_schema=False)
-def get_author_with_full_papers_html(
-    profile: str, request: Request, settings: Settings = Depends(get_settings)
-):
-    """Similar behaviour as with ``/api/authors`` but missing information for the
-    author's papers is filled in from all available data sources and the author page
-    is rendered as HTML.
-    """
-    author = get_author_with_papers(profile, settings)
+def _render_paper_page(
+    doi: str, settings: Settings, request: Request
+) -> templates.TemplateResponse:
+    paper = get_paper(doi=doi, settings=settings)
+
+    if _is_paywalled_and_nocost(paper):
+        category = "paywalled_nocost"
+    elif paper.is_open_access:
+        category = "already_oa"
+    elif paper.oa_pathway is OAPathway.other:
+        category = "other_policies"
+    else:
+        category = "issues"
+
+    return templates.TemplateResponse(
+        "paper.html", {"request": request, "paper": paper, "category": category}
+    )
+
+
+def _render_author_page(
+    author_query: str, settings: Settings, request: Request
+) -> templates.TemplateResponse:
+    author = get_author_with_papers(author_query, settings)
 
     logger.debug(
         {
-            "profile": profile,
+            "query": author_query,
             "provider": author.provider,
             "n_papers": len(author.papers),
         }
@@ -157,31 +172,28 @@ def get_author_with_full_papers_html(
             "request": request,
             "serverURL": serverURL,
             "author": author,
-            "search_string": profile,
+            "search_string": author_query,
             "dois": [p.doi for p in author.papers],
         },
     )
 
 
-@api_router.get("/papers", response_class=HTMLResponse, include_in_schema=False)
-def get_paper_html(
-    doi: str, request: Request, settings: Settings = Depends(get_settings)
+def _is_doi_query(string: str) -> bool:
+    return re.match("\\b[0-9]{2}.[0-9]+/", string) is not None
+
+
+@api_router.get("/search", response_class=HTMLResponse, include_in_schema=False)
+def get_search_result_html(
+    query: str, request: Request, settings: Settings = Depends(get_settings)
 ):
-    """Get paper with OpenAccess status and pathway for a given DOI."""
-    paper = get_paper(doi=doi, settings=settings)
+    """Allows author name, ORCID, Semantic Scholar ID / profile URL and DOI queries."""
 
-    if _is_paywalled_and_nocost(paper):
-        category = "paywalled_nocost"
-    elif paper.is_open_access:
-        category = "already_oa"
-    elif paper.oa_pathway is OAPathway.other:
-        category = "other_policies"
+    if _is_doi_query(query):
+        return _render_paper_page(doi=query, settings=settings, request=request)
     else:
-        category = "issues"
-
-    return templates.TemplateResponse(
-        "paper.html", {"request": request, "paper": paper, "category": category}
-    )
+        return _render_author_page(
+            author_query=query, settings=settings, request=request
+        )
 
 
 @api_router.get("/about", response_class=HTMLResponse, include_in_schema=False)

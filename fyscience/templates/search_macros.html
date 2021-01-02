@@ -1,11 +1,11 @@
 {% macro form(search_string) -%}
-<form method="GET" action="/authors" id="search-form">
+<form method="GET" action="/search" id="search-form">
     <div class="row mt-1">
         <div class="col">
             <div class="row g-2">
                 <div class="col-12 col-sm-11">
                     <label class="visually-hidden" for="search-field">Search</label>
-                    <input type="text" name="profile" class="form-control" id="search-field"
+                    <input type="text" name="query" class="form-control" id="search-field"
                         placeholder="Author name, ORCID or DOI" required value="{{ search_string }}">
                 </div>
                 <div class="col-12 col-sm-1">
