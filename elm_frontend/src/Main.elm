@@ -4,7 +4,7 @@ import Animation exposing (percent, px)
 import Api exposing (..)
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes exposing (class)
 import Html.Events exposing (..)
 import Http
 import Json.Decode exposing (bool)
@@ -42,7 +42,7 @@ init flags =
       , authorName = flags.authorName
       , authorProfileURL = flags.authorProfileURL
       , serverURL = flags.serverURL
-      , style = Animation.style [ Animation.width (percent 0) ]
+      , style = Animation.style [ Animation.width (percent 0), Animation.opacity 1 ]
       }
     , case List.head flags.dois of
         Just nextDOI ->
@@ -60,20 +60,25 @@ subscriptions model =
 
 percentDOIsFetched : Model -> Float
 percentDOIsFetched model =
-    100
-        * toFloat (List.length model.fetchedPapers)
-        / (toFloat (List.length model.fetchedPapers) + toFloat (List.length model.unfetchedDOIs))
+    max
+        10
+        (100
+            * toFloat (List.length model.fetchedPapers)
+            / (toFloat (List.length model.fetchedPapers) + toFloat (List.length model.unfetchedDOIs))
+        )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
-        updatedAnimationModel =
+        updatedModel =
             { model
                 | style =
                     Animation.interrupt
                         [ Animation.to
-                            [ Animation.width (percent (percentDOIsFetched model)) ]
+                            [ Animation.width (percent (percentDOIsFetched model))
+                            , Animation.opacity (toFloat (min 1 (List.length model.unfetchedDOIs)))
+                            ]
                         ]
                         model.style
             }
@@ -83,7 +88,7 @@ update msg model =
     in
     case msg of
         GotPaper (Ok paper) ->
-            ( { updatedAnimationModel
+            ( { updatedModel
                 | fetchedPapers = List.append model.fetchedPapers [ paper ]
                 , unfetchedDOIs = updatedDOIs
               }
@@ -97,7 +102,7 @@ update msg model =
 
         -- TODO: add the erroneous dois as well?
         GotPaper (Err err) ->
-            ( { model | unfetchedDOIs = updatedDOIs }
+            ( { updatedModel | unfetchedDOIs = updatedDOIs }
             , Cmd.none
             )
 
