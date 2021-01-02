@@ -1,4 +1,5 @@
 {% import 'paper_macros.html' as paper_page %}
+{% import 'search_macros.html' as search %}
 {% extends "base.html" %}
 
 {% block title %}
@@ -8,6 +9,9 @@ Free Your Science | {{ paper.doi }}
 {% block content %}
 <div class="container fs-5">
     <main>
+        <section class="my-5">
+            {{ search.form(paper.doi) }}
+        </section>
         <section class="mb-4 mt-4">
             <h1 class="fs-3">
                 {% if paper.is_open_access %}
@@ -33,10 +37,6 @@ Free Your Science | {{ paper.doi }}
                 {% endif %}
             </div>
         </section>
-        <small>
-            <a href="/" class="link-secondary">Go Back</a>
-        </small>
-
     </main>
 </div>
 {% endblock %}
