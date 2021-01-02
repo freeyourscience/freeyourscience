@@ -1,16 +1,8 @@
 module Types exposing (..)
 
+import Animation
 import Http
 import Json.Encode exposing (int)
-
-
-type alias Model =
-    { unfetchedDOIs : List DOI
-    , fetchedPapers : List Paper
-    , authorName : String
-    , authorProfileURL : String
-    , serverURL : String
-    }
 
 
 type alias Flags =
@@ -40,3 +32,4 @@ type alias Paper =
 
 type Msg
     = GotPaper (Result Http.Error Paper)
+    | Animate Animation.Msg
