@@ -44,7 +44,7 @@ div.paper-details {
 
 .progressbar__container {
   z-index: 99999;
-  height: 2px;
+  height: 4px;
   background: transparent;
   opacity: 1;
   transition: opacity .4s linear .4s;
