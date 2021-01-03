@@ -30,13 +30,20 @@ type alias Paper =
     }
 
 
+type alias NamedUrl =
+    { name : String
+    , url : String
+    }
+
+
 type alias RecommendedPathway =
-    { article_version : String
+    { articleVersion : String
     , locations : List String
     , prerequisites : List String
     , conditions : List String
     , notes : List String
-    , urls : List String
+    , urls : List NamedUrl
+    , policyUrl : String
     }
 
 

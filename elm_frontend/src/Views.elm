@@ -7,12 +7,13 @@ import Types exposing (..)
 
 recommendedPathway : RecommendedPathway
 recommendedPathway =
-    { article_version = "accepted"
+    { articleVersion = "accepted"
     , locations = [ "Academic Social Network", "Author's Homepage" ]
     , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
     , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
     , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
-    , urls = [ "https://freeyourscience.org" ]
+    , urls = [ { name = "Best Page Ever", url = "https://freeyourscience.org" } ]
+    , policyUrl = "https://freeyourscience.org"
     }
 
 
@@ -73,39 +74,27 @@ renderPaper paper =
             , if not isOpenAccess then
                 div []
                     [ p [] [ text "The publisher has a policy that lets you:" ]
-                    , p [] [ text "upload the accepted version to any of the following:" ]
+                    , p [] [ text ("upload the " ++ recommendedPathway.articleVersion ++ " version to any of the following:") ]
                     , ul []
-                        [ li []
-                            [ text " a non-commmercial repository (e.g. biorxiv) " ]
-                        , li []
-                            [ text " your institutions repository (e.g. uni library)" ]
-                        ]
+                        (List.map (\l -> li [] [ text l ]) recommendedPathway.locations)
                     , p [] [ text " You don't have pay a fee to do this." ]
                     , p [] [ text "But only:" ]
                     , ul []
-                        [ li []
-                            [ text "if your funder requires you to do this" ]
-                        , li []
-                            [ text "12 months have passed since publication" ]
-                        ]
+                        (List.map (\l -> li [] [ text l ]) recommendedPathway.prerequisites)
                     , p [] [ text "Conditions are:" ]
                     , ul []
-                        [ li []
-                            [ text "condition A" ]
-                        , li []
-                            [ text "condition B" ]
-                        ]
+                        (List.map (\l -> li [] [ text l ]) recommendedPathway.conditions)
                     , p [] [ text "The publisher also notes:" ]
                     , ul []
-                        [ li [] [ text "Lore ipsum" ]
-                        ]
+                        (List.map (\l -> li [] [ text l ]) recommendedPathway.notes)
                     , p [] [ text "The publisher has provided the following links to further information:" ]
                     , ul []
-                        [ li [] [ a [ href "publisher-url" ] [ text "url-name" ] ]
-                        ]
+                        (List.map (\url -> li [] [ a [ href url.url, class "link", class "link-secondary" ] [ text url.name ] ])
+                            recommendedPathway.urls
+                        )
                     , p []
                         [ text "The publisher has deposited this policy at "
-                        , a [ href "https://freeyourscience.org" ] [ text "Sherpa" ]
+                        , a [ href recommendedPathway.policyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
                         ]
                     ]
 
