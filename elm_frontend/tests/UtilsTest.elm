@@ -1,5 +1,6 @@
 module UtilsTest exposing (..)
 
+import Api exposing (recommendedPathway)
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Http exposing (Expect)
@@ -19,6 +20,14 @@ fullPaper =
         (Just False)
         (Just "nocost")
         (Just "#")
+        { articleVersion = "accepted"
+        , locations = [ "Academic Social Network", "Author's Homepage" ]
+        , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
+        , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
+        , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
+        , urls = [ { name = "Best Page Ever", url = "https://freeyourscience.org" } ]
+        , policyUrl = "https://freeyourscience.org"
+        }
 
 
 suite : Test
