@@ -59,35 +59,36 @@ renderPaper paper =
                     ]
                     []
                 ]
-            , if not isOpenAccess then
-                div []
-                    [ p [] [ text "The publisher has a policy that lets you:" ]
-                    , p [] [ text ("upload the " ++ paper.recommendedPathway.articleVersion ++ " version to any of the following:") ]
-                    , ul []
-                        (List.map (\l -> li [] [ text l ]) paper.recommendedPathway.locations)
-                    , p [] [ text " You don't have pay a fee to do this." ]
-                    , p [] [ text "But only:" ]
-                    , ul []
-                        (List.map (\l -> li [] [ text l ]) paper.recommendedPathway.prerequisites)
-                    , p [] [ text "Conditions are:" ]
-                    , ul []
-                        (List.map (\l -> li [] [ text l ]) paper.recommendedPathway.conditions)
-                    , p [] [ text "The publisher also notes:" ]
-                    , ul []
-                        (List.map (\l -> li [] [ text l ]) paper.recommendedPathway.notes)
-                    , p [] [ text "The publisher has provided the following links to further information:" ]
-                    , ul []
-                        (List.map (\url -> li [] [ a [ href url.url, class "link", class "link-secondary" ] [ text url.name ] ])
-                            paper.recommendedPathway.urls
-                        )
-                    , p []
-                        [ text "The publisher has deposited this policy at "
-                        , a [ href paper.recommendedPathway.policyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
+            , case paper.recommendedPathway of
+                Just recommendedPathway ->
+                    div []
+                        [ p [] [ text "The publisher has a policy that lets you:" ]
+                        , p [] [ text ("upload the " ++ recommendedPathway.articleVersion ++ " version to any of the following:") ]
+                        , ul []
+                            (List.map (\l -> li [] [ text l ]) recommendedPathway.locations)
+                        , p [] [ text " You don't have pay a fee to do this." ]
+                        , p [] [ text "But only:" ]
+                        , ul []
+                            (List.map (\l -> li [] [ text l ]) recommendedPathway.prerequisites)
+                        , p [] [ text "Conditions are:" ]
+                        , ul []
+                            (List.map (\l -> li [] [ text l ]) recommendedPathway.conditions)
+                        , p [] [ text "The publisher also notes:" ]
+                        , ul []
+                            (List.map (\l -> li [] [ text l ]) recommendedPathway.notes)
+                        , p [] [ text "The publisher has provided the following links to further information:" ]
+                        , ul []
+                            (List.map (\url -> li [] [ a [ href url.url, class "link", class "link-secondary" ] [ text url.name ] ])
+                                recommendedPathway.urls
+                            )
+                        , p []
+                            [ text "The publisher has deposited this policy at "
+                            , a [ href recommendedPathway.policyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
+                            ]
                         ]
-                    ]
 
-              else
-                text ""
+                _ ->
+                    text ""
             ]
         , if not isOpenAccess then
             div [ class "col-12 col-md-3 fs-6 text-md-end" ]

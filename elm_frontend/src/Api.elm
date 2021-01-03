@@ -19,9 +19,9 @@ recommendedPathway =
     }
 
 
-pathwayDecoder : Decoder Pathway
+pathwayDecoder : Decoder (Maybe Pathway)
 pathwayDecoder =
-    D.succeed recommendedPathway
+    D.succeed (Just recommendedPathway)
 
 
 paperDecoder : Decoder Paper
@@ -36,7 +36,7 @@ paperDecoder =
         |> Decode.andMap (D.maybe (D.field "is_open_access" D.bool))
         |> Decode.andMap (D.maybe (D.field "oa_pathway" D.string))
         |> Decode.andMap (D.maybe (D.field "oa_pathway_uri" D.string))
-        |> Decode.andMap pathwayDecoder
+        |> Decode.andMap (D.field "oa_pathway_details" pathwayDecoder)
 
 
 fetchPaper : String -> String -> Cmd Msg

@@ -27,7 +27,7 @@ type alias Paper =
     , isOpenAccess : Maybe Bool
     , oaPathway : Maybe String
     , oaPathwayURI : Maybe String
-    , recommendedPathway : Pathway
+    , recommendedPathway : Maybe Pathway
     }
 
 
