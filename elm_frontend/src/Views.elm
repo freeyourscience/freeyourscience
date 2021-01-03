@@ -5,6 +5,17 @@ import Html.Attributes exposing (..)
 import Types exposing (..)
 
 
+recommendedPathway : RecommendedPathway
+recommendedPathway =
+    { article_version = "accepted"
+    , locations = [ "Academic Social Network", "Author's Homepage" ]
+    , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
+    , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
+    , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
+    , urls = [ "https://freeyourscience.org" ]
+    }
+
+
 renderLoadingSpinner : Html Msg
 renderLoadingSpinner =
     div [ class "spinner-border text-primary fs-5 m-2", attribute "role" "status" ]
@@ -59,6 +70,13 @@ renderPaper paper =
                     ]
                     []
                 ]
+            , if not isOpenAccess then
+                p []
+                    [ text "Pathway Details"
+                    ]
+
+              else
+                text ""
             ]
         , if not isOpenAccess then
             div [ class "col-12 col-md-3 fs-6 text-md-end" ]
@@ -171,7 +189,6 @@ renderBuggyPapers papers =
                     papers
                 )
             ]
-
 
 
 renderFooter : String -> Html Msg

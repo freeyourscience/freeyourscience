@@ -30,6 +30,16 @@ type alias Paper =
     }
 
 
+type alias RecommendedPathway =
+    { article_version : String
+    , locations : List String
+    , prerequisites : List String
+    , conditions : List String
+    , notes : List String
+    , urls : List String
+    }
+
+
 type Msg
     = GotPaper (Result Http.Error Paper)
     | Animate Animation.Msg
