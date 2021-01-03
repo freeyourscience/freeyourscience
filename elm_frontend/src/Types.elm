@@ -27,6 +27,7 @@ type alias Paper =
     , isOpenAccess : Maybe Bool
     , oaPathway : Maybe String
     , oaPathwayURI : Maybe String
+    , recommendedPathway : Pathway
     }
 
 
@@ -36,7 +37,7 @@ type alias NamedUrl =
     }
 
 
-type alias RecommendedPathway =
+type alias Pathway =
     { articleVersion : String
     , locations : List String
     , prerequisites : List String

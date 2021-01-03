@@ -5,18 +5,6 @@ import Html.Attributes exposing (..)
 import Types exposing (..)
 
 
-recommendedPathway : RecommendedPathway
-recommendedPathway =
-    { articleVersion = "accepted"
-    , locations = [ "Academic Social Network", "Author's Homepage" ]
-    , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
-    , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
-    , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
-    , urls = [ { name = "Best Page Ever", url = "https://freeyourscience.org" } ]
-    , policyUrl = "https://freeyourscience.org"
-    }
-
-
 renderLoadingSpinner : Html Msg
 renderLoadingSpinner =
     div [ class "spinner-border text-primary fs-5 m-2", attribute "role" "status" ]
@@ -74,27 +62,27 @@ renderPaper paper =
             , if not isOpenAccess then
                 div []
                     [ p [] [ text "The publisher has a policy that lets you:" ]
-                    , p [] [ text ("upload the " ++ recommendedPathway.articleVersion ++ " version to any of the following:") ]
+                    , p [] [ text ("upload the " ++ paper.recommendedPathway.articleVersion ++ " version to any of the following:") ]
                     , ul []
-                        (List.map (\l -> li [] [ text l ]) recommendedPathway.locations)
+                        (List.map (\l -> li [] [ text l ]) paper.recommendedPathway.locations)
                     , p [] [ text " You don't have pay a fee to do this." ]
                     , p [] [ text "But only:" ]
                     , ul []
-                        (List.map (\l -> li [] [ text l ]) recommendedPathway.prerequisites)
+                        (List.map (\l -> li [] [ text l ]) paper.recommendedPathway.prerequisites)
                     , p [] [ text "Conditions are:" ]
                     , ul []
-                        (List.map (\l -> li [] [ text l ]) recommendedPathway.conditions)
+                        (List.map (\l -> li [] [ text l ]) paper.recommendedPathway.conditions)
                     , p [] [ text "The publisher also notes:" ]
                     , ul []
-                        (List.map (\l -> li [] [ text l ]) recommendedPathway.notes)
+                        (List.map (\l -> li [] [ text l ]) paper.recommendedPathway.notes)
                     , p [] [ text "The publisher has provided the following links to further information:" ]
                     , ul []
                         (List.map (\url -> li [] [ a [ href url.url, class "link", class "link-secondary" ] [ text url.name ] ])
-                            recommendedPathway.urls
+                            paper.recommendedPathway.urls
                         )
                     , p []
                         [ text "The publisher has deposited this policy at "
-                        , a [ href recommendedPathway.policyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
+                        , a [ href paper.recommendedPathway.policyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
                         ]
                     ]
 
