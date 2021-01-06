@@ -22,7 +22,7 @@ recommendedPathway =
     , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
     , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
     , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
-    , urls = [ { description = "Best Page Ever", url = "https://freeyourscience.org" } ]
+    , urls = Just [ { description = "Best Page Ever", url = "https://freeyourscience.org" } ]
     , policyUrl = "https://freeyourscience.org"
     }
 
@@ -80,9 +80,16 @@ percentDOIsFetched model =
         )
 
 
-recommendPathway : List PathwayDetails -> Pathway
+toPathway : PathwayDetails -> Pathway
+toPathway pathwayDetails =
+    { recommendedPathway | urls = pathwayDetails.urls }
+
+
+recommendPathway : List PathwayDetails -> Maybe Pathway
 recommendPathway pathwayDetails =
-    recommendedPathway
+    pathwayDetails
+        |> List.head
+        |> Maybe.map toPathway
 
 
 toPaper : BackendPaper -> Paper
@@ -96,7 +103,7 @@ toPaper backendPaper =
     , isOpenAccess = backendPaper.isOpenAccess
     , oaPathway = backendPaper.oaPathway
     , oaPathwayURI = backendPaper.oaPathwayURI
-    , recommendedPathway = Maybe.map recommendPathway backendPaper.pathwayDetails
+    , recommendedPathway = Maybe.andThen recommendPathway backendPaper.pathwayDetails
     }
 
 

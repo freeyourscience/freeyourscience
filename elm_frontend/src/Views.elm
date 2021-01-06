@@ -77,10 +77,15 @@ renderPaper paper =
                         , ul []
                             (List.map (\l -> li [] [ text l ]) recommendedPathway.notes)
                         , p [] [ text "The publisher has provided the following links to further information:" ]
-                        , ul []
-                            (List.map (\url -> li [] [ a [ href url.url, class "link", class "link-secondary" ] [ text url.description ] ])
-                                recommendedPathway.urls
+                        , Maybe.map
+                            (\urls ->
+                                ul []
+                                    (List.map (\url -> li [] [ a [ href url.url, class "link", class "link-secondary" ] [ text url.description ] ])
+                                        urls
+                                    )
                             )
+                            recommendedPathway.urls
+                            |> Maybe.withDefault (text "")
                         , p []
                             [ text "The publisher has deposited this policy at "
                             , a [ href recommendedPathway.policyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]

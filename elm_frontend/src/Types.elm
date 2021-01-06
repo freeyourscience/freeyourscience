@@ -57,7 +57,7 @@ type alias Pathway =
     , prerequisites : List String
     , conditions : List String
     , notes : List String
-    , urls : List NamedUrl
+    , urls : Maybe (List NamedUrl)
     , policyUrl : String
     }
 
