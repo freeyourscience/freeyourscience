@@ -33,7 +33,16 @@ fullPaperElm =
     , isOpenAccess = Just False
     , oaPathway = Just "nocost"
     , oaPathwayURI = Just "https://v2.sherpa.ac.uk/id/publication/1908"
-    , pathwayDetails = Just [ { urls = [ "#" ] } ]
+    , pathwayDetails =
+        Just
+            [ { urls =
+                    Just
+                        [ { description = "Vereinbarung zur Rechteűbertragung"
+                          , url = "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf"
+                          }
+                        ]
+              }
+            ]
     }
 
 

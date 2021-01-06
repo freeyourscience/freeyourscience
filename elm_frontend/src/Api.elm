@@ -7,9 +7,17 @@ import Json.Decode.Pipeline exposing (required)
 import Types exposing (..)
 
 
+namedUrlDecoder : Decoder NamedUrl
+namedUrlDecoder =
+    D.succeed NamedUrl
+        |> required "description" D.string
+        |> required "url" D.string
+
+
 pathwayDetailsDecoder : Decoder PathwayDetails
 pathwayDetailsDecoder =
-    D.succeed { urls = [ "#" ] }
+    D.succeed PathwayDetails
+        |> required "urls" (D.nullable (D.list namedUrlDecoder))
 
 
 paperDecoder : Decoder BackendPaper

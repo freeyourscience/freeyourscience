@@ -46,7 +46,7 @@ type alias BackendPaper =
 
 
 type alias NamedUrl =
-    { name : String
+    { description : String
     , url : String
     }
 
@@ -63,7 +63,7 @@ type alias Pathway =
 
 
 type alias PathwayDetails =
-    { urls : List String
+    { urls : Maybe (List NamedUrl)
     }
 
 
