@@ -1,11 +1,11 @@
 module ApiTest exposing (..)
 
-import Api exposing (paperDecoder)
+import Api exposing (paperDecoder, recommendedPathway)
 import Expect exposing (Expectation)
 import Json.Decode as D exposing (Decoder)
 import Test exposing (..)
 import Types exposing (..)
-import Api exposing (recommendedPathway)
+import UtilsTest exposing (fullPaper)
 
 
 fullPaperJson : String
@@ -34,41 +34,28 @@ dummyPathway =
     }
 
 
+recommendedPathway : String -> Maybe Pathway
+recommendedPathway paperJson =
+    let
+        decodedPaper =
+            D.decodeString paperDecoder paperJson
+    in
+    case decodedPaper of
+        Ok paper ->
+            paper.recommendedPathway
+
+        _ ->
+            Nothing
+
+
 suite : Test
 suite =
     describe "Testing the paperDecoder"
-        [ test "Parse the oa_pathway_details into a recommended pathway" <|
-            let
-                decodedPaper =
-                    D.decodeString paperDecoder fullPaperJson
-
-                recommendedPathway =
-                    \result ->
-                        case result of
-                            Ok paper ->
-                                paper.recommendedPathway
-
-                            _ ->
-                                Nothing
-            in
-            Expect.all
-                [ \_ -> Expect.ok decodedPaper
-                , \_ -> Expect.equal (Just dummyPathway) (recommendedPathway decodedPaper)
-                ]
+        [ test "Successful decoding of full paper" <|
+            \_ -> Expect.ok (D.decodeString paperDecoder fullPaperJson)
+        , test "Parse the oa_pathway_details into a recommended pathway" <|
+            \_ -> Expect.equal (Just dummyPathway) (recommendedPathway fullPaperJson)
         , test "Handle null for oa_pathway_details" <|
-            let
-                decodedPaper =
-                    D.decodeString paperDecoder oaPathwayNull
-
-                recommendedPathway =
-                    \result ->
-                        case result of
-                            Ok paper ->
-                                paper.recommendedPathway
-
-                            _ ->
-                                Nothing
-            in
             \_ ->
-                Expect.equal (Nothing) (recommendedPathway decodedPaper)
+                Expect.equal Nothing (recommendedPathway oaPathwayNull)
         ]
