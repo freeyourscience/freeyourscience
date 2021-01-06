@@ -8,7 +8,7 @@ import Types exposing (..)
 
 recommendedPathway : OaPathway
 recommendedPathway =
-    { articleVersion = "accepted"
+    { articleVersion = "submitted"
     , locations = [ "Academic Social Network", "Author's Homepage" ]
     , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
     , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
