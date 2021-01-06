@@ -77,7 +77,9 @@ type alias PermittedOA =
 
 
 type alias Location =
-    { location : List String }
+    { location : List String
+    , namedRepository : Maybe (List String)
+    }
 
 
 type Msg

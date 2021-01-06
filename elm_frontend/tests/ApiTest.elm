@@ -55,6 +55,9 @@ fullPaperJson =
                             "academic_social_network",
                             "authors_homepage",
                             "non_commercial_repository"
+                        ],
+                        "named_repository" : [
+                            "PubMed Central"
                         ]
                     },
                     "article_version": [
@@ -126,7 +129,10 @@ fullPaperElm =
               , permittedOA =
                     Just
                         [ { additionalOaFee = "no"
-                          , location = { location = [ "academic_social_network", "authors_homepage", "non_commercial_repository" ] }
+                          , location =
+                                { location = [ "academic_social_network", "authors_homepage", "non_commercial_repository" ]
+                                , namedRepository = Just [ "PubMed Central" ]
+                                }
                           , articleVersion = [ "submitted" ]
                           , conditions = [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
                           }

@@ -3,7 +3,7 @@ module Api exposing (..)
 import Http
 import HttpBuilder exposing (withHeader)
 import Json.Decode as D exposing (Decoder)
-import Json.Decode.Pipeline exposing (required)
+import Json.Decode.Pipeline exposing (optional, required)
 import Types exposing (..)
 
 
@@ -18,6 +18,7 @@ locationDecoder : Decoder Location
 locationDecoder =
     D.succeed Location
         |> required "location" (D.list D.string)
+        |> optional "named_repository" (D.maybe (D.list D.string)) Nothing
 
 
 permittedOADecoder : Decoder PermittedOA
