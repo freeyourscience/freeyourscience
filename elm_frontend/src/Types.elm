@@ -65,6 +65,7 @@ type alias Pathway =
 type alias PathwayDetails =
     { urls : Maybe (List NamedUrl)
     , permittedOA : Maybe (List PermittedOA)
+    , policyUrl : Maybe String
     }
 
 

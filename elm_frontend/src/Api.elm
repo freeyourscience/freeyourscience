@@ -35,6 +35,7 @@ pathwayDetailsDecoder =
     D.succeed PathwayDetails
         |> required "urls" (D.nullable (D.list namedUrlDecoder))
         |> required "permitted_oa" (D.nullable (D.list permittedOADecoder))
+        |> required "uri" (D.nullable D.string)
 
 
 paperDecoder : Decoder BackendPaper
