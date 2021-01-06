@@ -86,13 +86,13 @@ type alias BackendPolicy =
 
 type alias PermittedOA =
     { additionalOaFee : String
-    , location : Location
+    , location : BackendLocation
     , articleVersion : List String
     , conditions : List String
     }
 
 
-type alias Location =
+type alias BackendLocation =
     { location : List String
     , namedRepository : Maybe (List String)
     }

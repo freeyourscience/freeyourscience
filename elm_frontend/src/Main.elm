@@ -90,11 +90,32 @@ recommendPathway permittedOaPathways =
         |> Maybe.map
             (\pathway ->
                 { articleVersion = String.join ", " pathway.articleVersion
-                , locations = hardcodedPathway.locations
+                , locations = parseLocations pathway.location
                 , prerequisites = hardcodedPathway.prerequisites
                 , conditions = pathway.conditions
                 , notes = hardcodedPathway.notes
                 }
+            )
+
+
+parseLocations : BackendLocation -> List String
+parseLocations { location, namedRepository } =
+    List.concat [ location, Maybe.withDefault [] namedRepository ]
+        |> List.filter (\loc -> loc /= "named_repository")
+        |> List.map
+            (\loc ->
+                case loc of
+                    "academic_social_network" ->
+                        "Academic Social Networks"
+
+                    "non_commercial_repository" ->
+                        "Non-commercial Repositories"
+
+                    "authors_homepage" ->
+                        "Author's Homepage"
+
+                    a ->
+                        String.replace "_" " " a
             )
 
 

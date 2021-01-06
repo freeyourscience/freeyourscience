@@ -9,7 +9,7 @@ import Types exposing (..)
 recommendedPathway : OaPathway
 recommendedPathway =
     { articleVersion = "submitted"
-    , locations = [ "Academic Social Network", "Author's Homepage" ]
+    , locations = [ "Academic Social Networks", "Author's Homepage", "Non-commercial Repositories", "PubMed Central" ]
     , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
     , conditions = [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
     , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
@@ -30,7 +30,7 @@ pathwayDetails =
             Just
                 [ { additionalOaFee = "no"
                   , location =
-                        { location = [ "academic_social_network", "authors_homepage", "non_commercial_repository" ]
+                        { location = [ "academic_social_network", "authors_homepage", "non_commercial_repository", "named_repository" ]
                         , namedRepository = Just [ "PubMed Central" ]
                         }
                   , articleVersion = [ "submitted" ]

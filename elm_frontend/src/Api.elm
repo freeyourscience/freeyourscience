@@ -14,9 +14,9 @@ namedUrlDecoder =
         |> required "url" D.string
 
 
-locationDecoder : Decoder Location
+locationDecoder : Decoder BackendLocation
 locationDecoder =
-    D.succeed Location
+    D.succeed BackendLocation
         |> required "location" (D.list D.string)
         |> optional "named_repository" (D.maybe (D.list D.string)) Nothing
 
