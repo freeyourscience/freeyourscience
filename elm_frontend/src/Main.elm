@@ -15,6 +15,18 @@ import Utils exposing (..)
 import Views exposing (..)
 
 
+recommendedPathway : Pathway
+recommendedPathway =
+    { articleVersion = "accepted"
+    , locations = [ "Academic Social Network", "Author's Homepage" ]
+    , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
+    , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
+    , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
+    , urls = [ { name = "Best Page Ever", url = "https://freeyourscience.org" } ]
+    , policyUrl = "https://freeyourscience.org"
+    }
+
+
 type alias Model =
     { unfetchedDOIs : List DOI
     , fetchedPapers : List Paper
@@ -68,6 +80,21 @@ percentDOIsFetched model =
         )
 
 
+toPaper : BackendPaper -> Paper
+toPaper backendPaper =
+    { doi = backendPaper.doi
+    , title = backendPaper.title
+    , journal = backendPaper.journal
+    , authors = backendPaper.authors
+    , year = backendPaper.year
+    , issn = backendPaper.issn
+    , isOpenAccess = backendPaper.isOpenAccess
+    , oaPathway = backendPaper.oaPathway
+    , oaPathwayURI = backendPaper.oaPathwayURI
+    , recommendedPathway = Just recommendedPathway
+    }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
@@ -89,7 +116,7 @@ update msg model =
     case msg of
         GotPaper (Ok paper) ->
             ( { updatedModel
-                | fetchedPapers = List.append model.fetchedPapers [ paper ]
+                | fetchedPapers = List.append model.fetchedPapers [ toPaper paper ]
                 , unfetchedDOIs = updatedDOIs
               }
             , case List.head model.unfetchedDOIs of

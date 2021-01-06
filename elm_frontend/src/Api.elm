@@ -7,26 +7,14 @@ import Json.Decode.Pipeline exposing (required)
 import Types exposing (..)
 
 
-recommendedPathway : Pathway
-recommendedPathway =
-    { articleVersion = "accepted"
-    , locations = [ "Academic Social Network", "Author's Homepage" ]
-    , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
-    , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
-    , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
-    , urls = [ { name = "Best Page Ever", url = "https://freeyourscience.org" } ]
-    , policyUrl = "https://freeyourscience.org"
-    }
+pathwayDetailsDecoder : Decoder PathwayDetails
+pathwayDetailsDecoder =
+    D.succeed { urls = [ "#" ] }
 
 
-pathwayDecoder : Decoder Pathway
-pathwayDecoder =
-    D.succeed recommendedPathway
-
-
-paperDecoder : Decoder Paper
+paperDecoder : Decoder BackendPaper
 paperDecoder =
-    D.succeed Paper
+    D.succeed BackendPaper
         |> required "doi" D.string
         |> required "title" (D.nullable D.string)
         |> required "journal" (D.nullable D.string)
@@ -36,7 +24,7 @@ paperDecoder =
         |> required "is_open_access" (D.nullable D.bool)
         |> required "oa_pathway" (D.nullable D.string)
         |> required "oa_pathway_uri" (D.nullable D.string)
-        |> required "oa_pathway_details" (D.nullable pathwayDecoder)
+        |> required "oa_pathway_details" (D.nullable (D.list pathwayDetailsDecoder))
 
 
 fetchPaper : String -> String -> Cmd Msg

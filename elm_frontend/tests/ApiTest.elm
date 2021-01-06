@@ -1,6 +1,6 @@
 module ApiTest exposing (..)
 
-import Api exposing (paperDecoder, recommendedPathway)
+import Api exposing (paperDecoder)
 import Expect exposing (Expectation)
 import Json.Decode as D exposing (Decoder)
 import Test exposing (..)
@@ -22,40 +22,30 @@ oaPathwayNull =
 """
 
 
-dummyPathway : Pathway
-dummyPathway =
-    { articleVersion = "accepted"
-    , locations = [ "Academic Social Network", "Author's Homepage" ]
-    , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
-    , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
-    , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
-    , urls = [ { name = "Best Page Ever", url = "https://freeyourscience.org" } ]
-    , policyUrl = "https://freeyourscience.org"
+fullPaperElm : BackendPaper
+fullPaperElm =
+    { doi = "10.1002/STAB.201710469"
+    , title = Just "Zukunft Robotik - Automatisierungspotentiale im Stahl- und Metallleichtbau"
+    , journal = Just "Stahlbau"
+    , authors = Just "Sigrid Brell-Cokcan et al."
+    , year = Just 2017
+    , issn = Just "0038-9145"
+    , isOpenAccess = Just False
+    , oaPathway = Just "nocost"
+    , oaPathwayURI = Just "https://v2.sherpa.ac.uk/id/publication/1908"
+    , pathwayDetails = Just [ { urls = [ "#" ] } ]
     }
-
-
-recommendedPathway : String -> Maybe Pathway
-recommendedPathway paperJson =
-    let
-        decodedPaper =
-            D.decodeString paperDecoder paperJson
-    in
-    case decodedPaper of
-        Ok paper ->
-            paper.recommendedPathway
-
-        _ ->
-            Nothing
 
 
 suite : Test
 suite =
     describe "Testing the paperDecoder"
         [ test "Successful decoding of full paper" <|
-            \_ -> Expect.ok (D.decodeString paperDecoder fullPaperJson)
-        , test "Parse the oa_pathway_details into a recommended pathway" <|
-            \_ -> Expect.equal (Just dummyPathway) (recommendedPathway fullPaperJson)
+            let
+                decodedPaper =
+                    D.decodeString paperDecoder fullPaperJson
+            in
+            \_ -> Expect.equal (Ok fullPaperElm) decodedPaper
         , test "Handle null for oa_pathway_details" <|
-            \_ ->
-                Expect.equal Nothing (recommendedPathway oaPathwayNull)
+            \_ -> Expect.equal (Ok { fullPaperElm | pathwayDetails = Nothing }) (D.decodeString paperDecoder oaPathwayNull)
         ]

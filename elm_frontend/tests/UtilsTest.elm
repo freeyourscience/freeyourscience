@@ -1,6 +1,5 @@
 module UtilsTest exposing (..)
 
-import Api exposing (recommendedPathway)
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Http exposing (Expect)

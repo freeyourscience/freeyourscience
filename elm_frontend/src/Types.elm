@@ -31,6 +31,20 @@ type alias Paper =
     }
 
 
+type alias BackendPaper =
+    { doi : DOI
+    , title : Maybe String
+    , journal : Maybe String
+    , authors : Maybe String
+    , year : Maybe Int
+    , issn : Maybe String
+    , isOpenAccess : Maybe Bool
+    , oaPathway : Maybe String
+    , oaPathwayURI : Maybe String
+    , pathwayDetails : Maybe (List PathwayDetails)
+    }
+
+
 type alias NamedUrl =
     { name : String
     , url : String
@@ -48,6 +62,11 @@ type alias Pathway =
     }
 
 
+type alias PathwayDetails =
+    { urls : List String
+    }
+
+
 type Msg
-    = GotPaper (Result Http.Error Paper)
+    = GotPaper (Result Http.Error BackendPaper)
     | Animate Animation.Msg
