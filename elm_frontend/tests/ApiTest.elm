@@ -11,7 +11,89 @@ import UtilsTest exposing (fullPaper)
 fullPaperJson : String
 fullPaperJson =
     """
-{"doi":"10.1002/STAB.201710469","title":"Zukunft Robotik - Automatisierungspotentiale im Stahl- und Metallleichtbau","journal":"Stahlbau","authors":"Sigrid Brell-Cokcan et al.","year":2017,"issn":"0038-9145","is_open_access":false,"oa_pathway":"nocost","oa_pathway_uri":"https://v2.sherpa.ac.uk/id/publication/1908","oa_pathway_details":[{"open_access_prohibited":"no","urls":[{"description":"Vereinbarung zur Rechteűbertragung","url":"https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf"}],"permitted_oa":[{"additional_oa_fee":"no","location":{"location_phrases":[{"phrase":"Academic Social Network","language":"en","value":"academic_social_network"},{"phrase":"Author's Homepage","language":"en","value":"authors_homepage"},{"language":"en","value":"non_commercial_repository","phrase":"Non-Commercial Repository"}],"location":["academic_social_network","authors_homepage","non_commercial_repository"]},"article_version":["submitted"],"article_version_phrases":[{"language":"en","value":"submitted","phrase":"Submitted"}],"additional_oa_fee_phrases":[{"language":"en","value":"no","phrase":"No"}],"conditions":["Published source must be acknowledged","Must link to publisher version with DOI"]},{"additional_oa_fee_phrases":[{"phrase":"No","value":"no","language":"en"}],"conditions":["Published source must be acknowledged","Must link to publisher version with DOI"],"article_version_phrases":[{"language":"en","value":"accepted","phrase":"Accepted"}],"location":{"named_repository":["PubMed Central"],"location_phrases":[{"phrase":"Author's Homepage","language":"en","value":"authors_homepage"},{"phrase":"Institutional Website","value":"institutional_website","language":"en"},{"phrase":"Named Repository","language":"en","value":"named_repository"},{"phrase":"Subject Repository","language":"en","value":"subject_repository"}],"location":["authors_homepage","institutional_website","named_repository","subject_repository"]},"additional_oa_fee":"no","embargo":{"units":"months","amount":12,"units_phrases":[{"phrase":"Months","value":"months","language":"en"}]},"article_version":["accepted"]}],"open_access_prohibited_phrases":[{"language":"en","value":"no","phrase":"No"}],"internal_moniker":"Ernst und Sohn","publication_count":12,"uri":"https://v2.sherpa.ac.uk/id/publisher_policy/1390","id":1390}]}
+{
+    "doi": "10.1002/STAB.201710469",
+    "title": "Zukunft Robotik - Automatisierungspotentiale im Stahl- und Metallleichtbau",
+    "journal": "Stahlbau",
+    "authors": "Sigrid Brell-Cokcan et al.",
+    "year": 2017,
+    "issn": "0038-9145",
+    "is_open_access": false,
+    "oa_pathway": "nocost",
+    "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/1908",
+    "oa_pathway_details": [
+        {
+            "open_access_prohibited": "no",
+            "urls": [
+                {
+                    "description": "Vereinbarung zur Rechteűbertragung",
+                    "url": "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf"
+                }
+            ],
+            "permitted_oa": [
+                {
+                    "additional_oa_fee": "no",
+                    "location": {
+                        "location_phrases": [
+                            {
+                                "phrase": "Academic Social Network",
+                                "language": "en",
+                                "value": "academic_social_network"
+                            },
+                            {
+                                "phrase": "Author's Homepage",
+                                "language": "en",
+                                "value": "authors_homepage"
+                            },
+                            {
+                                "language": "en",
+                                "value": "non_commercial_repository",
+                                "phrase": "Non-Commercial Repository"
+                            }
+                        ],
+                        "location": [
+                            "academic_social_network",
+                            "authors_homepage",
+                            "non_commercial_repository"
+                        ]
+                    },
+                    "article_version": [
+                        "submitted"
+                    ],
+                    "article_version_phrases": [
+                        {
+                            "language": "en",
+                            "value": "submitted",
+                            "phrase": "Submitted"
+                        }
+                    ],
+                    "additional_oa_fee_phrases": [
+                        {
+                            "language": "en",
+                            "value": "no",
+                            "phrase": "No"
+                        }
+                    ],
+                    "conditions": [
+                        "Published source must be acknowledged",
+                        "Must link to publisher version with DOI"
+                    ]
+                }
+            ],
+            "open_access_prohibited_phrases": [
+                {
+                    "language": "en",
+                    "value": "no",
+                    "phrase": "No"
+                }
+            ],
+            "internal_moniker": "Ernst und Sohn",
+            "publication_count": 12,
+            "uri": "https://v2.sherpa.ac.uk/id/publisher_policy/1390",
+            "id": 1390
+        }
+    ]
+}
 """
 
 
@@ -39,6 +121,14 @@ fullPaperElm =
                     Just
                         [ { description = "Vereinbarung zur Rechteűbertragung"
                           , url = "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf"
+                          }
+                        ]
+              , permittedOA =
+                    Just
+                        [ { additionalOaFee = "no"
+                          , location = { location = [ "academic_social_network", "authors_homepage", "non_commercial_repository" ] }
+                          , articleVersion = [ "submitted" ]
+                          , conditions = [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
                           }
                         ]
               }

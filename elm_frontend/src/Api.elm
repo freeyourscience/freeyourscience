@@ -14,10 +14,26 @@ namedUrlDecoder =
         |> required "url" D.string
 
 
+locationDecoder : Decoder Location
+locationDecoder =
+    D.succeed Location
+        |> required "location" (D.list D.string)
+
+
+permittedOADecoder : Decoder PermittedOA
+permittedOADecoder =
+    D.succeed PermittedOA
+        |> required "additional_oa_fee" D.string
+        |> required "location" locationDecoder
+        |> required "article_version" (D.list D.string)
+        |> required "conditions" (D.list D.string)
+
+
 pathwayDetailsDecoder : Decoder PathwayDetails
 pathwayDetailsDecoder =
     D.succeed PathwayDetails
         |> required "urls" (D.nullable (D.list namedUrlDecoder))
+        |> required "permitted_oa" (D.nullable (D.list permittedOADecoder))
 
 
 paperDecoder : Decoder BackendPaper
