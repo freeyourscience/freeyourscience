@@ -3,7 +3,7 @@ module Api exposing (..)
 import Http
 import HttpBuilder exposing (withHeader)
 import Json.Decode as D exposing (Decoder)
-import Json.Decode.Extra as Decode
+import Json.Decode.Pipeline exposing (required)
 import Types exposing (..)
 
 
@@ -19,24 +19,24 @@ recommendedPathway =
     }
 
 
-pathwayDecoder : Decoder (Maybe Pathway)
+pathwayDecoder : Decoder Pathway
 pathwayDecoder =
-    D.succeed (Just recommendedPathway)
+    D.succeed recommendedPathway
 
 
 paperDecoder : Decoder Paper
 paperDecoder =
     D.succeed Paper
-        |> Decode.andMap (D.field "doi" D.string)
-        |> Decode.andMap (D.maybe (D.field "title" D.string))
-        |> Decode.andMap (D.maybe (D.field "journal" D.string))
-        |> Decode.andMap (D.maybe (D.field "authors" D.string))
-        |> Decode.andMap (D.maybe (D.field "year" D.int))
-        |> Decode.andMap (D.maybe (D.field "issn" D.string))
-        |> Decode.andMap (D.maybe (D.field "is_open_access" D.bool))
-        |> Decode.andMap (D.maybe (D.field "oa_pathway" D.string))
-        |> Decode.andMap (D.maybe (D.field "oa_pathway_uri" D.string))
-        |> Decode.andMap (D.field "oa_pathway_details" pathwayDecoder)
+        |> required "doi" D.string
+        |> required "title" (D.nullable D.string)
+        |> required "journal" (D.nullable D.string)
+        |> required "authors" (D.nullable D.string)
+        |> required "year" (D.nullable D.int)
+        |> required "issn" (D.nullable D.string)
+        |> required "is_open_access" (D.nullable D.bool)
+        |> required "oa_pathway" (D.nullable D.string)
+        |> required "oa_pathway_uri" (D.nullable D.string)
+        |> required "oa_pathway_details" (D.nullable pathwayDecoder)
 
 
 fetchPaper : String -> String -> Cmd Msg

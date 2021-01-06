@@ -5,6 +5,7 @@ import Expect exposing (Expectation)
 import Json.Decode as D exposing (Decoder)
 import Test exposing (..)
 import Types exposing (..)
+import Api exposing (recommendedPathway)
 
 
 fullPaperJson : String
@@ -55,6 +56,19 @@ suite =
                 , \_ -> Expect.equal (Just dummyPathway) (recommendedPathway decodedPaper)
                 ]
         , test "Handle null for oa_pathway_details" <|
+            let
+                decodedPaper =
+                    D.decodeString paperDecoder oaPathwayNull
+
+                recommendedPathway =
+                    \result ->
+                        case result of
+                            Ok paper ->
+                                paper.recommendedPathway
+
+                            _ ->
+                                Nothing
+            in
             \_ ->
-                Expect.ok (D.decodeString paperDecoder oaPathwayNull)
+                Expect.equal (Nothing) (recommendedPathway decodedPaper)
         ]
