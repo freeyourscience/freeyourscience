@@ -71,13 +71,9 @@ type alias PathwayDetails =
     }
 
 
-type alias PolicyDetails =
+type alias Policy =
     { policyUrl : String
-    }
-
-
-type alias OptionalPolicyDetails =
-    { urls : Maybe (List NamedUrl)
+    , urls : Maybe (List NamedUrl)
     }
 
 

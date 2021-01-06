@@ -68,24 +68,16 @@ percentDOIsFetched model =
         )
 
 
-oaPathway : PathwayDetails -> OptionalPolicyDetails -> PolicyDetails -> OaPathway
-oaPathway pathway optPolicyDetails policyDetails =
-    { articleVersion = pathway.articleVersion
-    , locations = pathway.locations
-    , prerequisites = pathway.prerequisites
-    , conditions = pathway.conditions
-    , notes = pathway.notes
-    , policyUrl = policyDetails.policyUrl
-    , urls = optPolicyDetails.urls
-    }
+toPolicy : BackendPolicy -> Maybe Policy
+toPolicy backendPolicy =
+    Maybe.map
+        (\policyUrl -> { policyUrl = policyUrl, urls = backendPolicy.urls })
+        backendPolicy.policyUrl
 
 
 toPathway : BackendPolicy -> Maybe OaPathway
 toPathway backendPolicy =
     let
-        optionalPolicyDetails =
-            OptionalPolicyDetails backendPolicy.urls
-
         hardcodedPathway =
             { articleVersion = "accepted"
             , locations = [ "Academic Social Network", "Author's Homepage" ]
@@ -94,8 +86,18 @@ toPathway backendPolicy =
             , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
             }
     in
-    Maybe.map PolicyDetails backendPolicy.policyUrl
-        |> Maybe.map (oaPathway hardcodedPathway optionalPolicyDetails)
+    Maybe.map
+        (\policy ->
+            { articleVersion = hardcodedPathway.articleVersion
+            , locations = hardcodedPathway.locations
+            , prerequisites = hardcodedPathway.prerequisites
+            , conditions = hardcodedPathway.conditions
+            , notes = hardcodedPathway.notes
+            , urls = policy.urls
+            , policyUrl = policy.policyUrl
+            }
+        )
+        (toPolicy backendPolicy)
 
 
 recommendPathway : List BackendPolicy -> Maybe OaPathway
