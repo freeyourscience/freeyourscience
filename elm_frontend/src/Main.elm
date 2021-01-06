@@ -92,7 +92,7 @@ recommendPathway permittedOaPathways =
                 { articleVersion = String.join ", " pathway.articleVersion
                 , locations = hardcodedPathway.locations
                 , prerequisites = hardcodedPathway.prerequisites
-                , conditions = hardcodedPathway.conditions
+                , conditions = pathway.conditions
                 , notes = hardcodedPathway.notes
                 }
             )

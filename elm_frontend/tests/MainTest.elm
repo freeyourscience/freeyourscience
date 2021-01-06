@@ -11,7 +11,7 @@ recommendedPathway =
     { articleVersion = "submitted"
     , locations = [ "Academic Social Network", "Author's Homepage" ]
     , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
-    , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
+    , conditions = [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
     , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
     , urls = Just [ { description = "Vereinbarung zur Rechteűbertragung", url = "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf" } ]
     , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
