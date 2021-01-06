@@ -68,37 +68,39 @@ percentDOIsFetched model =
         )
 
 
-joinPathwayFields : PathwayOptionalFields -> PathwayRequiredFields -> Pathway
-joinPathwayFields optionalFields requiredFields =
-    { articleVersion = optionalFields.articleVersion
-    , locations = optionalFields.locations
-    , prerequisites = optionalFields.prerequisites
-    , conditions = optionalFields.conditions
-    , notes = optionalFields.notes
-    , policyUrl = requiredFields.policyUrl
-    , urls = optionalFields.urls
+oaPathway : PathwayDetails -> OptionalPolicyDetails -> PolicyDetails -> OaPathway
+oaPathway pathway optPolicyDetails policyDetails =
+    { articleVersion = pathway.articleVersion
+    , locations = pathway.locations
+    , prerequisites = pathway.prerequisites
+    , conditions = pathway.conditions
+    , notes = pathway.notes
+    , policyUrl = policyDetails.policyUrl
+    , urls = optPolicyDetails.urls
     }
 
 
-toPathway : PathwayDetails -> Maybe Pathway
-toPathway pathwayDetails =
+toPathway : BackendPolicy -> Maybe OaPathway
+toPathway backendPolicy =
     let
-        optionalFields =
+        optionalPolicyDetails =
+            OptionalPolicyDetails backendPolicy.urls
+
+        hardcodedPathway =
             { articleVersion = "accepted"
             , locations = [ "Academic Social Network", "Author's Homepage" ]
             , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
             , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
             , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
-            , urls = pathwayDetails.urls
             }
     in
-    Maybe.map PathwayRequiredFields pathwayDetails.policyUrl
-        |> Maybe.map (joinPathwayFields optionalFields)
+    Maybe.map PolicyDetails backendPolicy.policyUrl
+        |> Maybe.map (oaPathway hardcodedPathway optionalPolicyDetails)
 
 
-recommendPathway : List PathwayDetails -> Maybe Pathway
-recommendPathway pathwayDetails =
-    pathwayDetails
+recommendPathway : List BackendPolicy -> Maybe OaPathway
+recommendPathway policies =
+    policies
         |> List.head
         |> Maybe.andThen toPathway
 

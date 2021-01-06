@@ -30,9 +30,9 @@ permittedOADecoder =
         |> required "conditions" (D.list D.string)
 
 
-pathwayDetailsDecoder : Decoder PathwayDetails
-pathwayDetailsDecoder =
-    D.succeed PathwayDetails
+policyDetailsDecoder : Decoder BackendPolicy
+policyDetailsDecoder =
+    D.succeed BackendPolicy
         |> required "urls" (D.nullable (D.list namedUrlDecoder))
         |> required "permitted_oa" (D.nullable (D.list permittedOADecoder))
         |> required "uri" (D.nullable D.string)
@@ -50,7 +50,7 @@ paperDecoder =
         |> required "is_open_access" (D.nullable D.bool)
         |> required "oa_pathway" (D.nullable D.string)
         |> required "oa_pathway_uri" (D.nullable D.string)
-        |> required "oa_pathway_details" (D.nullable (D.list pathwayDetailsDecoder))
+        |> required "oa_pathway_details" (D.nullable (D.list policyDetailsDecoder))
 
 
 fetchPaper : String -> String -> Cmd Msg

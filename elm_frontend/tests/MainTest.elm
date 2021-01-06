@@ -6,7 +6,7 @@ import Test exposing (..)
 import Types exposing (..)
 
 
-recommendedPathway : Pathway
+recommendedPathway : OaPathway
 recommendedPathway =
     { articleVersion = "accepted"
     , locations = [ "Academic Social Network", "Author's Homepage" ]
@@ -18,7 +18,7 @@ recommendedPathway =
     }
 
 
-pathwayDetails : List PathwayDetails
+pathwayDetails : List BackendPolicy
 pathwayDetails =
     [ { urls =
             Just

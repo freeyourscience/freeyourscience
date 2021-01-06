@@ -27,7 +27,7 @@ type alias Paper =
     , isOpenAccess : Maybe Bool
     , oaPathway : Maybe String
     , oaPathwayURI : Maybe String
-    , recommendedPathway : Maybe Pathway
+    , recommendedPathway : Maybe OaPathway
     }
 
 
@@ -41,7 +41,7 @@ type alias BackendPaper =
     , isOpenAccess : Maybe Bool
     , oaPathway : Maybe String
     , oaPathwayURI : Maybe String
-    , pathwayDetails : Maybe (List PathwayDetails)
+    , pathwayDetails : Maybe (List BackendPolicy)
     }
 
 
@@ -51,7 +51,7 @@ type alias NamedUrl =
     }
 
 
-type alias Pathway =
+type alias OaPathway =
     { articleVersion : String
     , locations : List String
     , prerequisites : List String
@@ -62,22 +62,26 @@ type alias Pathway =
     }
 
 
-type alias PathwayOptionalFields =
+type alias PathwayDetails =
     { articleVersion : String
     , locations : List String
     , prerequisites : List String
     , conditions : List String
     , notes : List String
-    , urls : Maybe (List NamedUrl)
     }
 
 
-type alias PathwayRequiredFields =
+type alias PolicyDetails =
     { policyUrl : String
     }
 
 
-type alias PathwayDetails =
+type alias OptionalPolicyDetails =
+    { urls : Maybe (List NamedUrl)
+    }
+
+
+type alias BackendPolicy =
     { urls : Maybe (List NamedUrl)
     , permittedOA : Maybe (List PermittedOA)
     , policyUrl : Maybe String
