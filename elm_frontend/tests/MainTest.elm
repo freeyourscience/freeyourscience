@@ -1,7 +1,7 @@
 module MainTest exposing (..)
 
 import Expect exposing (Expectation)
-import Main exposing (recommendPathway)
+import Main exposing (parsePolicies)
 import Test exposing (..)
 import Types exposing (..)
 
@@ -46,5 +46,5 @@ suite : Test
 suite =
     describe "recommendPathway"
         [ test "valid first prio pathway" <|
-            \_ -> Expect.equal (Just recommendedPathway) (recommendPathway pathwayDetails)
+            \_ -> Expect.equal (Just recommendedPathway) (parsePolicies pathwayDetails)
         ]

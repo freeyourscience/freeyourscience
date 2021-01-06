@@ -75,8 +75,8 @@ toPolicy backendPolicy =
         backendPolicy.policyUrl
 
 
-toPathway : BackendPolicy -> Maybe OaPathway
-toPathway backendPolicy =
+recommendPathway : Maybe (List PermittedOA) -> Maybe PathwayDetails
+recommendPathway permittedOaPathways =
     let
         hardcodedPathway =
             { articleVersion = "accepted"
@@ -86,22 +86,39 @@ toPathway backendPolicy =
             , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
             }
     in
-    Maybe.map
+    permittedOaPathways
+        |> Maybe.andThen List.head
+        |> Maybe.map
+            (\_ ->
+                { articleVersion = hardcodedPathway.articleVersion
+                , locations = hardcodedPathway.locations
+                , prerequisites = hardcodedPathway.prerequisites
+                , conditions = hardcodedPathway.conditions
+                , notes = hardcodedPathway.notes
+                }
+            )
+
+
+toPathway : BackendPolicy -> Maybe OaPathway
+toPathway backendPolicy =
+    Maybe.map2
         (\policy ->
-            { articleVersion = hardcodedPathway.articleVersion
-            , locations = hardcodedPathway.locations
-            , prerequisites = hardcodedPathway.prerequisites
-            , conditions = hardcodedPathway.conditions
-            , notes = hardcodedPathway.notes
-            , urls = policy.urls
-            , policyUrl = policy.policyUrl
-            }
+            \pathway ->
+                { articleVersion = pathway.articleVersion
+                , locations = pathway.locations
+                , prerequisites = pathway.prerequisites
+                , conditions = pathway.conditions
+                , notes = pathway.notes
+                , urls = policy.urls
+                , policyUrl = policy.policyUrl
+                }
         )
         (toPolicy backendPolicy)
+        (recommendPathway backendPolicy.permittedOA)
 
 
-recommendPathway : List BackendPolicy -> Maybe OaPathway
-recommendPathway policies =
+parsePolicies : List BackendPolicy -> Maybe OaPathway
+parsePolicies policies =
     policies
         |> List.head
         |> Maybe.andThen toPathway
@@ -118,7 +135,7 @@ toPaper backendPaper =
     , isOpenAccess = backendPaper.isOpenAccess
     , oaPathway = backendPaper.oaPathway
     , oaPathwayURI = backendPaper.oaPathwayURI
-    , recommendedPathway = Maybe.andThen recommendPathway backendPaper.pathwayDetails
+    , recommendedPathway = Maybe.andThen parsePolicies backendPaper.pathwayDetails
     }
 
 
