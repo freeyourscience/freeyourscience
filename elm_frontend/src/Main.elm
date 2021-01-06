@@ -68,23 +68,39 @@ percentDOIsFetched model =
         )
 
 
-toPathway : PathwayDetails -> Pathway
-toPathway pathwayDetails =
-    { articleVersion = "accepted"
-    , locations = [ "Academic Social Network", "Author's Homepage" ]
-    , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
-    , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
-    , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
-    , urls = pathwayDetails.urls
-    , policyUrl = "https://freeyourscience.org"
+joinPathwayFields : PathwayOptionalFields -> PathwayRequiredFields -> Pathway
+joinPathwayFields optionalFields requiredFields =
+    { articleVersion = optionalFields.articleVersion
+    , locations = optionalFields.locations
+    , prerequisites = optionalFields.prerequisites
+    , conditions = optionalFields.conditions
+    , notes = optionalFields.notes
+    , policyUrl = requiredFields.policyUrl
+    , urls = optionalFields.urls
     }
+
+
+toPathway : PathwayDetails -> Maybe Pathway
+toPathway pathwayDetails =
+    let
+        optionalFields =
+            { articleVersion = "accepted"
+            , locations = [ "Academic Social Network", "Author's Homepage" ]
+            , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
+            , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
+            , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
+            , urls = pathwayDetails.urls
+            }
+    in
+    Maybe.map PathwayRequiredFields pathwayDetails.policyUrl
+        |> Maybe.map (joinPathwayFields optionalFields)
 
 
 recommendPathway : List PathwayDetails -> Maybe Pathway
 recommendPathway pathwayDetails =
     pathwayDetails
         |> List.head
-        |> Maybe.map toPathway
+        |> Maybe.andThen toPathway
 
 
 toPaper : BackendPaper -> Paper

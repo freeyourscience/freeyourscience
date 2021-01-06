@@ -62,6 +62,21 @@ type alias Pathway =
     }
 
 
+type alias PathwayOptionalFields =
+    { articleVersion : String
+    , locations : List String
+    , prerequisites : List String
+    , conditions : List String
+    , notes : List String
+    , urls : Maybe (List NamedUrl)
+    }
+
+
+type alias PathwayRequiredFields =
+    { policyUrl : String
+    }
+
+
 type alias PathwayDetails =
     { urls : Maybe (List NamedUrl)
     , permittedOA : Maybe (List PermittedOA)

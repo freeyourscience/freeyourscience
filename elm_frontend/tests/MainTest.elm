@@ -14,7 +14,7 @@ recommendedPathway =
     , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
     , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
     , urls = Just [ { description = "Vereinbarung zur Rechteűbertragung", url = "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf" } ]
-    , policyUrl = "https://freeyourscience.org"
+    , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
     }
 
 
