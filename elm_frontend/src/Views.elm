@@ -78,7 +78,7 @@ renderPaper paper =
                             (List.map (\l -> li [] [ text l ]) recommendedPathway.notes)
                         , p [] [ text "The publisher has provided the following links to further information:" ]
                         , ul []
-                            (List.map (\url -> li [] [ a [ href url.url, class "link", class "link-secondary" ] [ text url.name ] ])
+                            (List.map (\url -> li [] [ a [ href url.url, class "link", class "link-secondary" ] [ text url.description ] ])
                                 recommendedPathway.urls
                             )
                         , p []
