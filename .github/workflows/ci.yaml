@@ -113,7 +113,7 @@ jobs:
             --platform managed \
             --allow-unauthenticated \
             --set-env-vars "UNPAYWALL_EMAIL=${{ secrets.API_EMAIL }},SHERPA_API_KEY=${{ secrets.SHERPA_API_KEY }},S2_API_KEY=${{ secrets.S2_API_KEY }}" \
-            --impersonate-service-account=${{ secrets.GCP_SERVICEACCOUNT_EMAIL}} \
+            --service-account=${{ secrets.GCP_SERVICEACCOUNT_EMAIL}} \
             --revision-suffix ${{ github.sha }}
 
   deploy-prod:
