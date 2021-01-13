@@ -1,6 +1,5 @@
 module Api exposing (..)
 
-import Html exposing (option)
 import Http
 import HttpBuilder exposing (withHeader)
 import Json.Decode as D exposing (Decoder)
