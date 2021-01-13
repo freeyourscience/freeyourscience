@@ -6,8 +6,6 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (..)
-import List
-import Maybe
 import Types exposing (..)
 import Utils exposing (..)
 import Views exposing (..)
