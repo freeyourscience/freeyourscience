@@ -43,7 +43,7 @@ permittedOADecoder =
         |> required "location" locationDecoder
         |> required "article_version" (D.list D.string)
         |> required "conditions" (D.list D.string)
-        |> required "prerequisites" (D.nullable prerequisitesDecoder)
+        |> optional "prerequisites" (D.nullable prerequisitesDecoder) Nothing
 
 
 policyDetailsDecoder : Decoder BackendPolicy
