@@ -1,5 +1,6 @@
 module Api exposing (..)
 
+import Html exposing (option)
 import Http
 import HttpBuilder exposing (withHeader)
 import Json.Decode as D exposing (Decoder)
@@ -42,7 +43,7 @@ permittedOADecoder =
         |> required "additional_oa_fee" D.string
         |> required "location" locationDecoder
         |> required "article_version" (D.list D.string)
-        |> required "conditions" (D.list D.string)
+        |> optional "conditions" (D.nullable (D.list D.string)) Nothing
         |> optional "prerequisites" (D.nullable prerequisitesDecoder) Nothing
 
 

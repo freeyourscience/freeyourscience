@@ -89,7 +89,7 @@ recommendPathway permittedOaPathways =
                 { articleVersion = String.join ", " pathway.articleVersion
                 , locations = parseLocations pathway.location
                 , prerequisites = Maybe.map parsePrequisites pathway.prerequisites
-                , conditions = Just pathway.conditions
+                , conditions = pathway.conditions
                 , notes = hardcodedPathway.notes
                 }
             )

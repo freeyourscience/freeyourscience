@@ -134,7 +134,7 @@ fullPaperElm =
                                 , namedRepository = Just [ "PubMed Central" ]
                                 }
                           , articleVersion = [ "submitted" ]
-                          , conditions = [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
+                          , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
                           , prerequisites = Nothing
                           }
                         ]

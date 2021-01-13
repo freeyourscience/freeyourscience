@@ -88,7 +88,7 @@ type alias PermittedOA =
     { additionalOaFee : String
     , location : BackendLocation
     , articleVersion : List String
-    , conditions : List String
+    , conditions : Maybe (List String)
     , prerequisites : Maybe BackendPrerequisites
     }
 
