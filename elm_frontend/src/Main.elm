@@ -79,9 +79,9 @@ recommendPathway : Maybe (List PermittedOA) -> Maybe PathwayDetails
 recommendPathway permittedOaPathways =
     let
         hardcodedPathway =
-            { prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
-            , conditions = [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
-            , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
+            { prerequisites = Just [ "If Required by Institution", "12 months have passed since publication" ]
+            , conditions = Just [ "Must be accompanied by set statement (see policy)", "Must link to publisher version" ]
+            , notes = Just [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
             }
     in
     permittedOaPathways
@@ -91,7 +91,7 @@ recommendPathway permittedOaPathways =
                 { articleVersion = String.join ", " pathway.articleVersion
                 , locations = parseLocations pathway.location
                 , prerequisites = hardcodedPathway.prerequisites
-                , conditions = pathway.conditions
+                , conditions = Just pathway.conditions
                 , notes = hardcodedPathway.notes
                 }
             )

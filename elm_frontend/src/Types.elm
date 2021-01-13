@@ -54,9 +54,9 @@ type alias NamedUrl =
 type alias OaPathway =
     { articleVersion : String
     , locations : List String
-    , prerequisites : List String
-    , conditions : List String
-    , notes : List String
+    , prerequisites : Maybe (List String)
+    , conditions : Maybe (List String)
+    , notes : Maybe (List String)
     , urls : Maybe (List NamedUrl)
     , policyUrl : String
     }
@@ -65,9 +65,9 @@ type alias OaPathway =
 type alias PathwayDetails =
     { articleVersion : String
     , locations : List String
-    , prerequisites : List String
-    , conditions : List String
-    , notes : List String
+    , prerequisites : Maybe (List String)
+    , conditions : Maybe (List String)
+    , notes : Maybe (List String)
     }
 
 
