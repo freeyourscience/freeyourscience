@@ -23,7 +23,7 @@ renderList list =
 
 renderUrl : NamedUrl -> Html Msg
 renderUrl { url, description } =
-    a [ href url, class "link", class "link-secondary" ] [ text url ]
+    a [ href url, class "link", class "link-secondary" ] [ text description ]
 
 
 renderPaper : Paper -> Html Msg
@@ -86,22 +86,22 @@ renderPaper paper =
                             , recommendedPathway.prerequisites
                                 |> Maybe.map (List.map text)
                                 |> Maybe.map renderList
-                                |> Maybe.map (\list -> [ p [] [ text "But only:" ] ] ++ [ list ])
+                                |> Maybe.map (\list -> [ p [] [ text "But only:" ], list ])
                                 |> Maybe.withDefault [ text "" ]
                             , recommendedPathway.conditions
                                 |> Maybe.map (List.map text)
                                 |> Maybe.map renderList
-                                |> Maybe.map (\list -> [ p [] [ text "Conditions are:" ] ] ++ [ list ])
+                                |> Maybe.map (\list -> [ p [] [ text "Conditions are:" ], list ])
                                 |> Maybe.withDefault [ text "" ]
                             , recommendedPathway.notes
                                 |> Maybe.map (List.map text)
                                 |> Maybe.map renderList
-                                |> Maybe.map (\list -> [ p [] [ text "The publisher also notes:" ] ] ++ [ list ])
+                                |> Maybe.map (\list -> [ p [] [ text "The publisher also notes:" ], list ])
                                 |> Maybe.withDefault [ text "" ]
                             , recommendedPathway.urls
                                 |> Maybe.map (List.map renderUrl)
                                 |> Maybe.map renderList
-                                |> Maybe.map (\list -> [ p [] [ text "The publisher has provided the following links to further information:" ] ] ++ [ list ])
+                                |> Maybe.map (\list -> [ p [] [ text "The publisher has provided the following links to further information:" ], list ])
                                 |> Maybe.withDefault [ text "" ]
                             , [ p []
                                     [ text "The publisher has deposited this policy at "
@@ -215,7 +215,7 @@ renderBuggyPapers papers =
                                 [ text p.doi
                                 ]
                             , case p.oaPathway of
-                                Just oaPathway ->
+                                Just _ ->
                                     text (" (unknown publisher policy for: " ++ Maybe.withDefault "Unknown Journal" p.journal ++ ")")
 
                                 _ ->

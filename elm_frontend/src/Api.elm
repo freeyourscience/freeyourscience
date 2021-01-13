@@ -1,4 +1,4 @@
-module Api exposing (..)
+module Api exposing (fetchPaper, paperDecoder)
 
 import Http
 import HttpBuilder exposing (withHeader)

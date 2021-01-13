@@ -1,13 +1,11 @@
 module Main exposing (..)
 
-import Animation exposing (percent, px)
+import Animation exposing (percent)
 import Api exposing (..)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (..)
-import Http
-import Json.Decode exposing (bool)
 import List
 import Maybe
 import Types exposing (..)
@@ -96,7 +94,7 @@ recommendPathway permittedOaPathways =
 
 
 parsePrequisites : BackendPrerequisites -> List String
-parsePrequisites { prerequisites, prerequisites_phrases } =
+parsePrequisites { prerequisites_phrases } =
     prerequisites_phrases
         |> List.map (\item -> item.phrase)
 
@@ -195,7 +193,7 @@ update msg model =
             )
 
         -- TODO: add the erroneous dois as well?
-        GotPaper (Err err) ->
+        GotPaper (Err _) ->
             ( { updatedModel | unfetchedDOIs = updatedDOIs }
             , Cmd.none
             )

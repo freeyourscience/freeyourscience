@@ -2,7 +2,6 @@ module Types exposing (..)
 
 import Animation
 import Http
-import Json.Encode exposing (int)
 
 
 type alias Flags =
@@ -28,20 +27,6 @@ type alias Paper =
     , oaPathway : Maybe String
     , oaPathwayURI : Maybe String
     , recommendedPathway : Maybe OaPathway
-    }
-
-
-type alias BackendPaper =
-    { doi : DOI
-    , title : Maybe String
-    , journal : Maybe String
-    , authors : Maybe String
-    , year : Maybe Int
-    , issn : Maybe String
-    , isOpenAccess : Maybe Bool
-    , oaPathway : Maybe String
-    , oaPathwayURI : Maybe String
-    , pathwayDetails : Maybe (List BackendPolicy)
     }
 
 
@@ -74,6 +59,20 @@ type alias PathwayDetails =
 type alias Policy =
     { policyUrl : String
     , urls : Maybe (List NamedUrl)
+    }
+
+
+type alias BackendPaper =
+    { doi : DOI
+    , title : Maybe String
+    , journal : Maybe String
+    , authors : Maybe String
+    , year : Maybe Int
+    , issn : Maybe String
+    , isOpenAccess : Maybe Bool
+    , oaPathway : Maybe String
+    , oaPathwayURI : Maybe String
+    , pathwayDetails : Maybe (List BackendPolicy)
     }
 
 
