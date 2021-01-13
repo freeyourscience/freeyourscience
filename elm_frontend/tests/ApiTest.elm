@@ -135,6 +135,7 @@ fullPaperElm =
                                 }
                           , articleVersion = [ "submitted" ]
                           , conditions = [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
+                          , prerequisites = Nothing
                           }
                         ]
               , policyUrl = Just "https://v2.sherpa.ac.uk/id/publisher_policy/1390"

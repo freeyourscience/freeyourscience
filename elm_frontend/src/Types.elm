@@ -89,6 +89,20 @@ type alias PermittedOA =
     , location : BackendLocation
     , articleVersion : List String
     , conditions : List String
+    , prerequisites : Maybe BackendPrerequisites
+    }
+
+
+type alias BackendPrerequisites =
+    { prerequisites : List String
+    , prerequisites_phrases : List BackendPhrase
+    }
+
+
+type alias BackendPhrase =
+    { value : String
+    , phrase : String
+    , language : String
     }
 
 

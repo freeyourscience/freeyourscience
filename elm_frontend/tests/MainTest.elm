@@ -10,8 +10,12 @@ recommendedPathway : OaPathway
 recommendedPathway =
     { articleVersion = "submitted"
     , locations = [ "Academic Social Networks", "Author's Homepage", "Non-commercial Repositories", "PubMed Central" ]
-    , prerequisites = [ "If Required by Institution", "12 months have passed since publication" ]
+
+    -- TODO: Add/test parsing embargo into prerequisites
+    , prerequisites = [ "If Required by Funder" ]
     , conditions = [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
+
+    -- TODO: Add/test parsing for notes source
     , notes = [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
     , urls = Just [ { description = "Vereinbarung zur Rechteűbertragung", url = "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf" } ]
     , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
@@ -35,6 +39,16 @@ pathwayDetails =
                         }
                   , articleVersion = [ "submitted" ]
                   , conditions = [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
+                  , prerequisites =
+                        Just
+                            { prerequisites = [ "when_required_by_funder" ]
+                            , prerequisites_phrases =
+                                [ { value = "when_required_by_funder"
+                                  , phrase = "If Required by Funder"
+                                  , language = "en"
+                                  }
+                                ]
+                            }
                   }
                 ]
       , policyUrl = Just "https://v2.sherpa.ac.uk/id/publisher_policy/1390"

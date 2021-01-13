@@ -21,6 +21,21 @@ locationDecoder =
         |> optional "named_repository" (D.maybe (D.list D.string)) Nothing
 
 
+prerequisitesDecoder : Decoder BackendPrerequisites
+prerequisitesDecoder =
+    D.succeed BackendPrerequisites
+        |> required "prerequisites" (D.list D.string)
+        |> required "prerequisites_phrases" (D.list phraseDecoder)
+
+
+phraseDecoder : Decoder BackendPhrase
+phraseDecoder =
+    D.succeed BackendPhrase
+        |> required "value" D.string
+        |> required "phrase" D.string
+        |> required "language" D.string
+
+
 permittedOADecoder : Decoder PermittedOA
 permittedOADecoder =
     D.succeed PermittedOA
@@ -28,6 +43,7 @@ permittedOADecoder =
         |> required "location" locationDecoder
         |> required "article_version" (D.list D.string)
         |> required "conditions" (D.list D.string)
+        |> required "prerequisites" (D.nullable prerequisitesDecoder)
 
 
 policyDetailsDecoder : Decoder BackendPolicy
