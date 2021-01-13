@@ -26,6 +26,10 @@ renderUrl { url, description } =
     a [ href url, class "link", class "link-secondary" ] [ text description ]
 
 
+
+-- PAPER
+
+
 renderPaper : Paper -> Html Msg
 renderPaper paper =
     let
@@ -141,6 +145,10 @@ renderPaper paper =
         ]
 
 
+
+-- PAPER SECTIONS
+
+
 renderPaywalledNoCostPathwayPapers : List Paper -> Html Msg
 renderPaywalledNoCostPathwayPapers papers =
     section [ class "mb-5" ]
@@ -225,6 +233,10 @@ renderBuggyPapers papers =
                     papers
                 )
             ]
+
+
+
+-- SOURCE PROFILE
 
 
 renderFooter : String -> Html Msg

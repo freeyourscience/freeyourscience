@@ -15,6 +15,10 @@ optionalYearComparison p1 p2 =
     compare y2 y1
 
 
+
+-- PAPER TYPES
+
+
 isPaywalledNoCostPathwayPaper : Paper -> Bool
 isPaywalledNoCostPathwayPaper p =
     not (Maybe.withDefault True p.isOpenAccess) && Maybe.withDefault "unknown" p.oaPathway == "nocost"
