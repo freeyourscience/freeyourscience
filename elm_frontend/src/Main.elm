@@ -11,6 +11,10 @@ import Utils exposing (..)
 import Views exposing (..)
 
 
+
+-- MODEL
+
+
 type alias Model =
     { unfetchedDOIs : List DOI
     , fetchedPapers : List Paper
@@ -19,6 +23,10 @@ type alias Model =
     , serverURL : String
     , style : Animation.State
     }
+
+
+
+-- SETUP
 
 
 main : Program Flags Model Msg
@@ -54,6 +62,98 @@ subscriptions model =
     Animation.subscription Animate [ model.style ]
 
 
+
+-- UPDATE
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    let
+        updatedModel =
+            { model
+                | style =
+                    Animation.interrupt
+                        [ Animation.to
+                            [ Animation.width (percent (percentDOIsFetched model))
+                            , Animation.opacity (toFloat (min 1 (List.length model.unfetchedDOIs)))
+                            ]
+                        ]
+                        model.style
+            }
+
+        updatedDOIs =
+            List.drop 1 model.unfetchedDOIs
+    in
+    case msg of
+        GotPaper (Ok paper) ->
+            ( { updatedModel
+                | fetchedPapers = List.append model.fetchedPapers [ toPaper paper ]
+                , unfetchedDOIs = updatedDOIs
+              }
+            , case List.head model.unfetchedDOIs of
+                Just nextDOI ->
+                    fetchPaper model.serverURL nextDOI
+
+                Nothing ->
+                    Cmd.none
+            )
+
+        -- TODO: add the erroneous dois as well?
+        GotPaper (Err _) ->
+            ( { updatedModel | unfetchedDOIs = updatedDOIs }
+            , Cmd.none
+            )
+
+        Animate animMsg ->
+            ( { model
+                | style = Animation.update animMsg model.style
+              }
+            , Cmd.none
+            )
+
+
+
+-- VIEW
+
+
+view : Model -> Html Msg
+view model =
+    let
+        preppedPapers =
+            List.sortWith optionalYearComparison model.fetchedPapers
+
+        paywalledNoCostPathwayPapers =
+            List.filter isPaywalledNoCostPathwayPaper preppedPapers
+
+        nonFreePolicyPapers =
+            List.filter isNonFreePolicyPaper preppedPapers
+
+        openAccessPapers =
+            List.filter isOpenAccessPaper preppedPapers
+
+        buggyPapers =
+            List.filter isBuggyPaper preppedPapers
+    in
+    div []
+        [ span
+            [ class "container"
+            , class "progressbar__container"
+            ]
+            [ span (Animation.render model.style ++ [ class "progressbar_progress" ]) [ text "" ] ]
+        , main_ []
+            [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
+            , renderNonFreePolicyPapers nonFreePolicyPapers
+            , renderOpenAccessPapers openAccessPapers
+            , renderBuggyPapers buggyPapers
+            ]
+        , renderFooter model.authorProfileURL
+        ]
+
+
+
+-- LOADING BAR
+
+
 percentDOIsFetched : Model -> Float
 percentDOIsFetched model =
     max
@@ -62,6 +162,50 @@ percentDOIsFetched model =
             * toFloat (List.length model.fetchedPapers)
             / (toFloat (List.length model.fetchedPapers) + toFloat (List.length model.unfetchedDOIs))
         )
+
+
+
+-- BACKEND-PAPER >>> PAPER
+
+
+toPaper : BackendPaper -> Paper
+toPaper backendPaper =
+    { doi = backendPaper.doi
+    , title = backendPaper.title
+    , journal = backendPaper.journal
+    , authors = backendPaper.authors
+    , year = backendPaper.year
+    , issn = backendPaper.issn
+    , isOpenAccess = backendPaper.isOpenAccess
+    , oaPathway = backendPaper.oaPathway
+    , oaPathwayURI = backendPaper.oaPathwayURI
+    , recommendedPathway = Maybe.andThen parsePolicies backendPaper.pathwayDetails
+    }
+
+
+parsePolicies : List BackendPolicy -> Maybe OaPathway
+parsePolicies policies =
+    policies
+        |> List.head
+        |> Maybe.andThen toPathway
+
+
+toPathway : BackendPolicy -> Maybe OaPathway
+toPathway backendPolicy =
+    Maybe.map2
+        (\policy ->
+            \pathway ->
+                { articleVersion = pathway.articleVersion
+                , locations = pathway.locations
+                , prerequisites = pathway.prerequisites
+                , conditions = pathway.conditions
+                , notes = pathway.notes
+                , urls = policy.urls
+                , policyUrl = policy.policyUrl
+                }
+        )
+        (toPolicy backendPolicy)
+        (recommendPathway backendPolicy.permittedOA)
 
 
 toPolicy : BackendPolicy -> Maybe Policy
@@ -116,123 +260,3 @@ parseLocations { location, namedRepository } =
                     a ->
                         String.replace "_" " " a
             )
-
-
-toPathway : BackendPolicy -> Maybe OaPathway
-toPathway backendPolicy =
-    Maybe.map2
-        (\policy ->
-            \pathway ->
-                { articleVersion = pathway.articleVersion
-                , locations = pathway.locations
-                , prerequisites = pathway.prerequisites
-                , conditions = pathway.conditions
-                , notes = pathway.notes
-                , urls = policy.urls
-                , policyUrl = policy.policyUrl
-                }
-        )
-        (toPolicy backendPolicy)
-        (recommendPathway backendPolicy.permittedOA)
-
-
-parsePolicies : List BackendPolicy -> Maybe OaPathway
-parsePolicies policies =
-    policies
-        |> List.head
-        |> Maybe.andThen toPathway
-
-
-toPaper : BackendPaper -> Paper
-toPaper backendPaper =
-    { doi = backendPaper.doi
-    , title = backendPaper.title
-    , journal = backendPaper.journal
-    , authors = backendPaper.authors
-    , year = backendPaper.year
-    , issn = backendPaper.issn
-    , isOpenAccess = backendPaper.isOpenAccess
-    , oaPathway = backendPaper.oaPathway
-    , oaPathwayURI = backendPaper.oaPathwayURI
-    , recommendedPathway = Maybe.andThen parsePolicies backendPaper.pathwayDetails
-    }
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    let
-        updatedModel =
-            { model
-                | style =
-                    Animation.interrupt
-                        [ Animation.to
-                            [ Animation.width (percent (percentDOIsFetched model))
-                            , Animation.opacity (toFloat (min 1 (List.length model.unfetchedDOIs)))
-                            ]
-                        ]
-                        model.style
-            }
-
-        updatedDOIs =
-            List.drop 1 model.unfetchedDOIs
-    in
-    case msg of
-        GotPaper (Ok paper) ->
-            ( { updatedModel
-                | fetchedPapers = List.append model.fetchedPapers [ toPaper paper ]
-                , unfetchedDOIs = updatedDOIs
-              }
-            , case List.head model.unfetchedDOIs of
-                Just nextDOI ->
-                    fetchPaper model.serverURL nextDOI
-
-                Nothing ->
-                    Cmd.none
-            )
-
-        -- TODO: add the erroneous dois as well?
-        GotPaper (Err _) ->
-            ( { updatedModel | unfetchedDOIs = updatedDOIs }
-            , Cmd.none
-            )
-
-        Animate animMsg ->
-            ( { model
-                | style = Animation.update animMsg model.style
-              }
-            , Cmd.none
-            )
-
-
-view : Model -> Html Msg
-view model =
-    let
-        preppedPapers =
-            List.sortWith optionalYearComparison model.fetchedPapers
-
-        paywalledNoCostPathwayPapers =
-            List.filter isPaywalledNoCostPathwayPaper preppedPapers
-
-        nonFreePolicyPapers =
-            List.filter isNonFreePolicyPaper preppedPapers
-
-        openAccessPapers =
-            List.filter isOpenAccessPaper preppedPapers
-
-        buggyPapers =
-            List.filter isBuggyPaper preppedPapers
-    in
-    div []
-        [ span
-            [ class "container"
-            , class "progressbar__container"
-            ]
-            [ span (Animation.render model.style ++ [ class "progressbar_progress" ]) [ text "" ] ]
-        , main_ []
-            [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
-            , renderNonFreePolicyPapers nonFreePolicyPapers
-            , renderOpenAccessPapers openAccessPapers
-            , renderBuggyPapers buggyPapers
-            ]
-        , renderFooter model.authorProfileURL
-        ]
