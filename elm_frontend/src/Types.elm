@@ -4,6 +4,10 @@ import Animation
 import Http
 
 
+
+-- INPUT DATA
+
+
 type alias Flags =
     { dois : List String
     , serverURL : String
@@ -12,8 +16,8 @@ type alias Flags =
     }
 
 
-type alias DOI =
-    String
+
+-- MODEL
 
 
 type alias Paper =
@@ -30,13 +34,8 @@ type alias Paper =
     }
 
 
-type alias NamedUrl =
-    { description : String
-    , url : String
-    }
-
-
 type alias OaPathway =
+    -- OaPathway is the union of Policy and PathwayDetails, this can probobably be done more nicely
     { articleVersion : String
     , locations : List String
     , prerequisites : Maybe (List String)
@@ -60,6 +59,24 @@ type alias Policy =
     { policyUrl : String
     , urls : Maybe (List NamedUrl)
     }
+
+
+
+-- GENERAL PURPOSE
+
+
+type alias DOI =
+    String
+
+
+type alias NamedUrl =
+    { description : String
+    , url : String
+    }
+
+
+
+-- BACKEND PAPER
 
 
 type alias BackendPaper =
@@ -109,6 +126,10 @@ type alias BackendLocation =
     { location : List String
     , namedRepository : Maybe (List String)
     }
+
+
+
+-- MSG
 
 
 type Msg
