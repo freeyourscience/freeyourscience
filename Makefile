@@ -3,6 +3,9 @@
 elm:
 	cd elm_frontend && elm make src/Main.elm --output ../fyscience/static/authorPapers.js 
 
+elm-test:
+	cd elm_frontend && elm-test
+
 build-dev:
 	docker build . --target dev --cache-from freeyourscience-dev -t freeyourscience-dev
 
