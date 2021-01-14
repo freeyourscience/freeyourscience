@@ -24,7 +24,7 @@ jobs:
         run: make elm-test
 
       - name: Build
-        run: make elm
+        run: cd elm_frontend && elm make src/Main.elm --output authorPapers.js
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v2
