@@ -12,6 +12,19 @@ renderLoadingSpinner =
         ]
 
 
+ulWithHeading : String -> (a -> Html Msg) -> List a -> List (Html Msg)
+ulWithHeading heading renderElement list =
+    let
+        renderedList =
+            list
+                |> List.map renderElement
+                |> renderList
+    in
+    [ p [] [ text heading ]
+    , renderedList
+    ]
+
+
 renderList : List (Html Msg) -> Html Msg
 renderList list =
     ul []
@@ -50,46 +63,9 @@ renderPaper paper =
             ]
             [ div [ class "fs-5 mb-1" ]
                 (renderPaperHeader paper)
-            , case paper.recommendedPathway of
-                Just recommendedPathway ->
-                    div []
-                        (List.concat
-                            [ [ p [] [ text "The publisher has a policy that lets you:" ]
-                              , p [] [ text ("upload the " ++ recommendedPathway.articleVersion ++ " version to any of the following:") ]
-                              , ul []
-                                    (List.map (\l -> li [] [ text l ]) recommendedPathway.locations)
-                              , p [] [ text " You don't have pay a fee to do this." ]
-                              ]
-                            , recommendedPathway.prerequisites
-                                |> Maybe.map (List.map text)
-                                |> Maybe.map renderList
-                                |> Maybe.map (\list -> [ p [] [ text "But only:" ], list ])
-                                |> Maybe.withDefault [ text "" ]
-                            , recommendedPathway.conditions
-                                |> Maybe.map (List.map text)
-                                |> Maybe.map renderList
-                                |> Maybe.map (\list -> [ p [] [ text "Conditions are:" ], list ])
-                                |> Maybe.withDefault [ text "" ]
-                            , recommendedPathway.notes
-                                |> Maybe.map (List.map text)
-                                |> Maybe.map renderList
-                                |> Maybe.map (\list -> [ p [] [ text "The publisher also notes:" ], list ])
-                                |> Maybe.withDefault [ text "" ]
-                            , recommendedPathway.urls
-                                |> Maybe.map (List.map renderUrl)
-                                |> Maybe.map renderList
-                                |> Maybe.map (\list -> [ p [] [ text "The publisher has provided the following links to further information:" ], list ])
-                                |> Maybe.withDefault [ text "" ]
-                            , [ p []
-                                    [ text "The publisher has deposited this policy at "
-                                    , a [ href recommendedPathway.policyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
-                                    ]
-                              ]
-                            ]
-                        )
-
-                _ ->
-                    text ""
+            , paper.recommendedPathway
+                |> Maybe.map renderRecommendedPathway
+                |> Maybe.withDefault (text "")
             ]
         , if not isOpenAccess then
             div [ class "col-12 col-md-3 fs-6 text-md-end" ]
@@ -162,6 +138,35 @@ renderPathwayButtons paper =
             ]
         ]
     ]
+
+
+renderRecommendedPathway : OaPathway -> Html Msg
+renderRecommendedPathway { locations, articleVersion, prerequisites, conditions, notes, urls, policyUrl } =
+    div []
+        (List.concat
+            [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
+            , locations
+                |> ulWithHeading ("upload the " ++ articleVersion ++ " version to any of the following:") text
+            , [ p [] [ text " You don't have pay a fee to do this." ] ]
+            , prerequisites
+                |> Maybe.map (ulWithHeading "But only:" text)
+                |> Maybe.withDefault [ text "" ]
+            , conditions
+                |> Maybe.map (ulWithHeading "Conditions are:" text)
+                |> Maybe.withDefault [ text "" ]
+            , notes
+                |> Maybe.map (ulWithHeading "The publisher also notes:" text)
+                |> Maybe.withDefault [ text "" ]
+            , urls
+                |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
+                |> Maybe.withDefault [ text "" ]
+            , [ p []
+                    [ text "The publisher has deposited this policy at "
+                    , a [ href policyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
+                    ]
+              ]
+            ]
+        )
 
 
 
