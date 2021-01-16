@@ -25,6 +25,8 @@ renderUrl : NamedUrl -> Html Msg
 renderUrl { url, description } =
     a [ href url, class "link", class "link-secondary" ] [ text description ]
 
+
+
 -- PAPER
 
 
@@ -33,7 +35,6 @@ renderPaper paper =
     let
         isOpenAccess =
             Maybe.withDefault False paper.isOpenAccess
-
     in
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div
@@ -49,7 +50,7 @@ renderPaper paper =
             ]
             [ div [ class "fs-5 mb-1" ]
                 (renderPaperHeader paper)
-                ,case paper.recommendedPathway of
+            , case paper.recommendedPathway of
                 Just recommendedPathway ->
                     div []
                         (List.concat
@@ -98,23 +99,26 @@ renderPaper paper =
             text ""
         ]
 
+
 renderPaperHeader : Paper -> List (Html Msg)
-renderPaperHeader ({journal, authors, year, doi} as paper) =
+renderPaperHeader ({ journal, authors, year, doi } as paper) =
     let
-        paperTitle = paper.title
+        paperTitle =
+            paper.title
     in
-    [
-         text (Maybe.withDefault "Unknown title" paperTitle )
-        , text (String.concat [
-            journal |> Maybe.withDefault "Unknown journal" 
+    [ text (Maybe.withDefault "Unknown title" paperTitle)
+    , text
+        (String.concat
+            [ journal |> Maybe.withDefault "Unknown journal"
             , ", "
-            , authors |> Maybe.withDefault "Unknown authors" 
-            ," ("
-            ,year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-             ,"), "
+            , authors |> Maybe.withDefault "Unknown authors"
+            , " ("
+            , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
+            , "), "
             , doi
-         ] )
-        , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
+            ]
+        )
+    , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
         [ img
             [ src "/static/img/box-arrow-up-right.svg"
             , alt ""
@@ -126,32 +130,38 @@ renderPaperHeader ({journal, authors, year, doi} as paper) =
         ]
     ]
 
-renderPathwayButtons : Paper -> List(Html Msg)
+
+renderPathwayButtons : Paper -> List (Html Msg)
 renderPathwayButtons paper =
     let
-        oaPathwayURI = Maybe.withDefault "#" paper.oaPathwayURI
-        journal = Maybe.withDefault "Unknown journal" paper.journal
-        paperTitle = Maybe.withDefault "Unknown title" paper.title
+        oaPathwayURI =
+            Maybe.withDefault "#" paper.oaPathwayURI
+
+        journal =
+            Maybe.withDefault "Unknown journal" paper.journal
+
+        paperTitle =
+            Maybe.withDefault "Unknown title" paper.title
     in
-        [ div []
-            [ a
-                [ href oaPathwayURI
-                , target "_blank"
-                , class "btn btn-success text-decoration-none"
-                , title ("View Open Access pathways for: " ++ journal)
-                ]
-                [ text "View Open Access pathways"
-                ]
-            , br [] []
-            , a
-                [ href "#"
-                , class "link-secondary text-decoration-none link-oa-incorrect"
-                , title ("Is there an Open Access version for: " ++ paperTitle)
-                ]
-                [ text "Already Open Access?"
-                ]
+    [ div []
+        [ a
+            [ href oaPathwayURI
+            , target "_blank"
+            , class "btn btn-success text-decoration-none"
+            , title ("View Open Access pathways for: " ++ journal)
+            ]
+            [ text "View Open Access pathways"
+            ]
+        , br [] []
+        , a
+            [ href "#"
+            , class "link-secondary text-decoration-none link-oa-incorrect"
+            , title ("Is there an Open Access version for: " ++ paperTitle)
+            ]
+            [ text "Already Open Access?"
             ]
         ]
+    ]
 
 
 

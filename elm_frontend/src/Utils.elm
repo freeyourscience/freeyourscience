@@ -13,4 +13,3 @@ optionalYearComparison p1 p2 =
             Maybe.withDefault 9999999999 p2.year
     in
     compare y2 y1
-
