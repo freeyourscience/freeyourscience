@@ -5,7 +5,6 @@ import Expect exposing (Expectation)
 import Json.Decode as D exposing (Decoder)
 import Test exposing (..)
 import Types exposing (..)
-import UtilsTest exposing (fullPaper)
 
 
 fullPaperJson : String
