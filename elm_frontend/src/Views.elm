@@ -54,29 +54,41 @@ renderPaperHeader ({journal, authors, year, doi} as paper) =
         ]
     ]
 
+renderPathwayButtons : Paper -> List(Html Msg)
+renderPathwayButtons paper =
+    let
+        oaPathwayURI = Maybe.withDefault "#" paper.oaPathwayURI
+        journal = Maybe.withDefault "Unknown journal" paper.journal
+        paperTitle = Maybe.withDefault "Unknown title" paper.title
+    in
+        [ div []
+            [ a
+                [ href oaPathwayURI
+                , target "_blank"
+                , class "btn btn-success text-decoration-none"
+                , title ("View Open Access pathways for: " ++ journal)
+                ]
+                [ text "View Open Access pathways"
+                ]
+            , br [] []
+            , a
+                [ href "#"
+                , class "link-secondary text-decoration-none link-oa-incorrect"
+                , title ("Is there an Open Access version for: " ++ paperTitle)
+                ]
+                [ text "Already Open Access?"
+                ]
+            ]
+        ]
 -- PAPER
 
 
 renderPaper : Paper -> Html Msg
 renderPaper paper =
     let
-        paperTitle =
-            Maybe.withDefault "Unknown Title" paper.title
-
-        journal =
-            Maybe.withDefault "Unknown Venue" paper.journal
-
-        authors =
-            Maybe.withDefault "Unknown Authors" paper.authors
-
-        year =
-            Maybe.withDefault 0 paper.year
-
         isOpenAccess =
             Maybe.withDefault False paper.isOpenAccess
 
-        oaPathwayURI =
-            Maybe.withDefault "#" paper.oaPathwayURI
     in
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div
@@ -135,25 +147,7 @@ renderPaper paper =
             ]
         , if not isOpenAccess then
             div [ class "col-12 col-md-3 fs-6 text-md-end" ]
-                [ div []
-                    [ a
-                        [ href oaPathwayURI
-                        , target "_blank"
-                        , class "btn btn-success text-decoration-none"
-                        , title ("View Open Access pathways for: " ++ journal)
-                        ]
-                        [ text "View Open Access pathways"
-                        ]
-                    , br [] []
-                    , a
-                        [ href "#"
-                        , class "link-secondary text-decoration-none link-oa-incorrect"
-                        , title ("Is there an Open Access version for: " ++ paperTitle)
-                        ]
-                        [ text "Already Open Access?"
-                        ]
-                    ]
-                ]
+                (renderPathwayButtons paper)
 
           else
             text ""
