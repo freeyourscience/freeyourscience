@@ -18,6 +18,10 @@ import Views exposing (..)
 type alias Model =
     { unfetchedDOIs : List DOI
     , fetchedPapers : List Paper
+    , freePathwayPapers : List Paper
+    , otherPathwayPapers : List Paper
+    , openAccessPapers : List Paper
+    , buggyPapers : List Paper
     , authorName : String
     , authorProfileURL : String
     , serverURL : String
@@ -43,6 +47,10 @@ init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { unfetchedDOIs = Maybe.withDefault [] (List.tail flags.dois)
       , fetchedPapers = []
+      , freePathwayPapers = []
+      , otherPathwayPapers = []
+      , openAccessPapers = []
+      , buggyPapers = []
       , authorName = flags.authorName
       , authorProfileURL = flags.authorProfileURL
       , serverURL = flags.serverURL
@@ -68,28 +76,48 @@ subscriptions model =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        updatedModel =
-            { model
-                | style =
-                    Animation.interrupt
-                        [ Animation.to
-                            [ Animation.width (percent (percentDOIsFetched model))
-                            , Animation.opacity (toFloat (min 1 (List.length model.unfetchedDOIs)))
-                            ]
-                        ]
-                        model.style
-            }
-
-        updatedDOIs =
-            List.drop 1 model.unfetchedDOIs
-    in
     case msg of
-        GotPaper (Ok paper) ->
-            ( { updatedModel
-                | fetchedPapers = List.append model.fetchedPapers [ toPaper paper ]
-                , unfetchedDOIs = updatedDOIs
-              }
+        GotPaper (Ok backendPaper) ->
+            let
+                classifiedPaper =
+                    backendPaper |> toPaper |> classifyPaper
+
+                updatedModel =
+                    { model
+                        | style =
+                            Animation.interrupt
+                                [ Animation.to
+                                    [ Animation.width (percent (percentDOIsFetched model))
+                                    , Animation.opacity (toFloat (min 1 (List.length model.unfetchedDOIs)))
+                                    ]
+                                ]
+                                model.style
+                    }
+            in
+            ( case classifiedPaper of
+                FreePathway paper ->
+                    { updatedModel
+                        | freePathwayPapers = List.append model.freePathwayPapers [ paper ]
+                        , unfetchedDOIs = List.drop 1 model.unfetchedDOIs
+                    }
+
+                OtherPathway paper ->
+                    { updatedModel
+                        | otherPathwayPapers = List.append model.otherPathwayPapers [ paper ]
+                        , unfetchedDOIs = List.drop 1 model.unfetchedDOIs
+                    }
+
+                OpenAccess paper ->
+                    { updatedModel
+                        | openAccessPapers = List.append model.openAccessPapers [ paper ]
+                        , unfetchedDOIs = List.drop 1 model.unfetchedDOIs
+                    }
+
+                Buggy paper ->
+                    { updatedModel
+                        | buggyPapers = List.append model.buggyPapers [ paper ]
+                        , unfetchedDOIs = List.drop 1 model.unfetchedDOIs
+                    }
             , case List.head model.unfetchedDOIs of
                 Just nextDOI ->
                     fetchPaper model.serverURL nextDOI
@@ -100,7 +128,7 @@ update msg model =
 
         -- TODO: add the erroneous dois as well?
         GotPaper (Err _) ->
-            ( { updatedModel | unfetchedDOIs = updatedDOIs }
+            ( { model | unfetchedDOIs = List.drop 1 model.unfetchedDOIs }
             , Cmd.none
             )
 
@@ -119,20 +147,17 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
-        preppedPapers =
-            List.sortWith optionalYearComparison model.fetchedPapers
-
         paywalledNoCostPathwayPapers =
-            List.filter isPaywalledNoCostPathwayPaper preppedPapers
+            List.sortWith optionalYearComparison model.freePathwayPapers
 
         nonFreePolicyPapers =
-            List.filter isNonFreePolicyPaper preppedPapers
+            List.sortWith optionalYearComparison model.otherPathwayPapers
 
         openAccessPapers =
-            List.filter isOpenAccessPaper preppedPapers
+            List.sortWith optionalYearComparison model.openAccessPapers
 
         buggyPapers =
-            List.filter isBuggyPaper preppedPapers
+            List.sortWith optionalYearComparison model.buggyPapers
     in
     div []
         [ span
@@ -166,6 +191,29 @@ percentDOIsFetched model =
 
 
 -- BACKEND-PAPER >>> PAPER
+
+
+classifyPaper : Paper -> ClassifiedPaper
+classifyPaper paper =
+    let
+        isOpenAccess =
+            paper.isOpenAccess
+
+        oaPathway =
+            paper.oaPathway
+    in
+    case ( isOpenAccess, oaPathway ) of
+        ( Just False, Just "nocost" ) ->
+            FreePathway paper
+
+        ( Just False, Just "other" ) ->
+            OtherPathway paper
+
+        ( Just True, _ ) ->
+            OpenAccess paper
+
+        _ ->
+            Buggy paper
 
 
 toPaper : BackendPaper -> Paper
