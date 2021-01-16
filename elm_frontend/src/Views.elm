@@ -26,6 +26,33 @@ renderUrl { url, description } =
     a [ href url, class "link", class "link-secondary" ] [ text description ]
 
 
+renderPaperHeader : Paper -> List (Html Msg)
+renderPaperHeader ({journal, authors, year, doi} as paper) =
+    let
+        paperTitle = paper.title
+    in
+    [
+         text (Maybe.withDefault "Unknown title" paperTitle )
+        , text (String.concat [
+            journal |> Maybe.withDefault "Unknown journal" 
+            , ", "
+            , authors |> Maybe.withDefault "Unknown authors" 
+            ," ("
+            ,year |> Maybe.map String.fromInt |> Maybe.withDefault ""
+             ,"), "
+            , doi
+         ] )
+        , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
+        [ img
+            [ src "/static/img/box-arrow-up-right.svg"
+            , alt ""
+            , width 12
+            , height 12
+            , title ("Visit article: " ++ Maybe.withDefault "" paperTitle)
+            ]
+            []
+        ]
+    ]
 
 -- PAPER
 
@@ -64,20 +91,8 @@ renderPaper paper =
                 )
             ]
             [ div [ class "fs-5 mb-1" ]
-                [ text paperTitle
-                ]
-            , text (journal ++ ", " ++ authors ++ " (" ++ String.fromInt year ++ "), " ++ paper.doi ++ " ")
-            , a [ href ("https://doi.org/" ++ paper.doi), class "link-secondary", target "_blank" ]
-                [ img
-                    [ src "/static/img/box-arrow-up-right.svg"
-                    , alt ""
-                    , width 12
-                    , height 12
-                    , title ("Visit article: " ++ paperTitle)
-                    ]
-                    []
-                ]
-            , case paper.recommendedPathway of
+                (renderPaperHeader paper)
+                ,case paper.recommendedPathway of
                 Just recommendedPathway ->
                     div []
                         (List.concat
