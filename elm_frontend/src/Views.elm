@@ -140,8 +140,8 @@ renderPathwayButtons paper =
     ]
 
 
-renderRecommendedPathway : OaPathway -> Html Msg
-renderRecommendedPathway { locations, articleVersion, prerequisites, conditions, notes, urls, policyUrl } =
+renderRecommendedPathway : RecommendedPathway -> Html Msg
+renderRecommendedPathway ( { profileUrl, additionalUrls }, { locations, articleVersion, prerequisites, conditions, notes } ) =
     div []
         (List.concat
             [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
@@ -157,12 +157,12 @@ renderRecommendedPathway { locations, articleVersion, prerequisites, conditions,
             , notes
                 |> Maybe.map (ulWithHeading "The publisher also notes:" text)
                 |> Maybe.withDefault [ text "" ]
-            , urls
+            , additionalUrls
                 |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
                 |> Maybe.withDefault [ text "" ]
             , [ p []
                     [ text "The publisher has deposited this policy at "
-                    , a [ href policyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
+                    , a [ href profileUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
                     ]
               ]
             ]

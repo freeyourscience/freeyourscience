@@ -236,7 +236,7 @@ toPaper backendPaper =
     }
 
 
-parsePolicies : List BackendPolicy -> Maybe OaPathway
+parsePolicies : List BackendPolicy -> Maybe RecommendedPathway
 parsePolicies policies =
     policies
         -- TODO: select policy intelligently
@@ -244,29 +244,22 @@ parsePolicies policies =
         |> Maybe.andThen toPathway
 
 
-toPathway : BackendPolicy -> Maybe OaPathway
+toPathway : BackendPolicy -> Maybe RecommendedPathway
 toPathway backendPolicy =
-    Maybe.map2
-        (\policy ->
-            \pathway ->
-                { articleVersion = pathway.articleVersion
-                , locations = pathway.locations
-                , prerequisites = pathway.prerequisites
-                , conditions = pathway.conditions
-                , notes = pathway.notes
-                , urls = policy.urls
-                , policyUrl = policy.policyUrl
-                }
-        )
+    Maybe.map2 Tuple.pair
         (toPolicy backendPolicy)
         (recommendPathway backendPolicy.permittedOA)
 
 
-toPolicy : BackendPolicy -> Maybe Policy
+toPolicy : BackendPolicy -> Maybe PolicyMetaData
 toPolicy backendPolicy =
-    Maybe.map
-        (\policyUrl -> { policyUrl = policyUrl, urls = backendPolicy.urls })
-        backendPolicy.policyUrl
+    backendPolicy.policyUrl
+        |> Maybe.map
+            (\policyProfileUrl ->
+                { profileUrl = policyProfileUrl
+                , additionalUrls = backendPolicy.urls
+                }
+            )
 
 
 recommendPathway : Maybe (List PermittedOA) -> Maybe PathwayDetails

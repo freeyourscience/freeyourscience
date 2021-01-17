@@ -37,19 +37,26 @@ type alias Paper =
     , isOpenAccess : Maybe Bool
     , oaPathway : Maybe String
     , oaPathwayURI : Maybe String
-    , recommendedPathway : Maybe OaPathway
+    , recommendedPathway : Maybe RecommendedPathway
     }
 
 
-type alias OaPathway =
-    -- OaPathway is the union of Policy and PathwayDetails, this can probobably be done more nicely
+type alias RecommendedPathway =
+    ( PolicyMetaData, NoCostOaPathway )
+
+
+type alias PolicyMetaData =
+    { profileUrl : String
+    , additionalUrls : Maybe (List NamedUrl)
+    }
+
+
+type alias NoCostOaPathway =
     { articleVersion : String
     , locations : List String
     , prerequisites : Maybe (List String)
     , conditions : Maybe (List String)
     , notes : Maybe (List String)
-    , urls : Maybe (List NamedUrl)
-    , policyUrl : String
     }
 
 
@@ -59,12 +66,6 @@ type alias PathwayDetails =
     , prerequisites : Maybe (List String)
     , conditions : Maybe (List String)
     , notes : Maybe (List String)
-    }
-
-
-type alias Policy =
-    { policyUrl : String
-    , urls : Maybe (List NamedUrl)
     }
 
 
