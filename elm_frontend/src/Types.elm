@@ -37,12 +37,8 @@ type alias Paper =
     , isOpenAccess : Maybe Bool
     , oaPathway : Maybe String
     , oaPathwayURI : Maybe String
-    , recommendedPathway : Maybe RecommendedPathway
+    , recommendedPathway : Maybe ( PolicyMetaData, NoCostOaPathway )
     }
-
-
-type alias RecommendedPathway =
-    ( PolicyMetaData, NoCostOaPathway )
 
 
 type alias PolicyMetaData =
@@ -52,10 +48,20 @@ type alias PolicyMetaData =
 
 
 type alias NoCostOaPathway =
-    { articleVersion : String
+    { articleVersions : List String
     , locations : List String
     , prerequisites : Maybe (List String)
     , conditions : Maybe (List String)
+    , notes : Maybe (List String)
+    }
+
+
+type alias Pathway =
+    { additionalOaFee : String
+    , locations : Maybe (List String)
+    , articleVersions : Maybe (List String)
+    , conditions : Maybe (List String)
+    , prerequisites : Maybe (List String)
     , notes : Maybe (List String)
     }
 
@@ -103,15 +109,15 @@ type alias BackendPaper =
 
 type alias BackendPolicy =
     { urls : Maybe (List NamedUrl)
-    , permittedOA : Maybe (List PermittedOA)
-    , policyUrl : Maybe String
+    , permittedOA : Maybe (List BackendPermittedOA)
+    , policyUrl : String -- TODO: this should come from oaPathwayURI
     }
 
 
-type alias PermittedOA =
+type alias BackendPermittedOA =
     { additionalOaFee : String
     , location : BackendLocation
-    , articleVersion : List String
+    , articleVersions : List String
     , conditions : Maybe (List String)
     , prerequisites : Maybe BackendPrerequisites
     }

@@ -140,13 +140,13 @@ renderPathwayButtons paper =
     ]
 
 
-renderRecommendedPathway : RecommendedPathway -> Html Msg
-renderRecommendedPathway ( { profileUrl, additionalUrls }, { locations, articleVersion, prerequisites, conditions, notes } ) =
+renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> Html Msg
+renderRecommendedPathway ( { profileUrl, additionalUrls }, { locations, articleVersions, prerequisites, conditions, notes } ) =
     div []
         (List.concat
             [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
             , locations
-                |> ulWithHeading ("upload the " ++ articleVersion ++ " version to any of the following:") text
+                |> ulWithHeading ("upload the " ++ String.join "or" articleVersions ++ " version to any of the following:") text
             , [ p [] [ text " You don't have pay a fee to do this." ] ]
             , prerequisites
                 |> Maybe.map (ulWithHeading "But only:" text)

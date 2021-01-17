@@ -36,9 +36,9 @@ phraseDecoder =
         |> required "language" D.string
 
 
-permittedOADecoder : Decoder PermittedOA
+permittedOADecoder : Decoder BackendPermittedOA
 permittedOADecoder =
-    D.succeed PermittedOA
+    D.succeed BackendPermittedOA
         |> required "additional_oa_fee" D.string
         |> required "location" locationDecoder
         |> required "article_version" (D.list D.string)
@@ -51,7 +51,7 @@ policyDetailsDecoder =
     D.succeed BackendPolicy
         |> required "urls" (D.nullable (D.list namedUrlDecoder))
         |> required "permitted_oa" (D.nullable (D.list permittedOADecoder))
-        |> required "uri" (D.nullable D.string)
+        |> required "uri" D.string
 
 
 paperDecoder : Decoder BackendPaper

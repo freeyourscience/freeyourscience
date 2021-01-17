@@ -4,6 +4,7 @@ import Animation exposing (percent)
 import Api exposing (..)
 import Array exposing (..)
 import Browser
+import Browser.Navigation exposing (back)
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (..)
@@ -236,50 +237,88 @@ toPaper backendPaper =
     }
 
 
-parsePolicies : List BackendPolicy -> Maybe RecommendedPathway
+parsePolicies : List BackendPolicy -> Maybe ( PolicyMetaData, NoCostOaPathway )
 parsePolicies policies =
     policies
-        -- TODO: select policy intelligently
+        |> flattenPolicies
+        |> List.map noCostOaPathway
+        |> List.filterMap identity
+        |> List.sortWith orderByPathwayQuality
         |> List.head
-        |> Maybe.andThen toPathway
 
 
-toPathway : BackendPolicy -> Maybe RecommendedPathway
-toPathway backendPolicy =
-    Maybe.map2 Tuple.pair
-        (toPolicy backendPolicy)
-        (recommendPathway backendPolicy.permittedOA)
+flattenPolicies : List BackendPolicy -> List ( PolicyMetaData, Pathway )
+flattenPolicies policies =
+    policies
+        |> List.map extractPathways
+        |> List.concatMap (\( meta, pathways ) -> pathways |> List.map (Tuple.pair meta))
 
 
-toPolicy : BackendPolicy -> Maybe PolicyMetaData
-toPolicy backendPolicy =
-    backendPolicy.policyUrl
-        |> Maybe.map
-            (\policyProfileUrl ->
-                { profileUrl = policyProfileUrl
-                , additionalUrls = backendPolicy.urls
-                }
-            )
+extractPathways : BackendPolicy -> ( PolicyMetaData, List Pathway )
+extractPathways backendPolicy =
+    ( backendPolicy
+        |> parsePolicyMetaData
+    , backendPolicy.permittedOA
+        |> Maybe.withDefault []
+        |> List.map parsePathway
+    )
 
 
-recommendPathway : Maybe (List PermittedOA) -> Maybe PathwayDetails
-recommendPathway permittedOaPathways =
+parsePathway : BackendPermittedOA -> Pathway
+parsePathway { articleVersions, location, prerequisites, conditions, additionalOaFee } =
     let
         hardcodedPathway =
             { notes = Just [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
             }
     in
-    permittedOaPathways
-        |> Maybe.andThen List.head
-        |> Maybe.map
-            (\pathway ->
-                { articleVersion = String.join ", " pathway.articleVersion
-                , locations = parseLocations pathway.location
-                , prerequisites = Maybe.map parsePrequisites pathway.prerequisites
-                , conditions = pathway.conditions
-                , notes = hardcodedPathway.notes
-                }
-            )
+    { articleVersions =
+        case articleVersions of
+            [] ->
+                Nothing
+
+            _ ->
+                Just articleVersions
+    , locations = location |> parseLocations
+    , prerequisites = prerequisites |> Maybe.map parsePrequisites
+    , conditions = conditions
+    , notes = hardcodedPathway.notes
+    , additionalOaFee = additionalOaFee
+    }
+
+
+orderByPathwayQuality : ( PolicyMetaData, NoCostOaPathway ) -> ( PolicyMetaData, NoCostOaPathway ) -> Order
+orderByPathwayQuality p1 p2 =
+    EQ
+
+
+noCostOaPathway : ( PolicyMetaData, Pathway ) -> Maybe ( PolicyMetaData, NoCostOaPathway )
+noCostOaPathway ( metadata, pathway ) =
+    let
+        hardcodedPathway =
+            { notes = Just [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
+            }
+    in
+    case ( pathway.additionalOaFee, pathway.locations, pathway.articleVersions ) of
+        ( "no", Just locations, Just articleVersions ) ->
+            Just
+                ( metadata
+                , { articleVersions = articleVersions
+                  , locations = locations
+                  , prerequisites = pathway.prerequisites
+                  , conditions = pathway.conditions
+                  , notes = hardcodedPathway.notes
+                  }
+                )
+
+        _ ->
+            Nothing
+
+
+parsePolicyMetaData : BackendPolicy -> PolicyMetaData
+parsePolicyMetaData { policyUrl, urls } =
+    { profileUrl = policyUrl
+    , additionalUrls = urls
+    }
 
 
 parsePrequisites : BackendPrerequisites -> List String
@@ -288,22 +327,31 @@ parsePrequisites { prerequisites_phrases } =
         |> List.map (\item -> item.phrase)
 
 
-parseLocations : BackendLocation -> List String
+parseLocations : BackendLocation -> Maybe (List String)
 parseLocations { location, namedRepository } =
-    List.concat [ location, Maybe.withDefault [] namedRepository ]
-        |> List.filter (\loc -> loc /= "named_repository")
-        |> List.map
-            (\loc ->
-                case loc of
-                    "academic_social_network" ->
-                        "Academic Social Networks"
+    let
+        locations =
+            List.concat [ location, Maybe.withDefault [] namedRepository ]
+                |> List.filter (\loc -> loc /= "named_repository")
+                |> List.map
+                    (\loc ->
+                        case loc of
+                            "academic_social_network" ->
+                                "Academic Social Networks"
 
-                    "non_commercial_repository" ->
-                        "Non-commercial Repositories"
+                            "non_commercial_repository" ->
+                                "Non-commercial Repositories"
 
-                    "authors_homepage" ->
-                        "Author's Homepage"
+                            "authors_homepage" ->
+                                "Author's Homepage"
 
-                    a ->
-                        String.replace "_" " " a
-            )
+                            a ->
+                                String.replace "_" " " a
+                    )
+    in
+    case locations of
+        [] ->
+            Nothing
+
+        _ ->
+            Just locations
