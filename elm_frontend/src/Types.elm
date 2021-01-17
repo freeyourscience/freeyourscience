@@ -65,14 +65,6 @@ type alias Pathway =
     }
 
 
-type alias PathwayDetails =
-    { articleVersion : String
-    , locations : List String
-    , prerequisites : Maybe (List String)
-    , conditions : Maybe (List String)
-    }
-
-
 
 -- GENERAL PURPOSE
 
