@@ -141,7 +141,23 @@ renderPathwayButtons paper =
 
 
 renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> Html Msg
-renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, articleVersions, prerequisites, conditions } ) =
+renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, articleVersions, prerequisites, conditions, embargo } ) =
+    let
+        addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
+        addEmbargo emb prereqs =
+            case ( emb, prereqs ) of
+                ( Just e, Just p ) ->
+                    Just (List.append [ "If " ++ e ++ " have passed since publication" ] p)
+
+                ( Just e, Nothing ) ->
+                    Just [ "If " ++ e ++ " have passed since publication" ]
+
+                ( Nothing, Just p ) ->
+                    Just p
+
+                _ ->
+                    Nothing
+    in
     div []
         (List.concat
             [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
@@ -149,6 +165,7 @@ renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, a
                 |> ulWithHeading ("upload the " ++ String.join "or" articleVersions ++ " version to any of the following:") text
             , [ p [] [ text " You don't have pay a fee to do this." ] ]
             , prerequisites
+                |> addEmbargo embargo
                 |> Maybe.map (ulWithHeading "But only:" text)
                 |> Maybe.withDefault [ text "" ]
             , conditions
