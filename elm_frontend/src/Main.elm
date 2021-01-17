@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Animation exposing (percent)
 import Api exposing (..)
+import Array exposing (..)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (class)
@@ -18,7 +19,7 @@ import Views exposing (..)
 type alias Model =
     { unfetchedDOIs : List DOI
     , fetchedPapers : List Paper
-    , freePathwayPapers : List Paper
+    , freePathwayPapers : Array Paper
     , otherPathwayPapers : List Paper
     , openAccessPapers : List Paper
     , buggyPapers : List Paper
@@ -47,7 +48,7 @@ init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { unfetchedDOIs = Maybe.withDefault [] (List.tail flags.dois)
       , fetchedPapers = []
-      , freePathwayPapers = []
+      , freePathwayPapers = Array.empty
       , otherPathwayPapers = []
       , openAccessPapers = []
       , buggyPapers = []
@@ -97,7 +98,7 @@ update msg model =
             ( case classifiedPaper of
                 FreePathway paper ->
                     { updatedModel
-                        | freePathwayPapers = List.append model.freePathwayPapers [ paper ]
+                        | freePathwayPapers = Array.push paper model.freePathwayPapers
                         , unfetchedDOIs = List.drop 1 model.unfetchedDOIs
                     }
 
@@ -147,8 +148,12 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
+        indexedPapersYearComp : ( Int, Paper ) -> ( Int, Paper ) -> Order
+        indexedPapersYearComp ( _, p1 ) ( _, p2 ) =
+            optionalYearComparison p1 p2
+
         paywalledNoCostPathwayPapers =
-            List.sortWith optionalYearComparison model.freePathwayPapers
+            List.sortWith indexedPapersYearComp (Array.toIndexedList model.freePathwayPapers)
 
         nonFreePolicyPapers =
             List.sortWith optionalYearComparison model.otherPathwayPapers

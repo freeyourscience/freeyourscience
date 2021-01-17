@@ -173,7 +173,7 @@ renderRecommendedPathway { locations, articleVersion, prerequisites, conditions,
 -- PAPER SECTIONS
 
 
-renderPaywalledNoCostPathwayPapers : List Paper -> Html Msg
+renderPaywalledNoCostPathwayPapers : List ( Int, Paper ) -> Html Msg
 renderPaywalledNoCostPathwayPapers papers =
     section [ class "mb-5" ]
         [ h2 []
@@ -185,7 +185,7 @@ renderPaywalledNoCostPathwayPapers papers =
                     ++ "However, the publishers likely allow no-cost re-publication as Open Access."
                 )
             ]
-        , div [] (List.map renderPaper papers)
+        , div [] (List.map renderPaper (List.map Tuple.second papers))
         ]
 
 
