@@ -61,7 +61,7 @@ renderPaper paper =
                        )
                 )
             ]
-            [ div [ class "fs-5 mb-1" ]
+            [ div []
                 (renderPaperHeader paper)
             , paper.recommendedPathway
                 |> Maybe.map renderRecommendedPathway
@@ -82,27 +82,29 @@ renderPaperHeader ({ journal, authors, year, doi } as paper) =
         paperTitle =
             paper.title
     in
-    [ text (Maybe.withDefault "Unknown title" paperTitle)
-    , text
-        (String.concat
-            [ journal |> Maybe.withDefault "Unknown journal"
-            , ", "
-            , authors |> Maybe.withDefault "Unknown authors"
-            , " ("
-            , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-            , "), "
-            , doi
+    [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" paperTitle) ]
+    , div [ class "mb-1" ]
+        [ text
+            (String.concat
+                [ journal |> Maybe.withDefault "Unknown journal"
+                , ", "
+                , authors |> Maybe.withDefault "Unknown authors"
+                , " ("
+                , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
+                , "), "
+                , doi
+                ]
+            )
+        , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
+            [ img
+                [ src "/static/img/box-arrow-up-right.svg"
+                , alt ""
+                , width 12
+                , height 12
+                , title ("Visit article: " ++ Maybe.withDefault "" paperTitle)
+                ]
+                []
             ]
-        )
-    , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
-        [ img
-            [ src "/static/img/box-arrow-up-right.svg"
-            , alt ""
-            , width 12
-            , height 12
-            , title ("Visit article: " ++ Maybe.withDefault "" paperTitle)
-            ]
-            []
         ]
     ]
 
