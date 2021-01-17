@@ -239,6 +239,7 @@ toPaper backendPaper =
 parsePolicies : List BackendPolicy -> Maybe OaPathway
 parsePolicies policies =
     policies
+        -- TODO: select policy intelligently
         |> List.head
         |> Maybe.andThen toPathway
 
