@@ -266,11 +266,6 @@ extractPathways backendPolicy =
 
 parsePathway : BackendPermittedOA -> Pathway
 parsePathway { articleVersions, location, prerequisites, conditions, additionalOaFee } =
-    let
-        hardcodedPathway =
-            { notes = Just [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
-            }
-    in
     { articleVersions =
         case articleVersions of
             [] ->
@@ -281,7 +276,6 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
     , locations = location |> parseLocations
     , prerequisites = prerequisites |> Maybe.map parsePrequisites
     , conditions = conditions
-    , notes = hardcodedPathway.notes
     , additionalOaFee = additionalOaFee
     }
 
@@ -293,11 +287,6 @@ orderByPathwayQuality p1 p2 =
 
 noCostOaPathway : ( PolicyMetaData, Pathway ) -> Maybe ( PolicyMetaData, NoCostOaPathway )
 noCostOaPathway ( metadata, pathway ) =
-    let
-        hardcodedPathway =
-            { notes = Just [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
-            }
-    in
     case ( pathway.additionalOaFee, pathway.locations, pathway.articleVersions ) of
         ( "no", Just locations, Just articleVersions ) ->
             Just
@@ -306,7 +295,6 @@ noCostOaPathway ( metadata, pathway ) =
                   , locations = locations
                   , prerequisites = pathway.prerequisites
                   , conditions = pathway.conditions
-                  , notes = hardcodedPathway.notes
                   }
                 )
 
@@ -315,9 +303,10 @@ noCostOaPathway ( metadata, pathway ) =
 
 
 parsePolicyMetaData : BackendPolicy -> PolicyMetaData
-parsePolicyMetaData { policyUrl, urls } =
+parsePolicyMetaData { policyUrl, urls, notes } =
     { profileUrl = policyUrl
     , additionalUrls = urls
+    , notes = notes
     }
 
 

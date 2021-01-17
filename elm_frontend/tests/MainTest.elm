@@ -10,6 +10,7 @@ recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
 recommendedPathway =
     ( { additionalUrls = Just [ { description = "Vereinbarung zur Rechteűbertragung", url = "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf" } ]
       , profileUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
+      , notes = Just "Notes about this policy"
       }
     , { articleVersions = [ "submitted" ]
       , locations = [ "Academic Social Networks", "Author's Homepage", "Non-commercial Repositories", "PubMed Central" ]
@@ -17,9 +18,6 @@ recommendedPathway =
       -- TODO: Add/test parsing embargo into prerequisites
       , prerequisites = Just [ "If Required by Funder" ]
       , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
-
-      -- TODO: Add/test parsing for notes source
-      , notes = Just [ "If mandated to deposit before 12 months, the author must obtain a  waiver from their Institution/Funding agency or use  AuthorChoice" ]
       }
     )
 
@@ -54,6 +52,7 @@ pathwayDetails =
                   }
                 ]
       , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
+      , notes = Just "Notes about this policy"
       }
     ]
 

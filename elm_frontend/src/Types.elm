@@ -44,6 +44,7 @@ type alias Paper =
 type alias PolicyMetaData =
     { profileUrl : String
     , additionalUrls : Maybe (List NamedUrl)
+    , notes : Maybe String
     }
 
 
@@ -52,7 +53,6 @@ type alias NoCostOaPathway =
     , locations : List String
     , prerequisites : Maybe (List String)
     , conditions : Maybe (List String)
-    , notes : Maybe (List String)
     }
 
 
@@ -62,7 +62,6 @@ type alias Pathway =
     , articleVersions : Maybe (List String)
     , conditions : Maybe (List String)
     , prerequisites : Maybe (List String)
-    , notes : Maybe (List String)
     }
 
 
@@ -71,7 +70,6 @@ type alias PathwayDetails =
     , locations : List String
     , prerequisites : Maybe (List String)
     , conditions : Maybe (List String)
-    , notes : Maybe (List String)
     }
 
 
@@ -111,6 +109,7 @@ type alias BackendPolicy =
     { urls : Maybe (List NamedUrl)
     , permittedOA : Maybe (List BackendPermittedOA)
     , policyUrl : String -- TODO: this should come from oaPathwayURI
+    , notes : Maybe String
     }
 
 

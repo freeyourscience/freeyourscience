@@ -141,7 +141,7 @@ renderPathwayButtons paper =
 
 
 renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> Html Msg
-renderRecommendedPathway ( { profileUrl, additionalUrls }, { locations, articleVersions, prerequisites, conditions, notes } ) =
+renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, articleVersions, prerequisites, conditions } ) =
     div []
         (List.concat
             [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
@@ -154,15 +154,16 @@ renderRecommendedPathway ( { profileUrl, additionalUrls }, { locations, articleV
             , conditions
                 |> Maybe.map (ulWithHeading "Conditions are:" text)
                 |> Maybe.withDefault [ text "" ]
-            , notes
-                |> Maybe.map (ulWithHeading "The publisher also notes:" text)
-                |> Maybe.withDefault [ text "" ]
             , additionalUrls
                 |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
                 |> Maybe.withDefault [ text "" ]
             , [ p []
                     [ text "The publisher has deposited this policy at "
                     , a [ href profileUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
+                    , notes
+                        |> Maybe.map (String.append "They also note: ")
+                        |> Maybe.withDefault ""
+                        |> text
                     ]
               ]
             ]
