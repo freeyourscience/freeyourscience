@@ -53,6 +53,7 @@ type alias NoCostOaPathway =
     , locations : List String
     , prerequisites : Maybe (List String)
     , conditions : Maybe (List String)
+    , embargo : Maybe String
     }
 
 
@@ -62,6 +63,7 @@ type alias Pathway =
     , articleVersions : Maybe (List String)
     , conditions : Maybe (List String)
     , prerequisites : Maybe (List String)
+    , embargo : Maybe String
     }
 
 

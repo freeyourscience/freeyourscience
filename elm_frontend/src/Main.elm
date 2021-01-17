@@ -265,7 +265,12 @@ extractPathways backendPolicy =
 
 
 parsePathway : BackendPermittedOA -> Pathway
-parsePathway { articleVersions, location, prerequisites, conditions, additionalOaFee } =
+parsePathway { articleVersions, location, prerequisites, conditions, additionalOaFee, embargo } =
+    let
+        embargoToString : BackendEmbargo -> String
+        embargoToString { amount, units } =
+            String.join " " [ String.fromInt amount, units ]
+    in
     { articleVersions =
         case articleVersions of
             [] ->
@@ -277,6 +282,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
     , prerequisites = prerequisites |> Maybe.map parsePrequisites
     , conditions = conditions
     , additionalOaFee = additionalOaFee
+    , embargo = embargo |> Maybe.map embargoToString
     }
 
 
@@ -295,6 +301,7 @@ noCostOaPathway ( metadata, pathway ) =
                   , locations = locations
                   , prerequisites = pathway.prerequisites
                   , conditions = pathway.conditions
+                  , embargo = pathway.embargo
                   }
                 )
 

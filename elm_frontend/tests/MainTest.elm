@@ -14,9 +14,8 @@ recommendedPathway =
       }
     , { articleVersions = [ "submitted" ]
       , locations = [ "Academic Social Networks", "Author's Homepage", "Non-commercial Repositories", "PubMed Central" ]
-
-      -- TODO: Add/test parsing embargo into prerequisites
       , prerequisites = Just [ "If Required by Funder" ]
+      , embargo = Just "12 months"
       , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
       }
     )
