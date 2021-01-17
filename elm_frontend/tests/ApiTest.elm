@@ -132,12 +132,12 @@ fullPaperElm =
                                 { location = [ "academic_social_network", "authors_homepage", "non_commercial_repository" ]
                                 , namedRepository = Just [ "PubMed Central" ]
                                 }
-                          , articleVersion = [ "submitted" ]
+                          , articleVersions = [ "submitted" ]
                           , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
                           , prerequisites = Nothing
                           }
                         ]
-              , policyUrl = Just "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
+              , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
               }
             ]
     }
