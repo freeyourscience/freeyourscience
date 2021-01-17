@@ -164,7 +164,7 @@ renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, a
         (List.concat
             [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
             , locations
-                |> ulWithHeading ("upload the " ++ String.join "or" articleVersions ++ " version to any of the following:") text
+                |> ulWithHeading ("upload the " ++ String.join " or " articleVersions ++ " version to any of the following:") text
             , [ p [] [ text " You don't have pay a fee to do this." ] ]
             , prerequisites
                 |> addEmbargo embargo
