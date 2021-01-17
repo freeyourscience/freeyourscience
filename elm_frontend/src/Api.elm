@@ -36,6 +36,13 @@ phraseDecoder =
         |> required "language" D.string
 
 
+embargoDecoder : Decoder BackendEmbargo
+embargoDecoder =
+    D.succeed BackendEmbargo
+        |> required "amount" D.int
+        |> required "units" D.string
+
+
 permittedOADecoder : Decoder BackendPermittedOA
 permittedOADecoder =
     D.succeed BackendPermittedOA
@@ -44,6 +51,7 @@ permittedOADecoder =
         |> required "article_version" (D.list D.string)
         |> optional "conditions" (D.nullable (D.list D.string)) Nothing
         |> optional "prerequisites" (D.nullable prerequisitesDecoder) Nothing
+        |> optional "embargo" (D.nullable embargoDecoder) Nothing
 
 
 policyDetailsDecoder : Decoder BackendPolicy

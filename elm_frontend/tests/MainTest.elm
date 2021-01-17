@@ -39,6 +39,7 @@ pathwayDetails =
                         }
                   , articleVersions = [ "submitted" ]
                   , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
+                  , embargo = Just { amount = 12, units = "months" }
                   , prerequisites =
                         Just
                             { prerequisites = [ "when_required_by_funder" ]

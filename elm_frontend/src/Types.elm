@@ -119,6 +119,7 @@ type alias BackendPermittedOA =
     , articleVersions : List String
     , conditions : Maybe (List String)
     , prerequisites : Maybe BackendPrerequisites
+    , embargo : Maybe BackendEmbargo
     }
 
 
@@ -138,6 +139,12 @@ type alias BackendPhrase =
 type alias BackendLocation =
     { location : List String
     , namedRepository : Maybe (List String)
+    }
+
+
+type alias BackendEmbargo =
+    { amount : Int
+    , units : String
     }
 
 
