@@ -64,17 +64,11 @@ renderPaper paper =
                 )
             ]
             [ renderPaperHeader paper ]
-        , if not isOpenAccess then
-            div [ class "col-12 col-md-3 fs-6 text-md-end" ]
-                (renderPathwayButtons paper)
-
-          else
-            text ""
         ]
 
 
-renderFreePathwayPaper : FreePathwayPaper -> Html Msg
-renderFreePathwayPaper paper =
+renderFreePathwayPaper : ( Int, FreePathwayPaper ) -> Html Msg
+renderFreePathwayPaper ( id, paper ) =
     let
         pathwayClass =
             if paper.pathwayVisible then
@@ -91,7 +85,7 @@ renderFreePathwayPaper paper =
                 (renderRecommendedPathway paper.recommendedPathway)
             ]
         , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
-            (renderPathwayButtons paper)
+            (renderPathwayButtons ( id, paper.title ))
         ]
 
 
@@ -309,7 +303,7 @@ renderOpenAccessPapers papers =
                 ]
 
           else
-            div [] (List.map renderPaper papers)
+            div [] (List.map renderOpenAccessPaper papers)
         ]
 
 
