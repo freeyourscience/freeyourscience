@@ -62,11 +62,7 @@ renderPaper paper =
                        )
                 )
             ]
-            [ renderPaperHeader paper
-            , paper.recommendedPathway
-                |> Maybe.map renderRecommendedPathway
-                |> Maybe.withDefault (text "")
-            ]
+            [ renderPaperHeader paper ]
         , if not isOpenAccess then
             div [ class "col-12 col-md-3 fs-6 text-md-end" ]
                 (renderPathwayButtons paper)
@@ -78,15 +74,13 @@ renderPaper paper =
 
 renderFreePathwayPaper : FreePathwayPaper -> Html Msg
 renderFreePathwayPaper paper =
-    let
-        paperDetails =
-            [ renderNarrowPaperHeader paper
-            , [ renderRecommendedPathway paper.recommendedPathway ]
-            ]
-    in
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-            (List.concat paperDetails)
+            [ div []
+                (renderNarrowPaperHeader paper)
+            , div [ class "d-none" ]
+                (renderRecommendedPathway paper.recommendedPathway)
+            ]
         , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
             (renderPathwayButtons paper)
         ]
@@ -205,7 +199,7 @@ renderPathwayButtons paper =
     ]
 
 
-renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> Html Msg
+renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
 renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, articleVersions, prerequisites, conditions, embargo } ) =
     let
         addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
@@ -223,33 +217,31 @@ renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, a
                 _ ->
                     Nothing
     in
-    div [ class "d-none" ]
-        (List.concat
-            [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
-            , locations
-                |> ulWithHeading ("upload the " ++ String.join " or " articleVersions ++ " version to any of the following:") text
-            , [ p [] [ text " You don't have pay a fee to do this." ] ]
-            , prerequisites
-                |> addEmbargo embargo
-                |> Maybe.map (ulWithHeading "But only:" text)
-                |> Maybe.withDefault [ text "" ]
-            , conditions
-                |> Maybe.map (ulWithHeading "Conditions are:" text)
-                |> Maybe.withDefault [ text "" ]
-            , additionalUrls
-                |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
-                |> Maybe.withDefault [ text "" ]
-            , [ p []
-                    [ text "The publisher has deposited this policy at "
-                    , a [ href profileUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
-                    , notes
-                        |> Maybe.map (String.append "They also note: ")
-                        |> Maybe.withDefault ""
-                        |> text
-                    ]
-              ]
-            ]
-        )
+    List.concat
+        [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
+        , locations
+            |> ulWithHeading ("upload the " ++ String.join " or " articleVersions ++ " version to any of the following:") text
+        , [ p [] [ text " You don't have pay a fee to do this." ] ]
+        , prerequisites
+            |> addEmbargo embargo
+            |> Maybe.map (ulWithHeading "But only:" text)
+            |> Maybe.withDefault [ text "" ]
+        , conditions
+            |> Maybe.map (ulWithHeading "Conditions are:" text)
+            |> Maybe.withDefault [ text "" ]
+        , additionalUrls
+            |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
+            |> Maybe.withDefault [ text "" ]
+        , [ p []
+                [ text "The publisher has deposited this policy at "
+                , a [ href profileUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
+                , notes
+                    |> Maybe.map (String.append "They also note: ")
+                    |> Maybe.withDefault ""
+                    |> text
+                ]
+          ]
+        ]
 
 
 
