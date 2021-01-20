@@ -2,6 +2,7 @@ module Views exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Types exposing (..)
 
 
@@ -112,17 +113,13 @@ renderPaperHeader ({ journal, authors, year, doi } as paper) =
 renderPathwayButtons : Paper -> List (Html Msg)
 renderPathwayButtons paper =
     let
-        oaPathwayURI =
-            Maybe.withDefault "#" paper.oaPathwayURI
-
         paperTitle =
             Maybe.withDefault "Unknown title" paper.title
     in
     [ div []
-        [ a
-            [ href oaPathwayURI
-            , target "_blank"
-            , class "btn btn-success text-decoration-none"
+        [ button
+            [ onClick TogglePathwayDisplay
+            , class "btn btn-success"
             , title ("View Open Access pathway for: " ++ paperTitle)
             ]
             [ text "View Open Access pathway"

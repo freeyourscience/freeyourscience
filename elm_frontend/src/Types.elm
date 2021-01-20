@@ -148,4 +148,5 @@ type alias BackendEmbargo =
 
 type Msg
     = GotPaper (Result Http.Error BackendPaper)
+    | TogglePathwayDisplay
     | Animate Animation.Msg

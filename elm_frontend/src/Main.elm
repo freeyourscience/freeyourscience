@@ -134,6 +134,9 @@ update msg model =
             , Cmd.none
             )
 
+        TogglePathwayDisplay ->
+            ( model, Cmd.none )
+
         Animate animMsg ->
             ( { model
                 | style = Animation.update animMsg model.style
