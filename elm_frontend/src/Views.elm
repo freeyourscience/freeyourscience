@@ -79,7 +79,7 @@ renderPaper paper =
 renderNonFreePathwayPaper : OtherPathwayPaper -> Html Msg
 renderNonFreePathwayPaper paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ renderNarrowPaperHeader paper ]
+        [ renderNarrowPaperHeader "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" paper ]
 
 
 type alias PaperMeta a =
@@ -92,15 +92,11 @@ type alias PaperMeta a =
     }
 
 
-renderNarrowPaperHeader : PaperMeta a -> Html Msg
-renderNarrowPaperHeader ({ journal, authors, year, doi } as meta) =
-    let
-        paperTitle =
-            meta.title
-    in
+renderNarrowPaperHeader : String -> PaperMeta a -> Html Msg
+renderNarrowPaperHeader classes { title, journal, authors, year, doi } =
     div
-        [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-        [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" paperTitle) ]
+        [ class classes ]
+        [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" title) ]
         , div [ class "mb-1" ]
             [ text
                 (String.concat
@@ -119,7 +115,7 @@ renderNarrowPaperHeader ({ journal, authors, year, doi } as meta) =
                     , alt ""
                     , width 12
                     , height 12
-                    , title ("Visit article: " ++ Maybe.withDefault "" paperTitle)
+                    , Html.Attributes.title ("Visit article: " ++ Maybe.withDefault "" title)
                     ]
                     []
                 ]
