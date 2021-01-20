@@ -3,7 +3,7 @@ module Utils exposing (..)
 import Types exposing (..)
 
 
-optionalYearComparison : Paper -> Paper -> Order
+optionalYearComparison : { a | year : Maybe Int } -> { a | year : Maybe Int } -> Order
 optionalYearComparison p1 p2 =
     let
         y1 =
