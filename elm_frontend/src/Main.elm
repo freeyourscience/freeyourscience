@@ -19,7 +19,7 @@ import Views exposing (..)
 type alias Model =
     { unfetchedDOIs : List DOI
     , fetchedPapers : List Paper
-    , freePathwayPapers : Array Paper
+    , freePathwayPapers : Array FreePathwayPaper
     , otherPathwayPapers : List OtherPathwayPaper
     , openAccessPapers : List Paper
     , buggyPapers : List Paper
@@ -131,7 +131,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
-        indexedPapersYearComp : ( Int, Paper ) -> ( Int, Paper ) -> Order
+        indexedPapersYearComp : ( Int, { a | year : Maybe Int } ) -> ( Int, { a | year : Maybe Int } ) -> Order
         indexedPapersYearComp ( _, p1 ) ( _, p2 ) =
             optionalYearComparison p1 p2
 
@@ -194,12 +194,24 @@ classifyPaper backendPaper model =
             Maybe.map2 Tuple.pair
                 paper.oaPathway
                 paper.oaPathwayURI
-    in
-    case ( isOpenAccess, oaPathway ) of
-        ( Just False, Just ( "nocost", _ ) ) ->
-            { model | freePathwayPapers = Array.push paper model.freePathwayPapers }
 
-        ( Just False, Just ( "other", pwUri ) ) ->
+        recommendedPathway =
+            Maybe.andThen parsePolicies backendPaper.pathwayDetails
+    in
+    case ( isOpenAccess, oaPathway, recommendedPathway ) of
+        ( Just False, Just ( "nocost", pwUri ), Just pathway ) ->
+            { doi = backendPaper.doi
+            , title = backendPaper.title
+            , journal = backendPaper.journal
+            , authors = backendPaper.authors
+            , year = backendPaper.year
+            , issn = backendPaper.issn
+            , oaPathwayURI = pwUri
+            , recommendedPathway = pathway
+            }
+                |> (\p -> { model | freePathwayPapers = Array.push p model.freePathwayPapers })
+
+        ( Just False, Just ( "other", pwUri ), Nothing ) ->
             { doi = backendPaper.doi
             , title = backendPaper.title
             , journal = backendPaper.journal
@@ -210,7 +222,7 @@ classifyPaper backendPaper model =
             }
                 |> (\p -> { model | otherPathwayPapers = model.otherPathwayPapers ++ [ p ] })
 
-        ( Just True, _ ) ->
+        ( Just True, _, _ ) ->
             { model | openAccessPapers = model.openAccessPapers ++ [ paper ] }
 
         _ ->

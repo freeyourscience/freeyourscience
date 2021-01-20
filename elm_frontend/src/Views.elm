@@ -76,10 +76,29 @@ renderPaper paper =
         ]
 
 
+renderFreePathwayPaper : FreePathwayPaper -> Html Msg
+renderFreePathwayPaper paper =
+    let
+        paperDetails =
+            [ renderNarrowPaperHeader paper
+            , [ renderRecommendedPathway paper.recommendedPathway ]
+            ]
+    in
+    div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
+        [ div [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
+            (List.concat paperDetails)
+        , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
+            (renderPathwayButtons paper)
+        ]
+
+
 renderNonFreePathwayPaper : OtherPathwayPaper -> Html Msg
 renderNonFreePathwayPaper paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ renderNarrowPaperHeader "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" paper ]
+        [ div
+            [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
+            (renderNarrowPaperHeader paper)
+        ]
 
 
 type alias PaperMeta a =
@@ -92,35 +111,33 @@ type alias PaperMeta a =
     }
 
 
-renderNarrowPaperHeader : String -> PaperMeta a -> Html Msg
-renderNarrowPaperHeader classes { title, journal, authors, year, doi } =
-    div
-        [ class classes ]
-        [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" title) ]
-        , div [ class "mb-1" ]
-            [ text
-                (String.concat
-                    [ journal |> Maybe.withDefault "Unknown journal"
-                    , ", "
-                    , authors |> Maybe.withDefault "Unknown authors"
-                    , " ("
-                    , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-                    , "), "
-                    , doi
-                    ]
-                )
-            , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
-                [ img
-                    [ src "/static/img/box-arrow-up-right.svg"
-                    , alt ""
-                    , width 12
-                    , height 12
-                    , Html.Attributes.title ("Visit article: " ++ Maybe.withDefault "" title)
-                    ]
-                    []
+renderNarrowPaperHeader : PaperMeta a -> List (Html Msg)
+renderNarrowPaperHeader { title, journal, authors, year, doi } =
+    [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" title) ]
+    , div [ class "mb-1" ]
+        [ text
+            (String.concat
+                [ journal |> Maybe.withDefault "Unknown journal"
+                , ", "
+                , authors |> Maybe.withDefault "Unknown authors"
+                , " ("
+                , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
+                , "), "
+                , doi
                 ]
+            )
+        , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
+            [ img
+                [ src "/static/img/box-arrow-up-right.svg"
+                , alt ""
+                , width 12
+                , height 12
+                , Html.Attributes.title ("Visit article: " ++ Maybe.withDefault "" title)
+                ]
+                []
             ]
         ]
+    ]
 
 
 renderPaperHeader : Paper -> Html Msg
@@ -239,7 +256,7 @@ renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, a
 -- PAPER SECTIONS
 
 
-renderPaywalledNoCostPathwayPapers : List ( Int, Paper ) -> Html Msg
+renderPaywalledNoCostPathwayPapers : List ( Int, FreePathwayPaper ) -> Html Msg
 renderPaywalledNoCostPathwayPapers papers =
     section [ class "mb-5" ]
         [ h2 []
@@ -251,7 +268,7 @@ renderPaywalledNoCostPathwayPapers papers =
                     ++ "However, the publishers likely allow no-cost re-publication as Open Access."
                 )
             ]
-        , div [] (List.map renderPaper (List.map Tuple.second papers))
+        , div [] (List.map renderFreePathwayPaper (List.map Tuple.second papers))
         ]
 
 

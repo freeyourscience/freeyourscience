@@ -34,6 +34,18 @@ type alias Paper =
     }
 
 
+type alias FreePathwayPaper =
+    { doi : DOI
+    , title : Maybe String
+    , journal : Maybe String
+    , authors : Maybe String
+    , year : Maybe Int
+    , issn : Maybe String
+    , oaPathwayURI : String
+    , recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
+    }
+
+
 type alias OtherPathwayPaper =
     { doi : DOI
     , title : Maybe String
