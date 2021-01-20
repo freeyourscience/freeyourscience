@@ -76,6 +76,12 @@ renderPaper paper =
         ]
 
 
+renderNonFreePathwayPaper : Paper -> Html Msg
+renderNonFreePathwayPaper paper =
+    div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
+        [ renderPaperHeader paper ]
+
+
 renderPaperHeader : Paper -> Html Msg
 renderPaperHeader ({ journal, authors, year, doi } as paper) =
     let
@@ -224,7 +230,7 @@ renderNonFreePolicyPapers papers =
                         ++ "re-publishing pathways, or do not allow Open Access publishing at all."
                     )
                 ]
-            , div [] (List.map renderPaper papers)
+            , div [] (List.map renderNonFreePathwayPaper papers)
             ]
 
 
