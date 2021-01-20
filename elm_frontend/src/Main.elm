@@ -18,7 +18,7 @@ import Views exposing (..)
 
 type alias Model =
     { unfetchedDOIs : List DOI
-    , fetchedPapers : List Paper
+    , fetchedPapers : List Bool
     , freePathwayPapers : Array FreePathwayPaper
     , otherPathwayPapers : List OtherPathwayPaper
     , openAccessPapers : List Paper
@@ -93,6 +93,9 @@ update msg model =
         updateUnfetched m =
             { m | unfetchedDOIs = List.drop 1 model.unfetchedDOIs }
 
+        updateFetched m =
+            { m | fetchedPapers = List.append m.fetchedPapers [ True ] }
+
         togglePathwayVisibility : Array FreePathwayPaper -> Int -> Array FreePathwayPaper
         togglePathwayVisibility papers id =
             papers
@@ -107,6 +110,7 @@ update msg model =
                 |> classifyPaper backendPaper
                 |> updateUnfetched
                 |> updateStyle
+                |> updateFetched
             , case List.head model.unfetchedDOIs of
                 Just nextDOI ->
                     fetchPaper model.serverURL nextDOI
@@ -117,7 +121,9 @@ update msg model =
 
         -- TODO: add the erroneous dois as well?
         GotPaper (Err _) ->
-            ( { model | unfetchedDOIs = List.drop 1 model.unfetchedDOIs }
+            ( model
+                |> updateUnfetched
+                |> updateFetched
             , case List.head model.unfetchedDOIs of
                 Just nextDOI ->
                     fetchPaper model.serverURL nextDOI
