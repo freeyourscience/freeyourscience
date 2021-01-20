@@ -68,10 +68,10 @@ renderOpenAccessPaper paper =
 
 
 renderFreePathwayPaper : ( Int, FreePathwayPaper ) -> Html Msg
-renderFreePathwayPaper ( id, paper ) =
+renderFreePathwayPaper ( id, { pathwayVisible, recommendedPathway } as paper ) =
     let
         pathwayClass =
-            if paper.pathwayVisible then
+            if pathwayVisible then
                 ""
 
             else
@@ -85,7 +85,7 @@ renderFreePathwayPaper ( id, paper ) =
                 (renderRecommendedPathway paper.recommendedPathway)
             ]
         , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
-            (renderPathwayButtons ( id, paper.title ))
+            (renderPathwayButtons pathwayVisible ( id, paper.title ))
         ]
 
 
@@ -184,19 +184,33 @@ renderPaperHeader ({ journal, authors, year, doi } as paper) =
         ]
 
 
-renderPathwayButtons : ( Int, Maybe String ) -> List (Html Msg)
-renderPathwayButtons ( id, title ) =
+renderPathwayButtons : Bool -> ( Int, Maybe String ) -> List (Html Msg)
+renderPathwayButtons pathwayIsVisible ( id, title ) =
     let
         paperTitle =
             Maybe.withDefault "Unknown title" title
+
+        verb =
+            if pathwayIsVisible then
+                "Hide"
+
+            else
+                "Show"
+
+        style =
+            if pathwayIsVisible then
+                "btn btn-light"
+
+            else
+                "btn btn-success"
     in
     [ div []
         [ button
             [ onClick (TogglePathwayDisplay id)
-            , class "btn btn-success"
-            , Html.Attributes.title ("View Open Access pathway for: " ++ paperTitle)
+            , class style
+            , Html.Attributes.title (verb ++ "Open Access pathway for: " ++ paperTitle)
             ]
-            [ text "View Open Access pathway"
+            [ text (verb ++ " Open Access pathway")
             ]
         ]
     ]
