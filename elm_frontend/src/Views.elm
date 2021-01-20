@@ -321,7 +321,7 @@ renderBuggyPapers papers =
                 (List.map
                     (\p ->
                         div []
-                            [ a [ href ("https://doi.org" ++ p.doi), target "_blank", class "link-secondary" ]
+                            [ a [ href ("https://doi.org/" ++ p.doi), target "_blank", class "link-secondary" ]
                                 [ text p.doi
                                 ]
                             , case p.oaPathway of
