@@ -62,8 +62,7 @@ renderPaper paper =
                        )
                 )
             ]
-            [ div []
-                (renderPaperHeader paper)
+            [ renderPaperHeader paper
             , paper.recommendedPathway
                 |> Maybe.map renderRecommendedPathway
                 |> Maybe.withDefault (text "")
@@ -77,37 +76,51 @@ renderPaper paper =
         ]
 
 
-renderPaperHeader : Paper -> List (Html Msg)
+renderPaperHeader : Paper -> Html Msg
 renderPaperHeader ({ journal, authors, year, doi } as paper) =
     let
         paperTitle =
             paper.title
+
+        isOpenAccess =
+            Maybe.withDefault False paper.isOpenAccess
     in
-    [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" paperTitle) ]
-    , div [ class "mb-1" ]
-        [ text
-            (String.concat
-                [ journal |> Maybe.withDefault "Unknown journal"
-                , ", "
-                , authors |> Maybe.withDefault "Unknown authors"
-                , " ("
-                , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-                , "), "
-                , doi
-                ]
+    div
+        [ class
+            ("paper-details col-12 fs-6 mb-2 mb-md-0"
+                ++ (if isOpenAccess then
+                        ""
+
+                    else
+                        " col-md-9"
+                   )
             )
-        , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
-            [ img
-                [ src "/static/img/box-arrow-up-right.svg"
-                , alt ""
-                , width 12
-                , height 12
-                , title ("Visit article: " ++ Maybe.withDefault "" paperTitle)
+        ]
+        [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" paperTitle) ]
+        , div [ class "mb-1" ]
+            [ text
+                (String.concat
+                    [ journal |> Maybe.withDefault "Unknown journal"
+                    , ", "
+                    , authors |> Maybe.withDefault "Unknown authors"
+                    , " ("
+                    , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
+                    , "), "
+                    , doi
+                    ]
+                )
+            , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
+                [ img
+                    [ src "/static/img/box-arrow-up-right.svg"
+                    , alt ""
+                    , width 12
+                    , height 12
+                    , title ("Visit article: " ++ Maybe.withDefault "" paperTitle)
+                    ]
+                    []
                 ]
-                []
             ]
         ]
-    ]
 
 
 renderPathwayButtons : Paper -> List (Html Msg)
