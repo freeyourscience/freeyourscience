@@ -79,7 +79,52 @@ renderPaper paper =
 renderNonFreePathwayPaper : Paper -> Html Msg
 renderNonFreePathwayPaper paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ renderPaperHeader paper ]
+        [ renderAgnosticPaperHeader paper ]
+
+
+type alias PaperMeta a =
+    { a
+        | doi : DOI
+        , title : Maybe String
+        , authors : Maybe String
+        , year : Maybe Int
+        , journal : Maybe String
+    }
+
+
+renderAgnosticPaperHeader : PaperMeta a -> Html Msg
+renderAgnosticPaperHeader ({ journal, authors, year, doi } as meta) =
+    let
+        paperTitle =
+            meta.title
+    in
+    div
+        [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
+        [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" paperTitle) ]
+        , div [ class "mb-1" ]
+            [ text
+                (String.concat
+                    [ journal |> Maybe.withDefault "Unknown journal"
+                    , ", "
+                    , authors |> Maybe.withDefault "Unknown authors"
+                    , " ("
+                    , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
+                    , "), "
+                    , doi
+                    ]
+                )
+            , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
+                [ img
+                    [ src "/static/img/box-arrow-up-right.svg"
+                    , alt ""
+                    , width 12
+                    , height 12
+                    , title ("Visit article: " ++ Maybe.withDefault "" paperTitle)
+                    ]
+                    []
+                ]
+            ]
+        ]
 
 
 renderPaperHeader : Paper -> Html Msg
