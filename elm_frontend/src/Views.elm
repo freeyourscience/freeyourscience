@@ -126,9 +126,9 @@ renderPathwayButtons paper =
             [ href oaPathwayURI
             , target "_blank"
             , class "btn btn-success text-decoration-none"
-            , title ("View Open Access pathways for: " ++ journal)
+            , title ("View Open Access pathway for: " ++ journal)
             ]
-            [ text "View Open Access pathways"
+            [ text "View Open Access pathway"
             ]
         , br [] []
         , a
