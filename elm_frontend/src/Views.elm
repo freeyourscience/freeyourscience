@@ -115,9 +115,6 @@ renderPathwayButtons paper =
         oaPathwayURI =
             Maybe.withDefault "#" paper.oaPathwayURI
 
-        journal =
-            Maybe.withDefault "Unknown journal" paper.journal
-
         paperTitle =
             Maybe.withDefault "Unknown title" paper.title
     in
@@ -126,17 +123,9 @@ renderPathwayButtons paper =
             [ href oaPathwayURI
             , target "_blank"
             , class "btn btn-success text-decoration-none"
-            , title ("View Open Access pathway for: " ++ journal)
+            , title ("View Open Access pathway for: " ++ paperTitle)
             ]
             [ text "View Open Access pathway"
-            ]
-        , br [] []
-        , a
-            [ href "#"
-            , class "link-secondary text-decoration-none link-oa-incorrect"
-            , title ("Is there an Open Access version for: " ++ paperTitle)
-            ]
-            [ text "Already Open Access?"
             ]
         ]
     ]
