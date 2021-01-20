@@ -76,7 +76,7 @@ renderPaper paper =
         ]
 
 
-renderNonFreePathwayPaper : Paper -> Html Msg
+renderNonFreePathwayPaper : OtherPathwayPaper -> Html Msg
 renderNonFreePathwayPaper paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ renderAgnosticPaperHeader paper ]
@@ -259,7 +259,7 @@ renderPaywalledNoCostPathwayPapers papers =
         ]
 
 
-renderNonFreePolicyPapers : List Paper -> Html Msg
+renderNonFreePolicyPapers : List OtherPathwayPaper -> Html Msg
 renderNonFreePolicyPapers papers =
     if List.isEmpty papers then
         text ""

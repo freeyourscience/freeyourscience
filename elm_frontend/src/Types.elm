@@ -34,6 +34,17 @@ type alias Paper =
     }
 
 
+type alias OtherPathwayPaper =
+    { doi : DOI
+    , title : Maybe String
+    , journal : Maybe String
+    , authors : Maybe String
+    , year : Maybe Int
+    , issn : Maybe String
+    , oaPathwayURI : String
+    }
+
+
 type alias PolicyMetaData =
     { profileUrl : String
     , additionalUrls : Maybe (List NamedUrl)

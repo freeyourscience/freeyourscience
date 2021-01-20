@@ -20,7 +20,7 @@ type alias Model =
     { unfetchedDOIs : List DOI
     , fetchedPapers : List Paper
     , freePathwayPapers : Array Paper
-    , otherPathwayPapers : List Paper
+    , otherPathwayPapers : List OtherPathwayPaper
     , openAccessPapers : List Paper
     , buggyPapers : List Paper
     , authorName : String
@@ -191,14 +191,24 @@ classifyPaper backendPaper model =
             paper.isOpenAccess
 
         oaPathway =
-            paper.oaPathway
+            Maybe.map2 Tuple.pair
+                paper.oaPathway
+                paper.oaPathwayURI
     in
     case ( isOpenAccess, oaPathway ) of
-        ( Just False, Just "nocost" ) ->
+        ( Just False, Just ( "nocost", _ ) ) ->
             { model | freePathwayPapers = Array.push paper model.freePathwayPapers }
 
-        ( Just False, Just "other" ) ->
-            { model | otherPathwayPapers = model.otherPathwayPapers ++ [ paper ] }
+        ( Just False, Just ( "other", pwUri ) ) ->
+            { doi = backendPaper.doi
+            , title = backendPaper.title
+            , journal = backendPaper.journal
+            , authors = backendPaper.authors
+            , year = backendPaper.year
+            , issn = backendPaper.issn
+            , oaPathwayURI = pwUri
+            }
+                |> (\p -> { model | otherPathwayPapers = model.otherPathwayPapers ++ [ p ] })
 
         ( Just True, _ ) ->
             { model | openAccessPapers = model.openAccessPapers ++ [ paper ] }
