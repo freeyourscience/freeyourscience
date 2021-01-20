@@ -4,7 +4,6 @@ import Animation exposing (percent)
 import Api exposing (..)
 import Array exposing (..)
 import Browser
-import Browser.Navigation exposing (back)
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (..)
@@ -290,7 +289,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
 
 
 orderByPathwayQuality : ( PolicyMetaData, NoCostOaPathway ) -> ( PolicyMetaData, NoCostOaPathway ) -> Order
-orderByPathwayQuality p1 p2 =
+orderByPathwayQuality _ _ =
     EQ
 
 
