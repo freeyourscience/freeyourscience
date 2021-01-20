@@ -43,6 +43,7 @@ type alias FreePathwayPaper =
     , issn : Maybe String
     , oaPathwayURI : String
     , recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
+    , pathwayVisible : Bool
     }
 
 

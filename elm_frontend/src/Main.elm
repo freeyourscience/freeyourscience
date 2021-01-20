@@ -208,6 +208,7 @@ classifyPaper backendPaper model =
             , issn = backendPaper.issn
             , oaPathwayURI = pwUri
             , recommendedPathway = pathway
+            , pathwayVisible = True
             }
                 |> (\p -> { model | freePathwayPapers = Array.push p model.freePathwayPapers })
 

@@ -1,5 +1,6 @@
 module Views exposing (..)
 
+import Browser.Events exposing (Visibility(..))
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -74,11 +75,19 @@ renderPaper paper =
 
 renderFreePathwayPaper : FreePathwayPaper -> Html Msg
 renderFreePathwayPaper paper =
+    let
+        pathwayClass =
+            if paper.pathwayVisible then
+                ""
+
+            else
+                "d-none"
+    in
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
             [ div []
                 (renderNarrowPaperHeader paper)
-            , div [ class "d-none" ]
+            , div [ class pathwayClass ]
                 (renderRecommendedPathway paper.recommendedPathway)
             ]
         , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
