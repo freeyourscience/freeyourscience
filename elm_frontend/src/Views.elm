@@ -45,8 +45,8 @@ renderUrl { url, description } =
 -- PAPER
 
 
-renderPaper : Paper -> Html Msg
-renderPaper paper =
+renderOpenAccessPaper : Paper -> Html Msg
+renderOpenAccessPaper paper =
     let
         isOpenAccess =
             Maybe.withDefault False paper.isOpenAccess
@@ -184,17 +184,17 @@ renderPaperHeader ({ journal, authors, year, doi } as paper) =
         ]
 
 
-renderPathwayButtons : { a | title : Maybe String } -> List (Html Msg)
-renderPathwayButtons paper =
+renderPathwayButtons : ( Int, Maybe String ) -> List (Html Msg)
+renderPathwayButtons ( id, title ) =
     let
         paperTitle =
-            Maybe.withDefault "Unknown title" paper.title
+            Maybe.withDefault "Unknown title" title
     in
     [ div []
         [ button
-            [ onClick TogglePathwayDisplay
+            [ onClick (TogglePathwayDisplay id)
             , class "btn btn-success"
-            , title ("View Open Access pathway for: " ++ paperTitle)
+            , Html.Attributes.title ("View Open Access pathway for: " ++ paperTitle)
             ]
             [ text "View Open Access pathway"
             ]
@@ -263,7 +263,7 @@ renderPaywalledNoCostPathwayPapers papers =
                     ++ "However, the publishers likely allow no-cost re-publication as Open Access."
                 )
             ]
-        , div [] (List.map renderFreePathwayPaper (List.map Tuple.second papers))
+        , div [] (List.map renderFreePathwayPaper papers)
         ]
 
 

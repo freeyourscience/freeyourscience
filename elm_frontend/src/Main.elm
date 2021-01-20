@@ -92,6 +92,14 @@ update msg model =
 
         updateUnfetched m =
             { m | unfetchedDOIs = List.drop 1 model.unfetchedDOIs }
+
+        togglePathwayVisibility : Array FreePathwayPaper -> Int -> Array FreePathwayPaper
+        togglePathwayVisibility papers id =
+            papers
+                |> Array.get id
+                |> Maybe.map (\p -> { p | pathwayVisible = not p.pathwayVisible })
+                |> Maybe.map (\p -> Array.set id p papers)
+                |> Maybe.withDefault papers
     in
     case msg of
         GotPaper (Ok backendPaper) ->
@@ -113,8 +121,10 @@ update msg model =
             , Cmd.none
             )
 
-        TogglePathwayDisplay ->
-            ( model, Cmd.none )
+        TogglePathwayDisplay paperId ->
+            ( { model | freePathwayPapers = togglePathwayVisibility model.freePathwayPapers paperId }
+            , Cmd.none
+            )
 
         Animate animMsg ->
             ( { model
@@ -208,7 +218,7 @@ classifyPaper backendPaper model =
             , issn = backendPaper.issn
             , oaPathwayURI = pwUri
             , recommendedPathway = pathway
-            , pathwayVisible = True
+            , pathwayVisible = False
             }
                 |> (\p -> { model | freePathwayPapers = Array.push p model.freePathwayPapers })
 
