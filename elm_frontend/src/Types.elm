@@ -20,13 +20,6 @@ type alias Flags =
 -- MODEL
 
 
-type ClassifiedPaper
-    = FreePathway Paper
-    | OtherPathway Paper
-    | OpenAccess Paper
-    | Buggy Paper
-
-
 type alias Paper =
     { doi : DOI
     , title : Maybe String
