@@ -118,7 +118,12 @@ update msg model =
         -- TODO: add the erroneous dois as well?
         GotPaper (Err _) ->
             ( { model | unfetchedDOIs = List.drop 1 model.unfetchedDOIs }
-            , Cmd.none
+            , case List.head model.unfetchedDOIs of
+                Just nextDOI ->
+                    fetchPaper model.serverURL nextDOI
+
+                Nothing ->
+                    Cmd.none
             )
 
         TogglePathwayDisplay paperId ->
