@@ -95,27 +95,10 @@ update msg model =
     in
     case msg of
         GotPaper (Ok backendPaper) ->
-            let
-                classifiedPaper =
-                    backendPaper |> toPaper |> classifyPaper
-
-                updatedModel =
-                    model
-                        |> updateStyle
-                        |> updateUnfetched
-            in
-            ( case classifiedPaper of
-                FreePathway paper ->
-                    { updatedModel | freePathwayPapers = Array.push paper updatedModel.freePathwayPapers }
-
-                OtherPathway paper ->
-                    { updatedModel | otherPathwayPapers = List.append updatedModel.otherPathwayPapers [ paper ] }
-
-                OpenAccess paper ->
-                    { updatedModel | openAccessPapers = List.append updatedModel.openAccessPapers [ paper ] }
-
-                Buggy paper ->
-                    { updatedModel | buggyPapers = List.append updatedModel.buggyPapers [ paper ] }
+            ( model
+                |> classifyPaper backendPaper
+                |> updateUnfetched
+                |> updateStyle
             , case List.head model.unfetchedDOIs of
                 Just nextDOI ->
                     fetchPaper model.serverURL nextDOI
@@ -198,9 +181,12 @@ percentDOIsFetched model =
 -- BACKEND-PAPER >>> PAPER
 
 
-classifyPaper : Paper -> ClassifiedPaper
-classifyPaper paper =
+classifyPaper : BackendPaper -> Model -> Model
+classifyPaper backendPaper model =
     let
+        paper =
+            toPaper backendPaper
+
         isOpenAccess =
             paper.isOpenAccess
 
@@ -209,16 +195,16 @@ classifyPaper paper =
     in
     case ( isOpenAccess, oaPathway ) of
         ( Just False, Just "nocost" ) ->
-            FreePathway paper
+            { model | freePathwayPapers = Array.push paper model.freePathwayPapers }
 
         ( Just False, Just "other" ) ->
-            OtherPathway paper
+            { model | otherPathwayPapers = model.otherPathwayPapers ++ [ paper ] }
 
         ( Just True, _ ) ->
-            OpenAccess paper
+            { model | openAccessPapers = model.openAccessPapers ++ [ paper ] }
 
         _ ->
-            Buggy paper
+            { model | buggyPapers = model.buggyPapers ++ [ paper ] }
 
 
 toPaper : BackendPaper -> Paper
