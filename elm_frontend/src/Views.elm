@@ -174,7 +174,7 @@ renderPaperHeader ({ journal, authors, year, doi } as paper) =
         ]
 
 
-renderPathwayButtons : Paper -> List (Html Msg)
+renderPathwayButtons : { a | title : Maybe String } -> List (Html Msg)
 renderPathwayButtons paper =
     let
         paperTitle =
