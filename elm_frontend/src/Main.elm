@@ -77,6 +77,22 @@ subscriptions model =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        updateStyle m =
+            { m
+                | style =
+                    Animation.interrupt
+                        [ Animation.to
+                            [ Animation.width (percent (percentDOIsFetched model))
+                            , Animation.opacity (toFloat (min 1 (List.length model.unfetchedDOIs)))
+                            ]
+                        ]
+                        model.style
+            }
+
+        updateUnfetched m =
+            { m | unfetchedDOIs = List.drop 1 model.unfetchedDOIs }
+    in
     case msg of
         GotPaper (Ok backendPaper) ->
             let
@@ -84,41 +100,22 @@ update msg model =
                     backendPaper |> toPaper |> classifyPaper
 
                 updatedModel =
-                    { model
-                        | style =
-                            Animation.interrupt
-                                [ Animation.to
-                                    [ Animation.width (percent (percentDOIsFetched model))
-                                    , Animation.opacity (toFloat (min 1 (List.length model.unfetchedDOIs)))
-                                    ]
-                                ]
-                                model.style
-                    }
+                    model
+                        |> updateStyle
+                        |> updateUnfetched
             in
             ( case classifiedPaper of
                 FreePathway paper ->
-                    { updatedModel
-                        | freePathwayPapers = Array.push paper model.freePathwayPapers
-                        , unfetchedDOIs = List.drop 1 model.unfetchedDOIs
-                    }
+                    { updatedModel | freePathwayPapers = Array.push paper updatedModel.freePathwayPapers }
 
                 OtherPathway paper ->
-                    { updatedModel
-                        | otherPathwayPapers = List.append model.otherPathwayPapers [ paper ]
-                        , unfetchedDOIs = List.drop 1 model.unfetchedDOIs
-                    }
+                    { updatedModel | otherPathwayPapers = List.append updatedModel.otherPathwayPapers [ paper ] }
 
                 OpenAccess paper ->
-                    { updatedModel
-                        | openAccessPapers = List.append model.openAccessPapers [ paper ]
-                        , unfetchedDOIs = List.drop 1 model.unfetchedDOIs
-                    }
+                    { updatedModel | openAccessPapers = List.append updatedModel.openAccessPapers [ paper ] }
 
                 Buggy paper ->
-                    { updatedModel
-                        | buggyPapers = List.append model.buggyPapers [ paper ]
-                        , unfetchedDOIs = List.drop 1 model.unfetchedDOIs
-                    }
+                    { updatedModel | buggyPapers = List.append updatedModel.buggyPapers [ paper ] }
             , case List.head model.unfetchedDOIs of
                 Just nextDOI ->
                     fetchPaper model.serverURL nextDOI
