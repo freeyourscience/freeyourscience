@@ -160,7 +160,7 @@ renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, a
                 _ ->
                     Nothing
     in
-    div []
+    div [ class "d-none" ]
         (List.concat
             [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
             , locations
