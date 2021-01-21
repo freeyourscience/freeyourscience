@@ -82,7 +82,7 @@ renderFreePathwayPaper ( id, { pathwayVisible, recommendedPathway } as paper ) =
             [ div []
                 (renderNarrowPaperHeader paper)
             , div [ class pathwayClass ]
-                (renderRecommendedPathway paper.recommendedPathway)
+                (renderRecommendedPathway paper.oaPathwayURI recommendedPathway)
             ]
         , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
             (renderPathwayButtons pathwayVisible ( id, paper.title ))
@@ -216,8 +216,8 @@ renderPathwayButtons pathwayIsVisible ( id, title ) =
     ]
 
 
-renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
-renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, articleVersions, prerequisites, conditions, embargo } ) =
+renderRecommendedPathway : String -> ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
+renderRecommendedPathway journalPolicyUrl ( { profileUrl, additionalUrls, notes }, { locations, articleVersions, prerequisites, conditions, embargo } ) =
     let
         addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
         addEmbargo emb prereqs =
@@ -251,7 +251,7 @@ renderRecommendedPathway ( { profileUrl, additionalUrls, notes }, { locations, a
             |> Maybe.withDefault [ text "" ]
         , [ p []
                 [ text "The publisher has deposited this policy at "
-                , a [ href profileUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
+                , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
                 , notes
                     |> Maybe.map (String.append "They also note: ")
                     |> Maybe.withDefault ""
