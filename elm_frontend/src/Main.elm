@@ -272,8 +272,39 @@ parsePolicies policies =
         |> flattenPolicies
         |> List.map noCostOaPathway
         |> List.filterMap identity
-        |> List.sortWith orderByPathwayQuality
+        |> List.map scoreNoCostPathway
+        |> List.sortBy Tuple.first
+        |> List.map Tuple.second
+        |> List.reverse
         |> List.head
+
+
+scoreNoCostPathway : ( PolicyMetaData, NoCostOaPathway ) -> ( Float, ( PolicyMetaData, NoCostOaPathway ) )
+scoreNoCostPathway ( metaData, pathway ) =
+    let
+        score =
+            pathway.articleVersions
+                |> List.map scoreAllowedVersion
+                |> List.maximum
+                |> Maybe.withDefault 0
+    in
+    ( score, ( metaData, pathway ) )
+
+
+scoreAllowedVersion : String -> Float
+scoreAllowedVersion version =
+    case version of
+        "published" ->
+            30
+
+        "accepted" ->
+            20
+
+        "submitted" ->
+            10
+
+        _ ->
+            0
 
 
 flattenPolicies : List BackendPolicy -> List ( PolicyMetaData, Pathway )
@@ -313,11 +344,6 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
     , additionalOaFee = additionalOaFee
     , embargo = embargo |> Maybe.map embargoToString
     }
-
-
-orderByPathwayQuality : ( PolicyMetaData, NoCostOaPathway ) -> ( PolicyMetaData, NoCostOaPathway ) -> Order
-orderByPathwayQuality _ _ =
-    EQ
 
 
 noCostOaPathway : ( PolicyMetaData, Pathway ) -> Maybe ( PolicyMetaData, NoCostOaPathway )
