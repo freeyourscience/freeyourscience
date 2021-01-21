@@ -2,7 +2,7 @@ module MainTest exposing (..)
 
 import Expect
 import Main exposing (parsePolicies)
-import Test exposing (..)
+import Test exposing (Test, describe, test)
 import Types exposing (..)
 
 

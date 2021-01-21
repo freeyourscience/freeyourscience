@@ -1,9 +1,9 @@
 module ApiTest exposing (..)
 
 import Api exposing (paperDecoder)
-import Expect exposing (Expectation)
-import Json.Decode as D exposing (Decoder)
-import Test exposing (..)
+import Expect
+import Json.Decode as D
+import Test exposing (Test, describe, test)
 import Types exposing (..)
 
 
