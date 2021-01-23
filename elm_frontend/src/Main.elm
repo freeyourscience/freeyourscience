@@ -23,6 +23,7 @@ type alias Model =
     , otherPathwayPapers : List OtherPathwayPaper
     , openAccessPapers : List Paper
     , buggyPapers : List Paper
+    , numFailedDOIRequests : Int
     , authorName : String
     , authorProfileURL : String
     , serverURL : String
@@ -51,6 +52,7 @@ init flags =
       , otherPathwayPapers = []
       , openAccessPapers = []
       , buggyPapers = []
+      , numFailedDOIRequests = 0
       , authorName = flags.authorName
       , authorProfileURL = flags.authorProfileURL
       , serverURL = flags.serverURL
@@ -104,7 +106,7 @@ update msg model =
             )
 
         GotPaper (Err _) ->
-            ( model
+            ( { model | numFailedDOIRequests = model.numFailedDOIRequests + 1 }
             , Cmd.none
             )
 
@@ -170,6 +172,7 @@ numberFetchedPapers model =
         + Array.length model.freePathwayPapers
         + List.length model.openAccessPapers
         + List.length model.otherPathwayPapers
+        + model.numFailedDOIRequests
 
 
 percentDOIsFetched : Model -> Float
