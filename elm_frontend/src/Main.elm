@@ -7,6 +7,7 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (..)
+import Json.Encode exposing (float)
 import Types exposing (..)
 import Utils exposing (..)
 import Views exposing (..)
@@ -281,14 +282,22 @@ parsePolicies policies =
 
 scoreNoCostPathway : ( PolicyMetaData, NoCostOaPathway ) -> ( Float, ( PolicyMetaData, NoCostOaPathway ) )
 scoreNoCostPathway ( metaData, pathway ) =
+    -- NOTE: It feels like this function should only output a float and it should be the parent
+    -- context's responsibility to combine the score with the policy meta data and pathway details
     let
-        score =
+        version_score =
             pathway.articleVersions
                 |> List.map scoreAllowedVersion
                 |> List.maximum
                 |> Maybe.withDefault 0
+
+        location_score =
+            pathway.locations
+                |> List.map scoreAllowedLocation
+                |> List.maximum
+                |> Maybe.withDefault 0
     in
-    ( score, ( metaData, pathway ) )
+    ( version_score + location_score, ( metaData, pathway ) )
 
 
 scoreAllowedVersion : String -> Float
@@ -302,6 +311,64 @@ scoreAllowedVersion version =
 
         "submitted" ->
             10
+
+        _ ->
+            0
+
+
+scoreAllowedLocation : String -> Float
+scoreAllowedLocation location =
+    case location of
+        "any_repository" ->
+            6
+
+        "preprint_repository" ->
+            5
+
+        "subject_repository" ->
+            5
+
+        "non_commercial_repository" ->
+            5
+
+        "non_commercial_subject_repository" ->
+            4
+
+        "institutional_repository" ->
+            4
+
+        "non_commercial_institutional_repository" ->
+            4
+
+        "named_repository" ->
+            4
+
+        "any_website" ->
+            3
+
+        "institutional_website" ->
+            3
+
+        "non_commercial_website" ->
+            3
+
+        "authors_homepage" ->
+            3
+
+        "academic_social_network" ->
+            2
+
+        "non_commercial_social_network" ->
+            2
+
+        "named_academic_social_network" ->
+            2
+
+        "funder_designated_location" ->
+            2
+
+        "this_journal" ->
+            1
 
         _ ->
             0
