@@ -250,12 +250,15 @@ renderRecommendedPathway journalPolicyUrl ( { profileUrl, additionalUrls, notes 
             |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
             |> Maybe.withDefault [ text "" ]
         , [ p []
-                [ text "The publisher has deposited this policy at "
-                , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Sherpa" ]
-                , notes
+                [ notes
                     |> Maybe.map (String.append "They also note: ")
                     |> Maybe.withDefault ""
                     |> text
+                ]
+          ]
+        , [ p []
+                [ text "More information about this and other Open Access policies for this publication can be found in the "
+                , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Sherpa Policy Database" ]
                 ]
           ]
         ]
