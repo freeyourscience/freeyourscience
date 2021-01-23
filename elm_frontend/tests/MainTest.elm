@@ -1,7 +1,7 @@
 module MainTest exposing (..)
 
 import Expect
-import Main exposing (parsePolicies)
+import Main exposing (parsePolicies, scoreNoCostPathway)
 import Test exposing (Test, describe, test)
 import Types exposing (..)
 
@@ -59,7 +59,30 @@ pathwayDetails =
 
 suite : Test
 suite =
-    describe "recommendPathway"
-        [ test "valid first prio pathway" <|
-            \_ -> Expect.equal (Just recommendedPathway) (parsePolicies pathwayDetails)
+    describe "main tests"
+        [ describe "recommendPathway"
+            [ test "valid first prio pathway" <|
+                \_ -> Expect.equal (Just recommendedPathway) (parsePolicies pathwayDetails)
+            ]
+        , describe "scoreNoCostPathway"
+            [ test "relative score example" <|
+                let
+                    liberal_pathway =
+                        { articleVersions = [ "published" ]
+                        , locations = [ "any_repository" ]
+                        , prerequisites = Nothing
+                        , conditions = Nothing
+                        , embargo = Nothing
+                        }
+
+                    restrictive_pathway =
+                        { articleVersions = [ "submitted" ]
+                        , locations = [ "this_journal" ]
+                        , prerequisites = Nothing
+                        , conditions = Nothing
+                        , embargo = Nothing
+                        }
+                in
+                \_ -> Expect.greaterThan (scoreNoCostPathway restrictive_pathway) (scoreNoCostPathway liberal_pathway)
+            ]
         ]

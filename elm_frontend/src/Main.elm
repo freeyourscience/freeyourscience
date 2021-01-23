@@ -273,17 +273,15 @@ parsePolicies policies =
         |> flattenPolicies
         |> List.map noCostOaPathway
         |> List.filterMap identity
-        |> List.map scoreNoCostPathway
+        |> List.map (\( metadata, pathway ) -> ( scoreNoCostPathway pathway, ( metadata, pathway ) ))
         |> List.sortBy Tuple.first
         |> List.map Tuple.second
         |> List.reverse
         |> List.head
 
 
-scoreNoCostPathway : ( PolicyMetaData, NoCostOaPathway ) -> ( Float, ( PolicyMetaData, NoCostOaPathway ) )
-scoreNoCostPathway ( metaData, pathway ) =
-    -- NOTE: It feels like this function should only output a float and it should be the parent
-    -- context's responsibility to combine the score with the policy meta data and pathway details
+scoreNoCostPathway : NoCostOaPathway -> Float
+scoreNoCostPathway pathway =
     let
         version_score =
             pathway.articleVersions
@@ -297,20 +295,20 @@ scoreNoCostPathway ( metaData, pathway ) =
                 |> List.maximum
                 |> Maybe.withDefault 0
     in
-    ( version_score + location_score, ( metaData, pathway ) )
+    version_score + location_score
 
 
 scoreAllowedVersion : String -> Float
 scoreAllowedVersion version =
     case version of
         "published" ->
-            30
+            3
 
         "accepted" ->
-            20
+            2
 
         "submitted" ->
-            10
+            1
 
         _ ->
             0
