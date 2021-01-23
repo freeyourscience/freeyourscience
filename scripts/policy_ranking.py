@@ -1,3 +1,5 @@
+import itertools
+
 ARTICLE_VERSIONS = dict(
     published=3,
     accepted=2,
@@ -46,6 +48,10 @@ if __name__ == "__main__":
         ("submitted", "institutional_repository", "no_embargo"),
         ("submitted", "any_repository", "no_embargo"),
     ]
+
+    policies = list(
+        itertools.product(ARTICLE_VERSIONS.keys(), LOCATIONS.keys(), EMBARGOS.keys())
+    )
 
     scored_policies = [(p, score(*p)) for p in policies]
     scored_policies = sorted(scored_policies, key=lambda sp: sp[1], reverse=True)
