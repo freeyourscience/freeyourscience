@@ -76,6 +76,7 @@ paperDecoder =
         |> required "oa_pathway" (D.nullable D.string)
         |> required "oa_pathway_uri" (D.nullable D.string)
         |> required "oa_pathway_details" (D.nullable (D.list policyDetailsDecoder))
+        |> required "oa_location_url" (D.nullable D.string)
 
 
 fetchPaper : String -> String -> Cmd Msg

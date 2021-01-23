@@ -34,6 +34,17 @@ type alias Paper =
     }
 
 
+type alias OpenAccessPaper =
+    { doi : DOI
+    , title : Maybe String
+    , journal : Maybe String
+    , authors : Maybe String
+    , year : Maybe Int
+    , issn : Maybe String
+    , oaLocationURL : String
+    }
+
+
 type alias FreePathwayPaper =
     { doi : DOI
     , title : Maybe String
@@ -113,6 +124,7 @@ type alias BackendPaper =
     , oaPathway : Maybe String
     , oaPathwayURI : Maybe String
     , pathwayDetails : Maybe (List BackendPolicy)
+    , oaLocationURL : Maybe String
     }
 
 

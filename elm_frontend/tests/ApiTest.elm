@@ -19,6 +19,7 @@ fullPaperJson =
     "issn": "0038-9145",
     "is_open_access": false,
     "oa_pathway": "nocost",
+    "oa_location_url": "https://doi.org/10.1002/STAB.201710469",
     "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/1908",
     "oa_pathway_details": [
         {
@@ -110,7 +111,19 @@ fullPaperJson =
 oaPathwayNull : String
 oaPathwayNull =
     """
-{"doi":"10.1002/STAB.201710469","title":"Zukunft Robotik - Automatisierungspotentiale im Stahl- und Metallleichtbau","journal":"Stahlbau","authors":"Sigrid Brell-Cokcan et al.","year":2017,"issn":"0038-9145","is_open_access":false,"oa_pathway":"nocost","oa_pathway_uri":"https://v2.sherpa.ac.uk/id/publication/1908","oa_pathway_details":null}
+{
+    "doi": "10.1002/STAB.201710469",
+    "title": "Zukunft Robotik - Automatisierungspotentiale im Stahl- und Metallleichtbau",
+    "journal": "Stahlbau",
+    "authors": "Sigrid Brell-Cokcan et al.",
+    "year": 2017,
+    "issn": "0038-9145",
+    "is_open_access": false,
+    "oa_pathway": "nocost",
+    "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/1908",
+    "oa_pathway_details": null,
+    "oa_location_url": "https://doi.org/10.1002/STAB.201710469"
+}
 """
 
 
@@ -125,6 +138,7 @@ fullPaperElm =
     , isOpenAccess = Just False
     , oaPathway = Just "nocost"
     , oaPathwayURI = Just "https://v2.sherpa.ac.uk/id/publication/1908"
+    , oaLocationURL = Just "https://doi.org/10.1002/STAB.201710469"
     , pathwayDetails =
         Just
             [ { urls =
