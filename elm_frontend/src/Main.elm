@@ -18,8 +18,7 @@ import Views exposing (..)
 
 
 type alias Model =
-    { unfetchedDOIs : List DOI
-    , fetchedPapers : List Bool
+    { initialDOIs : List DOI
     , freePathwayPapers : Array FreePathwayPaper
     , otherPathwayPapers : List OtherPathwayPaper
     , openAccessPapers : List Paper
@@ -47,8 +46,7 @@ main =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { unfetchedDOIs = Maybe.withDefault [] (List.tail flags.dois)
-      , fetchedPapers = []
+    ( { initialDOIs = flags.dois
       , freePathwayPapers = Array.empty
       , otherPathwayPapers = []
       , openAccessPapers = []
@@ -58,12 +56,7 @@ init flags =
       , serverURL = flags.serverURL
       , style = Animation.style [ Animation.width (percent 0), Animation.opacity 1 ]
       }
-    , case List.head flags.dois of
-        Just nextDOI ->
-            fetchPaper flags.serverURL nextDOI
-
-        Nothing ->
-            Cmd.none
+    , Cmd.batch (List.map (fetchPaper flags.serverURL) flags.dois)
     )
 
 
@@ -85,17 +78,14 @@ update msg model =
                     Animation.interrupt
                         [ Animation.to
                             [ Animation.width (percent (percentDOIsFetched model))
-                            , Animation.opacity (toFloat (min 1 (List.length model.unfetchedDOIs)))
+                            , Animation.opacity
+                                (toFloat
+                                    (min 1 (List.length model.initialDOIs - numberFetchedPapers m))
+                                )
                             ]
                         ]
                         model.style
             }
-
-        updateUnfetched m =
-            { m | unfetchedDOIs = List.drop 1 model.unfetchedDOIs }
-
-        updateFetched m =
-            { m | fetchedPapers = List.append m.fetchedPapers [ True ] }
 
         togglePathwayVisibility : Array FreePathwayPaper -> Int -> Array FreePathwayPaper
         togglePathwayVisibility papers id =
@@ -109,28 +99,14 @@ update msg model =
         GotPaper (Ok backendPaper) ->
             ( model
                 |> classifyPaper backendPaper
-                |> updateUnfetched
                 |> updateStyle
-                |> updateFetched
-            , case List.head model.unfetchedDOIs of
-                Just nextDOI ->
-                    fetchPaper model.serverURL nextDOI
-
-                Nothing ->
-                    Cmd.none
+            , Cmd.none
             )
 
         -- TODO: add the erroneous dois as well?
         GotPaper (Err _) ->
             ( model
-                |> updateUnfetched
-                |> updateFetched
-            , case List.head model.unfetchedDOIs of
-                Just nextDOI ->
-                    fetchPaper model.serverURL nextDOI
-
-                Nothing ->
-                    Cmd.none
+            , Cmd.none
             )
 
         TogglePathwayDisplay paperId ->
@@ -189,13 +165,22 @@ view model =
 -- LOADING BAR
 
 
+numberFetchedPapers : Model -> Int
+numberFetchedPapers model =
+    List.length model.buggyPapers
+        + Array.length model.freePathwayPapers
+        + List.length model.openAccessPapers
+        + List.length model.otherPathwayPapers
+
+
 percentDOIsFetched : Model -> Float
 percentDOIsFetched model =
+    -- Report at least 10 percent at all times to provide immediate loading feedback.
     max
         10
         (100
-            * toFloat (List.length model.fetchedPapers)
-            / (toFloat (List.length model.fetchedPapers) + toFloat (List.length model.unfetchedDOIs))
+            * (model |> numberFetchedPapers |> toFloat)
+            / (model.initialDOIs |> List.length |> toFloat)
         )
 
 
