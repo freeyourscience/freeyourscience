@@ -36,7 +36,7 @@ def score(articleVersion, location, embargo):
 
 
 if __name__ == "__main__":
-    policies = [
+    pathways = [
         ("published", "any_repository", "no_embargo"),
         ("submitted", "this_journal", "embargo"),
         ("accepted", "any_repository", "expired_embargo"),
@@ -49,12 +49,12 @@ if __name__ == "__main__":
         ("submitted", "any_repository", "no_embargo"),
     ]
 
-    policies = list(
+    pathways = list(
         itertools.product(ARTICLE_VERSIONS.keys(), LOCATIONS.keys(), EMBARGOS.keys())
     )
 
-    scored_policies = [(p, score(*p)) for p in policies]
-    scored_policies = sorted(scored_policies, key=lambda sp: sp[1], reverse=True)
+    scored_pathways = [(p, score(*p)) for p in pathways]
+    scored_pathways = sorted(scored_pathways, key=lambda sp: sp[1], reverse=True)
 
-    for p, s in scored_policies:
+    for p, s in scored_pathways:
         print(f"{s} {p}")
