@@ -52,6 +52,7 @@ class FullPaper(BaseModel):
     year: Optional[int] = None
     issn: Optional[str] = None
     is_open_access: Optional[bool] = None
+    oa_location_url: Optional[str] = None
     oa_pathway: Optional[OAPathway] = None
     oa_pathway_uri: Optional[str] = None
     oa_pathway_details: Optional[List[dict]] = None

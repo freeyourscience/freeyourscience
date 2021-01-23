@@ -79,6 +79,16 @@ def get_paper(doi: str, email: Optional[str] = None) -> Optional[FullPaper]:
     if paper is None:
         return None
 
+    oa_location_url = None
+    if paper.best_oa_location is not None:
+        oa_location_url = paper.best_oa_location.get(
+            "url",
+            paper.best_oa_location.get(
+                "url_for_pdf",
+                None,
+            ),
+        )
+
     return FullPaper(
         doi=doi,
         issn=paper.journal_issn_l,
@@ -87,4 +97,5 @@ def get_paper(doi: str, email: Optional[str] = None) -> Optional[FullPaper]:
         year=paper.year,
         journal=paper.journal_name,
         authors=_extract_authors(paper.z_authors) if paper.z_authors else None,
+        oa_location_url=oa_location_url,
     )

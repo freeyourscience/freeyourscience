@@ -32,6 +32,7 @@ def _construct_paper(
     journal = paper.journal
     year = paper.year
     authors = paper.authors
+    oa_location_url = paper.oa_location_url
 
     paper = PaperWithOAStatus(
         doi=doi, issn=paper.issn, is_open_access=paper.is_open_access
@@ -45,7 +46,12 @@ def _construct_paper(
     # TODO: Add this title straight away, but this requires moving to support FullPaper
     #       in all places (most notably oa_pathway)
     paper = FullPaper(
-        title=title, journal=journal, authors=authors, year=year, **paper.dict()
+        title=title,
+        journal=journal,
+        authors=authors,
+        year=year,
+        oa_location_url=oa_location_url,
+        **paper.dict(),
     )
 
     return paper

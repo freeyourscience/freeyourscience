@@ -75,8 +75,13 @@ def get_paper(paper_id: str, api_key: str = None) -> Optional[FullPaper]:
     if paper is None or paper.doi is None:
         return None
 
+    oa_location_url = paper.url if paper.is_open_access else None
+
     return FullPaper(
-        doi=paper.doi, is_open_access=paper.is_open_access, title=paper.title
+        doi=paper.doi,
+        is_open_access=paper.is_open_access,
+        title=paper.title,
+        oa_location_url=oa_location_url,
     )
 
 
