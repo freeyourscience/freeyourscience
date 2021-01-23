@@ -103,7 +103,6 @@ update msg model =
             , Cmd.none
             )
 
-        -- TODO: add the erroneous dois as well?
         GotPaper (Err _) ->
             ( model
             , Cmd.none
