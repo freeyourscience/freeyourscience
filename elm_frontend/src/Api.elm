@@ -60,7 +60,7 @@ policyDetailsDecoder =
         |> required "urls" (D.nullable (D.list namedUrlDecoder))
         |> required "permitted_oa" (D.nullable (D.list permittedOADecoder))
         |> required "uri" D.string
-        |> optional "notes" (D.nullable D.string) Nothing
+        |> optional "public_notes" (D.nullable D.string) Nothing
 
 
 paperDecoder : Decoder BackendPaper
