@@ -1,13 +1,20 @@
 from copy import deepcopy
-from typing import Optional
+from typing import Optional, Union
 
-from fyscience.schemas import OAPathway, PaperWithOAStatus, PaperWithOAPathway
+from fyscience.schemas import (
+    OAPathway,
+    PaperWithOAStatus,
+    PaperWithOAPathway,
+    FullPaper,
+)
 from fyscience.sherpa import get_pathway as sherpa_pathway_api
 
 
 def oa_pathway(
-    paper: PaperWithOAStatus, cache=None, api_key: Optional[str] = None
-) -> PaperWithOAPathway:
+    paper: Union[PaperWithOAStatus, FullPaper],
+    cache=None,
+    api_key: Optional[str] = None,
+) -> Union[PaperWithOAStatus, FullPaper]:
     """Enrich a given paper with information about the available open access pathway
     collected from the Sherpa API.
 
@@ -27,12 +34,18 @@ def oa_pathway(
         else:
             pathway, pathway_uri, details = sherpa_pathway_api(paper.issn, api_key)
 
-    return PaperWithOAPathway(
-        oa_pathway=pathway,
-        oa_pathway_uri=pathway_uri,
-        oa_pathway_details=details,
-        **paper.dict()
-    )
+    if isinstance(paper, PaperWithOAStatus):
+        return PaperWithOAPathway(
+            oa_pathway=pathway,
+            oa_pathway_uri=pathway_uri,
+            oa_pathway_details=details,
+            **paper.dict()
+        )
+    else:
+        paper.oa_pathway = pathway
+        paper.oa_pathway_uri = pathway_uri
+        paper.oa_pathway_details = details
+        return paper
 
 
 def remove_costly_oa_from_publisher_policy(policy: dict) -> dict:

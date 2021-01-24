@@ -25,7 +25,7 @@ def _construct_paper(
 ) -> FullPaper:
 
     paper = unpaywall_get_paper(doi=doi, email=unpaywall_email)
-    if paper is None or paper.issn is None:
+    if paper is None or paper.issn is None and not paper.is_open_access:
         logger.warning(
             {
                 "message": "unknown_doi",
@@ -36,15 +36,6 @@ def _construct_paper(
         )
         return FullPaper(doi=doi)
 
-    title = paper.title
-    journal = paper.journal
-    year = paper.year
-    authors = paper.authors
-    oa_location_url = paper.oa_location_url
-
-    paper = PaperWithOAStatus(
-        doi=doi, issn=paper.issn, is_open_access=paper.is_open_access
-    )
     # TODO: Don't do this twice if the author papers already have the s2 status
     #       Potentially move towards an enrich as opposed to a construct approach
     paper = validate_oa_status_from_s2(paper, s2_api_key)
@@ -59,17 +50,6 @@ def _construct_paper(
                 "paper": json.dumps(paper.dict()),
             }
         )
-
-    # TODO: Add this title straight away, but this requires moving to support FullPaper
-    #       in all places (most notably oa_pathway)
-    paper = FullPaper(
-        title=title,
-        journal=journal,
-        authors=authors,
-        year=year,
-        oa_location_url=oa_location_url,
-        **paper.dict(),
-    )
 
     return paper
 
