@@ -25,16 +25,19 @@ def _construct_paper(
 ) -> FullPaper:
 
     paper = unpaywall_get_paper(doi=doi, email=unpaywall_email)
-    if paper is None or paper.issn is None and not paper.is_open_access:
+    if paper is None:
+        paper = FullPaper(doi=doi)
+
+    if paper.issn is None and not paper.is_open_access:
         logger.warning(
             {
-                "message": "unknown_doi",
+                "message": "no_issn_for_paywalled_pub",
                 "provider": "unpaywall",
                 "doi": doi,
                 "paper": json.dumps(paper.dict()),
             }
         )
-        return FullPaper(doi=doi)
+        return paper
 
     # TODO: Don't do this twice if the author papers already have the s2 status
     #       Potentially move towards an enrich as opposed to a construct approach
