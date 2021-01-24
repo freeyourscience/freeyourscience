@@ -276,19 +276,20 @@ parsePolicies policies =
 scoreNoCostPathway : NoCostOaPathway -> Float
 scoreNoCostPathway pathway =
     let
-        version_score =
+        versionScore =
             pathway.articleVersions
                 |> List.map scoreAllowedVersion
                 |> List.maximum
                 |> Maybe.withDefault 0
 
-        location_score =
-            pathway.locations
-                |> List.map scoreAllowedLocation
-                |> List.maximum
+        -- TODO: These locations are already parsed into their human readable form and therefore impossible to score like this
+        locationScore =
+            pathway.sortedLocations
+                |> List.head
+                |> Maybe.map scoreAllowedLocation
                 |> Maybe.withDefault 0
     in
-    version_score + location_score
+    versionScore + locationScore
 
 
 scoreAllowedVersion : String -> Float
@@ -396,7 +397,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
 
             _ ->
                 Just articleVersions
-    , locations = location |> parseAndSortLocations
+    , sortedLocations = location |> parseAndSortLocations
     , prerequisites = prerequisites |> Maybe.map parsePrequisites
     , conditions = conditions
     , additionalOaFee = additionalOaFee
@@ -412,7 +413,7 @@ noCostOaPathway ( metadata, pathway ) =
             Just
                 ( metadata
                 , { articleVersions = articleVersions
-                  , locations = pathway.locations
+                  , sortedLocations = pathway.sortedLocations
                   , prerequisites = pathway.prerequisites
                   , conditions = pathway.conditions
                   , embargo = pathway.embargo

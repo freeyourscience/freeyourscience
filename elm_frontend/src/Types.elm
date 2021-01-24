@@ -78,7 +78,7 @@ type alias PolicyMetaData =
 
 type alias NoCostOaPathway =
     { articleVersions : List String
-    , locations : List String
+    , sortedLocations : List String
     , prerequisites : Maybe (List String)
     , conditions : Maybe (List String)
     , embargo : Maybe String
@@ -88,7 +88,7 @@ type alias NoCostOaPathway =
 
 type alias Pathway =
     { additionalOaFee : String
-    , locations : List String
+    , sortedLocations : List String
     , articleVersions : Maybe (List String)
     , conditions : Maybe (List String)
     , prerequisites : Maybe (List String)

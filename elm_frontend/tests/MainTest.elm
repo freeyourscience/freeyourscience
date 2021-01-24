@@ -13,7 +13,7 @@ recommendedPathway =
       , notes = Just "Notes about this policy"
       }
     , { articleVersions = [ "submitted" ]
-      , locations = [ "Non-commercial repositories", "PubMed Central", "Author's homepage", "Academic social networks" ]
+      , sortedLocations = [ "Non-commercial repositories", "PubMed Central", "Author's homepage", "Academic social networks" ]
       , prerequisites = Just [ "If Required by Funder" ]
       , embargo = Just "12 months"
       , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
@@ -71,7 +71,7 @@ suite =
                 let
                     liberal_pathway =
                         { articleVersions = [ "published" ]
-                        , locations = [ "any_repository" ]
+                        , sortedLocations = [ "any_repository" ]
                         , prerequisites = Nothing
                         , conditions = Nothing
                         , embargo = Nothing
@@ -80,7 +80,7 @@ suite =
 
                     restrictive_pathway =
                         { articleVersions = [ "submitted" ]
-                        , locations = [ "this_journal" ]
+                        , sortedLocations = [ "this_journal" ]
                         , prerequisites = Nothing
                         , conditions = Nothing
                         , embargo = Nothing

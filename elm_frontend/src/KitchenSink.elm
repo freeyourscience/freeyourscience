@@ -56,7 +56,7 @@ freePathwayPaper1 =
           , notes = Just "Policy notes are awesome"
           }
         , { articleVersions = [ "submitted", "accepted" ]
-          , locations = [ "Author's homepage", "Preprint Server" ]
+          , sortedLocations = [ "Author's homepage", "Preprint server" ]
           , prerequisites = Just [ "Prerequisite to take care of", "Another prerequisite" ]
           , conditions = Just [ "Condition one", "Second condition", "Third condition" ]
           , embargo = Just "Wait for the day of doom and then two days more"
@@ -90,7 +90,7 @@ freePathwayPaper2 =
           , notes = Just "Policy notes are awesome"
           }
         , { articleVersions = [ "submitted", "accepted", "published" ]
-          , locations = [ "Author's homepage", "Preprint Server" ]
+          , sortedLocations = [ "Author's homepage", "Preprint server" ]
           , prerequisites = Just [ "Prerequisite to take care of", "Another prerequisite" ]
           , conditions = Just [ "Condition one", "Second condition", "Third condition" ]
           , embargo = Just "Wait for the day of doom and then two days more"
