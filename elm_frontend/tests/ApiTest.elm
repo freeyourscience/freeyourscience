@@ -30,7 +30,7 @@ fullPaperJson =
                     "url": "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf"
                 }
             ],
-            "notes": "Notes about this policy",
+            "public_notes": "Notes about this policy",
             "permitted_oa": [
                 {
                     "additional_oa_fee": "no",
