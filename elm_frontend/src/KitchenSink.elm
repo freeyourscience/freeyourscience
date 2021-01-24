@@ -70,7 +70,7 @@ freePathwayPaper1 =
 freePathwayPaper2 : FreePathwayPaper
 freePathwayPaper2 =
     { doi = "10.123/1010-4321"
-    , title = Just "Hidden pub with the best title"
+    , title = Just "Hidden pub with submitted, accepted and published versions allowed"
     , journal = Just "Paywall Inc."
     , authors = Just "Ronald Snape et al."
     , year = Just 1990
@@ -89,7 +89,7 @@ freePathwayPaper2 =
                     ]
           , notes = Just "Policy notes are awesome"
           }
-        , { articleVersions = [ "submitted", "accepted" ]
+        , { articleVersions = [ "submitted", "accepted", "published" ]
           , locations = [ "Author's homepage", "Preprint Server" ]
           , prerequisites = Just [ "Prerequisite to take care of", "Another prerequisite" ]
           , conditions = Just [ "Condition one", "Second condition", "Third condition" ]

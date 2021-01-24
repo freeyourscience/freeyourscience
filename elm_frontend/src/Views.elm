@@ -233,11 +233,17 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locations, articleVersions
 
                 _ ->
                     Nothing
+
+        articleVersion =
+            articleVersions
+                |> List.filter (\v -> v == "published")
+                |> List.head
+                |> Maybe.withDefault (String.join " or " articleVersions)
     in
     List.concat
         [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
         , locations
-            |> ulWithHeading ("upload the " ++ String.join " or " articleVersions ++ " version to any of the following:") text
+            |> ulWithHeading ("upload the " ++ articleVersion ++ " version to any of the following:") text
         , [ p [] [ text " You don't have pay a fee to do this." ] ]
         , prerequisites
             |> addEmbargo embargo
