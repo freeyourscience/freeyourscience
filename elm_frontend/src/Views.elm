@@ -217,7 +217,7 @@ renderPathwayButtons pathwayIsVisible ( id, title ) =
 
 
 renderRecommendedPathway : String -> ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
-renderRecommendedPathway journalPolicyUrl ( policy, { sortedLocations, articleVersions, prerequisites, conditions, embargo, notes } ) =
+renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, articleVersions, prerequisites, conditions, embargo, notes } ) =
     let
         addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
         addEmbargo emb prereqs =
@@ -242,7 +242,7 @@ renderRecommendedPathway journalPolicyUrl ( policy, { sortedLocations, articleVe
     in
     List.concat
         [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
-        , sortedLocations
+        , locationLabelsSorted
             |> List.take 3
             |> ulWithHeading ("upload the " ++ articleVersion ++ " version to any of the following:") text
         , [ p [] [ text " You don't have pay a fee to do this." ] ]

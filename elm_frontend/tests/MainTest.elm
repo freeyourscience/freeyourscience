@@ -1,7 +1,7 @@
 module MainTest exposing (..)
 
 import Expect
-import Main exposing (parsePolicies, scoreNoCostPathway)
+import Main exposing (parsePolicies, scorePathway)
 import Test exposing (Test, describe, test)
 import Types exposing (..)
 
@@ -13,7 +13,7 @@ recommendedPathway =
       , notes = Just "Notes about this policy"
       }
     , { articleVersions = [ "submitted" ]
-      , sortedLocations = [ "Non-commercial repositories", "PubMed Central", "Author's homepage", "Academic social networks" ]
+      , locationLabelsSorted = [ "Non-commercial repositories", "PubMed Central", "Author's homepage", "Academic social networks" ]
       , prerequisites = Just [ "If Required by Funder" ]
       , embargo = Just "12 months"
       , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
@@ -69,24 +69,32 @@ suite =
         , describe "scoreNoCostPathway"
             [ test "relative score example" <|
                 let
-                    liberal_pathway =
-                        { articleVersions = [ "published" ]
-                        , sortedLocations = [ "any_repository" ]
+                    liberalPathway =
+                        { articleVersions = Just [ "published" ]
+                        , sortedLocation =
+                            { location = [ "any_repository" ]
+                            , namedRepository = Nothing
+                            }
+                        , additionalOaFee = "no"
                         , prerequisites = Nothing
                         , conditions = Nothing
                         , embargo = Nothing
                         , notes = Nothing
                         }
 
-                    restrictive_pathway =
-                        { articleVersions = [ "submitted" ]
-                        , sortedLocations = [ "this_journal" ]
+                    restrictivePathway =
+                        { articleVersions = Just [ "submitted" ]
+                        , sortedLocation =
+                            { location = [ "this_journal" ]
+                            , namedRepository = Nothing
+                            }
+                        , additionalOaFee = "no"
                         , prerequisites = Nothing
                         , conditions = Nothing
                         , embargo = Nothing
                         , notes = Nothing
                         }
                 in
-                \_ -> Expect.greaterThan (scoreNoCostPathway restrictive_pathway) (scoreNoCostPathway liberal_pathway)
+                \_ -> Expect.greaterThan (scorePathway restrictivePathway) (scorePathway liberalPathway)
             ]
         ]

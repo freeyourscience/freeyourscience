@@ -264,27 +264,27 @@ parsePolicies policies =
     -- TODO: move scoring extraction & construction into locally scoped function
     policies
         |> flattenPolicies
+        |> List.map (\( metadata, pathway ) -> ( scorePathway pathway, ( metadata, pathway ) ))
+        |> List.sortBy Tuple.first
+        |> List.reverse
+        |> List.map Tuple.second
         |> List.map noCostOaPathway
         |> List.filterMap identity
-        |> List.map (\( metadata, pathway ) -> ( scoreNoCostPathway pathway, ( metadata, pathway ) ))
-        |> List.sortBy Tuple.first
-        |> List.map Tuple.second
-        |> List.reverse
         |> List.head
 
 
-scoreNoCostPathway : NoCostOaPathway -> Float
-scoreNoCostPathway pathway =
+scorePathway : Pathway -> Float
+scorePathway pathway =
     let
         versionScore =
             pathway.articleVersions
+                |> Maybe.withDefault []
                 |> List.map scoreAllowedVersion
                 |> List.maximum
                 |> Maybe.withDefault 0
 
-        -- TODO: These locations are already parsed into their human readable form and therefore impossible to score like this
         locationScore =
-            pathway.sortedLocations
+            pathway.sortedLocation.location
                 |> List.head
                 |> Maybe.map scoreAllowedLocation
                 |> Maybe.withDefault 0
@@ -397,7 +397,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
 
             _ ->
                 Just articleVersions
-    , sortedLocations = location |> parseAndSortLocations
+    , sortedLocation = { location | location = location.location |> List.sortBy scoreAllowedLocation |> List.reverse }
     , prerequisites = prerequisites |> Maybe.map parsePrequisites
     , conditions = conditions
     , additionalOaFee = additionalOaFee
@@ -413,7 +413,7 @@ noCostOaPathway ( metadata, pathway ) =
             Just
                 ( metadata
                 , { articleVersions = articleVersions
-                  , sortedLocations = pathway.sortedLocations
+                  , locationLabelsSorted = humanizeLocations pathway.sortedLocation
                   , prerequisites = pathway.prerequisites
                   , conditions = pathway.conditions
                   , embargo = pathway.embargo
@@ -439,11 +439,9 @@ parsePrequisites { prerequisites_phrases } =
         |> List.map (\item -> item.phrase)
 
 
-parseAndSortLocations : BackendLocation -> List String
-parseAndSortLocations { location, namedRepository } =
+humanizeLocations : BackendLocation -> List String
+humanizeLocations { location, namedRepository } =
     location
-        |> List.sortBy scoreAllowedLocation
-        |> List.reverse
         |> List.map humanize
         |> List.map
             (\loc ->
