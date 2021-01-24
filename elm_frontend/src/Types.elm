@@ -82,7 +82,7 @@ type alias NoCostOaPathway =
     , prerequisites : Maybe (List String)
     , conditions : Maybe (List String)
     , embargo : Maybe String
-    , notes : Maybe String
+    , notes : Maybe (List String)
     }
 
 
@@ -93,7 +93,7 @@ type alias Pathway =
     , conditions : Maybe (List String)
     , prerequisites : Maybe (List String)
     , embargo : Maybe String
-    , notes : Maybe String
+    , notes : Maybe (List String)
     }
 
 
@@ -145,7 +145,7 @@ type alias BackendPermittedOA =
     , conditions : Maybe (List String)
     , prerequisites : Maybe BackendPrerequisites
     , embargo : Maybe BackendEmbargo
-    , publicNotes : Maybe String
+    , publicNotes : Maybe (List String)
     }
 
 

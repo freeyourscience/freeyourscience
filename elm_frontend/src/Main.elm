@@ -4,6 +4,7 @@ import Animation exposing (percent)
 import Api exposing (..)
 import Array exposing (..)
 import Browser
+import Debug
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (..)
@@ -104,7 +105,11 @@ update msg model =
             , Cmd.none
             )
 
-        GotPaper (Err _) ->
+        GotPaper (Err error) ->
+            let
+                _ =
+                    Debug.log "Error in GotPaper" error
+            in
             ( { model | numFailedDOIRequests = model.numFailedDOIRequests + 1 }
             , Cmd.none
             )

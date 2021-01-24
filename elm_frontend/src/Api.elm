@@ -52,7 +52,7 @@ permittedOADecoder =
         |> optional "conditions" (D.nullable (D.list D.string)) Nothing
         |> optional "prerequisites" (D.nullable prerequisitesDecoder) Nothing
         |> optional "embargo" (D.nullable embargoDecoder) Nothing
-        |> optional "public_notes" (D.nullable D.string) Nothing
+        |> optional "public_notes" (D.nullable (D.list D.string)) Nothing
 
 
 policyDetailsDecoder : Decoder BackendPolicy
