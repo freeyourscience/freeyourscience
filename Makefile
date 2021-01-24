@@ -1,7 +1,9 @@
 .PHONY: elm build-dev dev lint prod release test
 
 elm:
-	cd elm_frontend && elm make src/Main.elm --output ../fyscience/static/authorPapers.js 
+	cd elm_frontend \
+		&& elm make src/Main.elm --output ../fyscience/static/authorPapers.js \
+		&& elm make src/KitchenSink.elm --output dist/kitchenSink.js
 
 elm-test:
 	cd elm_frontend && npx elm-test
