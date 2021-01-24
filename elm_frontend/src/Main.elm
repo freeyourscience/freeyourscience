@@ -407,12 +407,12 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
 
 noCostOaPathway : ( PolicyMetaData, Pathway ) -> Maybe ( PolicyMetaData, NoCostOaPathway )
 noCostOaPathway ( metadata, pathway ) =
-    case ( pathway.additionalOaFee, pathway.locations, pathway.articleVersions ) of
-        ( "no", Just locations, Just articleVersions ) ->
+    case ( pathway.additionalOaFee, pathway.articleVersions ) of
+        ( "no", Just articleVersions ) ->
             Just
                 ( metadata
                 , { articleVersions = articleVersions
-                  , locations = locations
+                  , locations = pathway.locations
                   , prerequisites = pathway.prerequisites
                   , conditions = pathway.conditions
                   , embargo = pathway.embargo
@@ -438,7 +438,7 @@ parsePrequisites { prerequisites_phrases } =
         |> List.map (\item -> item.phrase)
 
 
-parseAndSortLocations : BackendLocation -> Maybe (List String)
+parseAndSortLocations : BackendLocation -> List String
 parseAndSortLocations { location, namedRepository } =
     location
         |> List.sortBy scoreAllowedLocation
@@ -468,4 +468,3 @@ parseAndSortLocations { location, namedRepository } =
                     _ ->
                         loc
             )
-        |> Just
