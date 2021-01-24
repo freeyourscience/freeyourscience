@@ -17,6 +17,7 @@ recommendedPathway =
       , prerequisites = Just [ "If Required by Funder" ]
       , embargo = Just "12 months"
       , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
+      , notes = Just "Pathway specific notes"
       }
     )
 
@@ -49,6 +50,7 @@ pathwayDetails =
                                   }
                                 ]
                             }
+                  , publicNotes = Just "Pathway specific notes"
                   }
                 ]
       , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
@@ -73,6 +75,7 @@ suite =
                         , prerequisites = Nothing
                         , conditions = Nothing
                         , embargo = Nothing
+                        , notes = Nothing
                         }
 
                     restrictive_pathway =
@@ -81,6 +84,7 @@ suite =
                         , prerequisites = Nothing
                         , conditions = Nothing
                         , embargo = Nothing
+                        , notes = Nothing
                         }
                 in
                 \_ -> Expect.greaterThan (scoreNoCostPathway restrictive_pathway) (scoreNoCostPathway liberal_pathway)

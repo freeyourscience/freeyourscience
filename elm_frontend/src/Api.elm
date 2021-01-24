@@ -52,6 +52,7 @@ permittedOADecoder =
         |> optional "conditions" (D.nullable (D.list D.string)) Nothing
         |> optional "prerequisites" (D.nullable prerequisitesDecoder) Nothing
         |> optional "embargo" (D.nullable embargoDecoder) Nothing
+        |> optional "public_notes" (D.nullable D.string) Nothing
 
 
 policyDetailsDecoder : Decoder BackendPolicy
@@ -60,7 +61,7 @@ policyDetailsDecoder =
         |> required "urls" (D.nullable (D.list namedUrlDecoder))
         |> required "permitted_oa" (D.nullable (D.list permittedOADecoder))
         |> required "uri" D.string
-        |> optional "public_notes" (D.nullable D.string) Nothing
+        |> optional "notes" (D.nullable D.string) Nothing
 
 
 paperDecoder : Decoder BackendPaper

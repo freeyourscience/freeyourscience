@@ -7,7 +7,6 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (..)
-import Json.Encode exposing (float)
 import Types exposing (..)
 import Utils exposing (..)
 import Views exposing (..)
@@ -256,6 +255,7 @@ toPaper backendPaper =
 
 parsePolicies : List BackendPolicy -> Maybe ( PolicyMetaData, NoCostOaPathway )
 parsePolicies policies =
+    -- TODO: move scoring extraction & construction into locally scoped function
     policies
         |> flattenPolicies
         |> List.map noCostOaPathway
@@ -377,7 +377,7 @@ extractPathways backendPolicy =
 
 
 parsePathway : BackendPermittedOA -> Pathway
-parsePathway { articleVersions, location, prerequisites, conditions, additionalOaFee, embargo } =
+parsePathway { articleVersions, location, prerequisites, conditions, additionalOaFee, embargo, publicNotes } =
     let
         embargoToString : BackendEmbargo -> String
         embargoToString { amount, units } =
@@ -395,6 +395,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
     , conditions = conditions
     , additionalOaFee = additionalOaFee
     , embargo = embargo |> Maybe.map embargoToString
+    , notes = publicNotes
     }
 
 
@@ -409,6 +410,7 @@ noCostOaPathway ( metadata, pathway ) =
                   , prerequisites = pathway.prerequisites
                   , conditions = pathway.conditions
                   , embargo = pathway.embargo
+                  , notes = pathway.notes
                   }
                 )
 

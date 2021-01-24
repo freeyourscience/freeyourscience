@@ -30,10 +30,11 @@ fullPaperJson =
                     "url": "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf"
                 }
             ],
-            "public_notes": "Notes about this policy",
+            "notes": "Notes about this policy",
             "permitted_oa": [
                 {
                     "additional_oa_fee": "no",
+                    "public_notes": "pathway notes",
                     "embargo": {
                         "amount":12,
                         "units_phrases": [
@@ -158,6 +159,7 @@ fullPaperElm =
                           , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
                           , prerequisites = Nothing
                           , embargo = Just { amount = 12, units = "months" }
+                          , publicNotes = Just "pathway notes"
                           }
                         ]
               , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
