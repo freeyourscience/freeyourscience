@@ -217,7 +217,7 @@ renderPathwayButtons pathwayIsVisible ( id, title ) =
 
 
 renderRecommendedPathway : String -> ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
-renderRecommendedPathway journalPolicyUrl ( { profileUrl, additionalUrls, notes }, { locations, articleVersions, prerequisites, conditions, embargo } ) =
+renderRecommendedPathway journalPolicyUrl ( policy, { locations, articleVersions, prerequisites, conditions, embargo, notes } ) =
     let
         addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
         addEmbargo emb prereqs =
@@ -246,12 +246,15 @@ renderRecommendedPathway journalPolicyUrl ( { profileUrl, additionalUrls, notes 
         , conditions
             |> Maybe.map (ulWithHeading "Conditions are:" text)
             |> Maybe.withDefault [ text "" ]
-        , additionalUrls
+        , notes
+            |> Maybe.map (ulWithHeading "Notes regarding this pathway:" text)
+            |> Maybe.withDefault [ text "" ]
+        , policy.additionalUrls
             |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
             |> Maybe.withDefault [ text "" ]
         , [ p []
-                [ notes
-                    |> Maybe.map (String.append "They also note: ")
+                [ policy.notes
+                    |> Maybe.map (String.append "Regarding the policy they note: ")
                     |> Maybe.withDefault ""
                     |> text
                 ]
