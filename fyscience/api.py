@@ -1,7 +1,7 @@
-from typing import List
+import json
 import re
 
-from fastapi import APIRouter, Header, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
@@ -26,6 +26,14 @@ def _construct_paper(
 
     paper = unpaywall_get_paper(doi=doi, email=unpaywall_email)
     if paper is None or paper.issn is None:
+        logger.warning(
+            {
+                "message": "unknown_doi",
+                "provider": "unpaywall",
+                "doi": doi,
+                "paper": json.dumps(paper.dict()),
+            }
+        )
         return FullPaper(doi=doi)
 
     title = paper.title
@@ -42,6 +50,15 @@ def _construct_paper(
     paper = validate_oa_status_from_s2(paper, s2_api_key)
 
     paper = oa_pathway(paper=paper, api_key=sherpa_api_key)
+    if paper.oa_pathway is OAPathway.not_found:
+        logger.warning(
+            {
+                "message": "no_policy_for_issn",
+                "provider": "sherpa",
+                "issn": paper.issn,
+                "paper": json.dumps(paper.dict()),
+            }
+        )
 
     # TODO: Add this title straight away, but this requires moving to support FullPaper
     #       in all places (most notably oa_pathway)
