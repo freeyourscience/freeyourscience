@@ -8,6 +8,7 @@ import Debug
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (..)
+import String.Extra exposing (humanize)
 import Types exposing (..)
 import Utils exposing (..)
 import Views exposing (..)
@@ -395,7 +396,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
 
             _ ->
                 Just articleVersions
-    , locations = location |> parseLocations
+    , locations = location |> parseAndSortLocations
     , prerequisites = prerequisites |> Maybe.map parsePrequisites
     , conditions = conditions
     , additionalOaFee = additionalOaFee
@@ -437,31 +438,34 @@ parsePrequisites { prerequisites_phrases } =
         |> List.map (\item -> item.phrase)
 
 
-parseLocations : BackendLocation -> Maybe (List String)
-parseLocations { location, namedRepository } =
-    let
-        locations =
-            List.concat [ location, Maybe.withDefault [] namedRepository ]
-                |> List.filter (\loc -> loc /= "named_repository")
-                |> List.map
-                    (\loc ->
-                        case loc of
-                            "academic_social_network" ->
-                                "Academic Social Networks"
+parseAndSortLocations : BackendLocation -> Maybe (List String)
+parseAndSortLocations { location, namedRepository } =
+    location
+        |> List.sortBy scoreAllowedLocation
+        |> List.reverse
+        |> List.map humanize
+        |> List.map
+            (\loc ->
+                case ( loc, namedRepository ) of
+                    ( "Named repository", Just repositoryNames ) ->
+                        String.join " or " repositoryNames
 
-                            "non_commercial_repository" ->
-                                "Non-commercial Repositories"
+                    _ ->
+                        loc
+            )
+        |> List.map
+            (\loc ->
+                case loc of
+                    "Non commercial repository" ->
+                        "Non-commercial repositories"
 
-                            "authors_homepage" ->
-                                "Author's Homepage"
+                    "Authors homepage" ->
+                        "Author's homepage"
 
-                            a ->
-                                String.replace "_" " " a
-                    )
-    in
-    case locations of
-        [] ->
-            Nothing
+                    "Academic social network" ->
+                        "Academic social networks"
 
-        _ ->
-            Just locations
+                    _ ->
+                        loc
+            )
+        |> Just
