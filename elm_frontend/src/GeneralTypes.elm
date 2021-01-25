@@ -1,4 +1,7 @@
-module GeneralTypes exposing (DOI, NamedUrl, PaperMetadata)
+module GeneralTypes exposing (DOI, NamedUrl, PaperMetadata, renderUrl)
+
+import Html exposing (Html, a, text)
+import Html.Attributes exposing (class, href)
 
 
 type alias DOI =
@@ -19,3 +22,8 @@ type alias NamedUrl =
     { description : String
     , url : String
     }
+
+
+renderUrl : NamedUrl -> Html msg
+renderUrl { url, description } =
+    a [ href url, class "link", class "link-secondary" ] [ text description ]
