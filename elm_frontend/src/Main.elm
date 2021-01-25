@@ -6,7 +6,7 @@ import BackendPaper exposing (BackendPaper, paperDecoder)
 import Browser
 import Browser.Events exposing (Visibility(..))
 import Debug
-import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, parsePolicies)
+import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
 import GeneralTypes exposing (DOI, NamedUrl)
 import Html exposing (..)
 import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
@@ -195,7 +195,7 @@ classifyPaper backendPaper model =
                 backendPaper.oaPathwayURI
 
         recommendedPathway =
-            Maybe.andThen parsePolicies backendPaper.pathwayDetails
+            Maybe.andThen recommendPathway backendPaper.pathwayDetails
     in
     case ( isOpenAccess, oaPathway, recommendedPathway ) of
         ( Just False, Just ( "nocost", pwUri ), Just pathway ) ->

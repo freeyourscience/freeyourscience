@@ -1,7 +1,7 @@
 module Paper exposing (OtherPathwayPaper, Paper, toPaper)
 
 import BackendPaper exposing (BackendPaper)
-import FreePathwayPaper exposing (NoCostOaPathway, PolicyMetaData, parsePolicies)
+import FreePathwayPaper exposing (NoCostOaPathway, PolicyMetaData, recommendPathway)
 import GeneralTypes exposing (DOI)
 
 
@@ -49,5 +49,5 @@ toPaper backendPaper =
     , isOpenAccess = backendPaper.isOpenAccess
     , oaPathway = backendPaper.oaPathway
     , oaPathwayURI = backendPaper.oaPathwayURI
-    , recommendedPathway = Maybe.andThen parsePolicies backendPaper.pathwayDetails
+    , recommendedPathway = Maybe.andThen recommendPathway backendPaper.pathwayDetails
     }

@@ -1,4 +1,4 @@
-module FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, Pathway, PolicyMetaData, parsePolicies)
+module FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, Pathway, PolicyMetaData, recommendPathway)
 
 import BackendPaper exposing (BackendEmbargo, BackendLocation, BackendPermittedOA, BackendPolicy, BackendPrerequisites)
 import GeneralTypes exposing (DOI, NamedUrl)
@@ -54,8 +54,8 @@ type alias Pathway =
 -- Select no-cost-oa-pathway
 
 
-parsePolicies : List BackendPolicy -> Maybe ( PolicyMetaData, NoCostOaPathway )
-parsePolicies policies =
+recommendPathway : List BackendPolicy -> Maybe ( PolicyMetaData, NoCostOaPathway )
+recommendPathway policies =
     -- TODO: move scoring extraction & construction into locally scoped function
     policies
         |> flattenPolicies
