@@ -1,4 +1,4 @@
-module Paper exposing (OtherPathwayPaper, Paper, toPaper)
+module Paper exposing (BuggyPaper, OtherPathwayPaper, Paper, toPaper)
 
 import BackendPaper exposing (BackendPaper)
 import FreePathwayPaper exposing (NoCostOaPathway, PolicyMetaData, recommendPathway)
@@ -26,6 +26,13 @@ type alias Paper =
 type alias OtherPathwayPaper =
     { meta : PaperMetadata
     , oaPathwayURI : String
+    }
+
+
+type alias BuggyPaper =
+    { doi : DOI
+    , journal : Maybe String
+    , oaPathway : Maybe String
     }
 
 

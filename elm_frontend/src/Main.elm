@@ -13,7 +13,7 @@ import Html.Attributes exposing (alt, class, height, href, src, target, title, w
 import Html.Events exposing (..)
 import Http
 import HttpBuilder exposing (withHeader)
-import Paper exposing (OtherPathwayPaper, Paper, toPaper)
+import Paper exposing (BuggyPaper, OtherPathwayPaper, Paper, toPaper)
 
 
 type alias Model =
@@ -21,7 +21,7 @@ type alias Model =
     , freePathwayPapers : Array FreePathwayPaper
     , otherPathwayPapers : List OtherPathwayPaper
     , openAccessPapers : List Paper
-    , buggyPapers : List Paper
+    , buggyPapers : List BuggyPaper
     , numFailedDOIRequests : Int
     , authorName : String
     , authorProfileURL : String
@@ -108,9 +108,6 @@ view model =
 
         openAccessPapers =
             List.sortWith optionalYearComparison model.openAccessPapers
-
-        buggyPapers =
-            List.sortWith optionalYearComparison model.buggyPapers
     in
     div []
         [ span
@@ -122,7 +119,7 @@ view model =
             [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
             , renderNonFreePolicyPapers nonFreePolicyPapers
             , renderOpenAccessPapers openAccessPapers
-            , renderBuggyPapers buggyPapers
+            , renderBuggyPapers model.buggyPapers
             ]
         , renderFooter model.authorProfileURL
         ]
@@ -230,7 +227,7 @@ classifyPaper backendPaper model =
             { model | openAccessPapers = model.openAccessPapers ++ [ toPaper backendPaper ] }
 
         _ ->
-            { model | buggyPapers = model.buggyPapers ++ [ toPaper backendPaper ] }
+            { model | buggyPapers = model.buggyPapers ++ [ BuggyPaper backendPaper.doi backendPaper.journal backendPaper.oaPathway ] }
 
 
 
@@ -593,7 +590,7 @@ renderOpenAccessPapers papers =
         ]
 
 
-renderBuggyPapers : List Paper -> Html Msg
+renderBuggyPapers : List BuggyPaper -> Html Msg
 renderBuggyPapers papers =
     if List.isEmpty papers then
         text ""
