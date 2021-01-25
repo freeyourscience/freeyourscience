@@ -14,8 +14,8 @@ import Html.Events exposing (onClick)
 import HtmlUtils exposing (ulWithHeading)
 import Http
 import HttpBuilder exposing (withHeader)
-import OpenAccessPaper as OpenAccessPaper exposing (OpenAccessPaper)
-import OtherPathwayPaper as OtherPathwayPaper exposing (OtherPathwayPaper)
+import OpenAccessPaper exposing (OpenAccessPaper)
+import OtherPathwayPaper exposing (OtherPathwayPaper)
 
 
 type alias Model =
