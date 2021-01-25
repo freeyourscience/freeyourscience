@@ -15,7 +15,7 @@ import HtmlUtils exposing (ulWithHeading)
 import Http
 import HttpBuilder exposing (withHeader)
 import OpenAccessPaper as OpenAccessPaper exposing (OpenAccessPaper)
-import OtherPathwayPaper exposing (OtherPathwayPaper)
+import OtherPathwayPaper as OtherPathwayPaper exposing (OtherPathwayPaper)
 
 
 type alias Model =
@@ -105,7 +105,7 @@ view model =
             [ span (Animation.render model.style ++ [ class "progressbar_progress" ]) [ text "" ] ]
         , main_ []
             [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
-            , renderNonFreePolicyPapers nonFreePolicyPapers
+            , OtherPathwayPaper.viewList nonFreePolicyPapers
             , OpenAccessPaper.viewList model.openAccessPapers
             , renderBuggyPapers model.buggyPapers
             ]
@@ -298,15 +298,6 @@ renderFreePathwayPaper ( id, { pathwayVisible, recommendedPathway } as paper ) =
         ]
 
 
-renderNonFreePathwayPaper : OtherPathwayPaper -> Html Msg
-renderNonFreePathwayPaper paper =
-    div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ div
-            [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-            (renderPaperMetaData paper.meta)
-        ]
-
-
 renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String } ) -> List (Html Msg)
 renderPathwayButtons pathwayIsVisible ( id, { title } ) =
     let
@@ -415,26 +406,6 @@ renderPaywalledNoCostPathwayPapers papers =
             ]
         , div [] (List.map renderFreePathwayPaper papers)
         ]
-
-
-renderNonFreePolicyPapers : List OtherPathwayPaper -> Html Msg
-renderNonFreePolicyPapers papers =
-    if List.isEmpty papers then
-        text ""
-
-    else
-        section [ class "mb-5" ]
-            [ h2 []
-                [ text "Publications with non-free publisher policies"
-                ]
-            , p [ class "fs-6 mb-4" ]
-                [ text
-                    ("The following publications do not seem to have any no-cost Open Access "
-                        ++ "re-publishing pathways, or do not allow Open Access publishing at all."
-                    )
-                ]
-            , div [] (List.map renderNonFreePathwayPaper papers)
-            ]
 
 
 renderBuggyPapers : List BuggyPaper -> Html Msg
