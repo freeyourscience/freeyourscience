@@ -1,4 +1,4 @@
-module FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, Pathway, PolicyMetaData, recommendPathway)
+module FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
 
 import BackendPaper exposing (BackendEmbargo, BackendLocation, BackendPermittedOA, BackendPolicy, BackendPrerequisites)
 import GeneralTypes exposing (DOI, NamedUrl)
