@@ -1,7 +1,7 @@
 module FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
 
 import BackendPaper exposing (BackendEmbargo, BackendLocation, BackendPermittedOA, BackendPolicy, BackendPrerequisites)
-import GeneralTypes exposing (DOI, NamedUrl)
+import GeneralTypes exposing (NamedUrl, PaperMetadata)
 import String.Extra exposing (humanize)
 
 
@@ -10,12 +10,7 @@ import String.Extra exposing (humanize)
 
 
 type alias FreePathwayPaper =
-    { doi : DOI
-    , title : Maybe String
-    , journal : Maybe String
-    , authors : Maybe String
-    , year : Maybe Int
-    , issn : Maybe String
+    { meta : PaperMetadata
     , oaPathwayURI : String
     , recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
     , pathwayVisible : Bool
