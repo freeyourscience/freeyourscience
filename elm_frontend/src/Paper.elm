@@ -1,7 +1,5 @@
-module Paper exposing (BuggyPaper, OtherPathwayPaper, Paper, toPaper)
+module Paper exposing (BuggyPaper, OpenAccessPaper, OtherPathwayPaper)
 
-import BackendPaper exposing (BackendPaper)
-import FreePathwayPaper exposing (NoCostOaPathway, PolicyMetaData, recommendPathway)
 import GeneralTypes exposing (DOI, PaperMetadata)
 
 
@@ -9,17 +7,13 @@ import GeneralTypes exposing (DOI, PaperMetadata)
 -- TYPES
 
 
-type alias Paper =
+type alias OpenAccessPaper =
     { doi : DOI
     , title : Maybe String
     , journal : Maybe String
     , authors : Maybe String
     , year : Maybe Int
     , issn : Maybe String
-    , isOpenAccess : Maybe Bool
-    , oaPathway : Maybe String
-    , oaPathwayURI : Maybe String
-    , recommendedPathway : Maybe ( PolicyMetaData, NoCostOaPathway )
     }
 
 
@@ -33,23 +27,4 @@ type alias BuggyPaper =
     { doi : DOI
     , journal : Maybe String
     , oaPathway : Maybe String
-    }
-
-
-
--- CONSTRUCTOR
-
-
-toPaper : BackendPaper -> Paper
-toPaper backendPaper =
-    { doi = backendPaper.doi
-    , title = backendPaper.title
-    , journal = backendPaper.journal
-    , authors = backendPaper.authors
-    , year = backendPaper.year
-    , issn = backendPaper.issn
-    , isOpenAccess = backendPaper.isOpenAccess
-    , oaPathway = backendPaper.oaPathway
-    , oaPathwayURI = backendPaper.oaPathwayURI
-    , recommendedPathway = Maybe.andThen recommendPathway backendPaper.pathwayDetails
     }

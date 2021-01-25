@@ -13,14 +13,14 @@ import Html.Attributes exposing (alt, class, height, href, src, target, title, w
 import Html.Events exposing (..)
 import Http
 import HttpBuilder exposing (withHeader)
-import Paper exposing (BuggyPaper, OtherPathwayPaper, Paper, toPaper)
+import Paper exposing (BuggyPaper, OpenAccessPaper, OtherPathwayPaper)
 
 
 type alias Model =
     { initialDOIs : List DOI
     , freePathwayPapers : Array FreePathwayPaper
     , otherPathwayPapers : List OtherPathwayPaper
-    , openAccessPapers : List Paper
+    , openAccessPapers : List OpenAccessPaper
     , buggyPapers : List BuggyPaper
     , numFailedDOIRequests : Int
     , authorName : String
@@ -74,17 +74,6 @@ fetchPaper serverURL doi =
 view : Model -> Html Msg
 view model =
     let
-        optionalYearComparison : { a | year : Maybe Int } -> { a | year : Maybe Int } -> Order
-        optionalYearComparison p1 p2 =
-            let
-                y1 =
-                    Maybe.withDefault 9999999999 p1.year
-
-                y2 =
-                    Maybe.withDefault 9999999999 p2.year
-            in
-            compare y2 y1
-
         paperMetaCompare : { a | meta : PaperMetadata } -> { a | meta : PaperMetadata } -> Order
         paperMetaCompare p1 p2 =
             let
@@ -105,9 +94,6 @@ view model =
 
         nonFreePolicyPapers =
             List.sortWith paperMetaCompare model.otherPathwayPapers
-
-        openAccessPapers =
-            List.sortWith optionalYearComparison model.openAccessPapers
     in
     div []
         [ span
@@ -118,7 +104,7 @@ view model =
         , main_ []
             [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
             , renderNonFreePolicyPapers nonFreePolicyPapers
-            , renderOpenAccessPapers openAccessPapers
+            , renderOpenAccessPapers model.openAccessPapers
             , renderBuggyPapers model.buggyPapers
             ]
         , renderFooter model.authorProfileURL
@@ -224,7 +210,13 @@ classifyPaper backendPaper model =
                 |> (\p -> { model | otherPathwayPapers = model.otherPathwayPapers ++ [ p ] })
 
         ( Just True, _, _ ) ->
-            { model | openAccessPapers = model.openAccessPapers ++ [ toPaper backendPaper ] }
+            OpenAccessPaper meta.doi
+                meta.title
+                meta.journal
+                meta.authors
+                meta.year
+                meta.issn
+                |> (\p -> { model | openAccessPapers = model.openAccessPapers ++ [ p ] })
 
         _ ->
             { model | buggyPapers = model.buggyPapers ++ [ BuggyPaper backendPaper.doi backendPaper.journal backendPaper.oaPathway ] }
@@ -311,24 +303,11 @@ renderUrl { url, description } =
 -- PAPER
 
 
-renderOpenAccessPaper : Paper -> Html Msg
+renderOpenAccessPaper : OpenAccessPaper -> Html Msg
 renderOpenAccessPaper paper =
-    let
-        isOpenAccess =
-            Maybe.withDefault False paper.isOpenAccess
-    in
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div
-            [ class
-                ("paper-details col-12 fs-6 mb-2 mb-md-0"
-                    ++ (if isOpenAccess then
-                            ""
-
-                        else
-                            " col-md-9"
-                       )
-                )
-            ]
+            [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
             [ renderPaperHeader paper ]
         ]
 
@@ -393,26 +372,14 @@ renderNarrowPaperHeader { title, journal, authors, year, doi } =
     ]
 
 
-renderPaperHeader : Paper -> Html Msg
+renderPaperHeader : OpenAccessPaper -> Html Msg
 renderPaperHeader ({ journal, authors, year, doi } as paper) =
     let
         paperTitle =
             paper.title
-
-        isOpenAccess =
-            Maybe.withDefault False paper.isOpenAccess
     in
     div
-        [ class
-            ("paper-details col-12 fs-6 mb-2 mb-md-0"
-                ++ (if isOpenAccess then
-                        ""
-
-                    else
-                        " col-md-9"
-                   )
-            )
-        ]
+        [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
         [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" paperTitle) ]
         , div [ class "mb-1" ]
             [ text
@@ -570,7 +537,7 @@ renderNonFreePolicyPapers papers =
             ]
 
 
-renderOpenAccessPapers : List Paper -> Html Msg
+renderOpenAccessPapers : List OpenAccessPaper -> Html Msg
 renderOpenAccessPapers papers =
     section [ class "mb-5" ]
         [ h2 [ class "mb-3" ]
