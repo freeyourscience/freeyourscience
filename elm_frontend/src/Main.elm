@@ -5,7 +5,6 @@ import Array exposing (Array)
 import BackendPaper exposing (BackendPaper, paperDecoder)
 import Browser
 import Browser.Events exposing (Visibility(..))
-import Browser.Navigation exposing (back)
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
 import GeneralTypes exposing (DOI, NamedUrl, PaperMetadata)
