@@ -1,13 +1,11 @@
-module KitchenSink exposing (..)
+module KitchenSink exposing (main)
 
 import Animation
-import Api exposing (paperDecoder)
 import Array
 import Browser
 import Http
 import Json.Decode as D
-import Main exposing (..)
-import Types exposing (..)
+import Main exposing (Model, Msg, update)
 
 
 main : Program () Model Msg
