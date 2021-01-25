@@ -88,7 +88,7 @@ type alias NoCostOaPathway =
 
 type alias Pathway =
     { additionalOaFee : String
-    , sortedLocation : BackendLocation
+    , locationSorted : BackendLocation
     , articleVersions : Maybe (List String)
     , conditions : Maybe (List String)
     , prerequisites : Maybe (List String)

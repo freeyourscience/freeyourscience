@@ -71,7 +71,7 @@ suite =
                 let
                     liberalPathway =
                         { articleVersions = Just [ "published" ]
-                        , sortedLocation =
+                        , locationSorted =
                             { location = [ "any_repository" ]
                             , namedRepository = Nothing
                             }
@@ -84,7 +84,7 @@ suite =
 
                     restrictivePathway =
                         { articleVersions = Just [ "submitted" ]
-                        , sortedLocation =
+                        , locationSorted =
                             { location = [ "this_journal" ]
                             , namedRepository = Nothing
                             }

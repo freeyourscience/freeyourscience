@@ -284,7 +284,7 @@ scorePathway pathway =
                 |> Maybe.withDefault 0
 
         locationScore =
-            pathway.sortedLocation.location
+            pathway.locationSorted.location
                 |> List.head
                 |> Maybe.map scoreAllowedLocation
                 |> Maybe.withDefault 0
@@ -397,7 +397,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
 
             _ ->
                 Just articleVersions
-    , sortedLocation = { location | location = location.location |> List.sortBy scoreAllowedLocation |> List.reverse }
+    , locationSorted = { location | location = location.location |> List.sortBy scoreAllowedLocation |> List.reverse }
     , prerequisites = prerequisites |> Maybe.map parsePrequisites
     , conditions = conditions
     , additionalOaFee = additionalOaFee
@@ -413,7 +413,7 @@ noCostOaPathway ( metadata, pathway ) =
             Just
                 ( metadata
                 , { articleVersions = articleVersions
-                  , locationLabelsSorted = humanizeLocations pathway.sortedLocation
+                  , locationLabelsSorted = humanizeLocations pathway.locationSorted
                   , prerequisites = pathway.prerequisites
                   , conditions = pathway.conditions
                   , embargo = pathway.embargo
