@@ -6,7 +6,7 @@ import Browser
 import Browser.Events exposing (Visibility(..))
 import Debug
 import Html exposing (..)
-import Html.Attributes exposing (alt, attribute, class, height, href, src, target, title, width)
+import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
 import Html.Events exposing (..)
 import Http
 import HttpBuilder exposing (withHeader)
@@ -587,17 +587,6 @@ type alias Paper =
     }
 
 
-type alias OpenAccessPaper =
-    { doi : DOI
-    , title : Maybe String
-    , journal : Maybe String
-    , authors : Maybe String
-    , year : Maybe Int
-    , issn : Maybe String
-    , oaLocationURL : String
-    }
-
-
 type alias FreePathwayPaper =
     { doi : DOI
     , title : Maybe String
@@ -755,13 +744,6 @@ optionalYearComparison p1 p2 =
 
 
 -- Views
-
-
-renderLoadingSpinner : Html Msg
-renderLoadingSpinner =
-    div [ class "spinner-border text-primary fs-5 m-2", attribute "role" "status" ]
-        [ span [ class "visually-hidden" ] [ text "Loading..." ]
-        ]
 
 
 ulWithHeading : String -> (a -> Html Msg) -> List a -> List (Html Msg)
