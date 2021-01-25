@@ -8,9 +8,10 @@ import BuggyPaper exposing (BuggyPaper)
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
 import GeneralTypes exposing (DOI, PaperMetadata, renderUrl)
-import Html exposing (Html, a, button, div, footer, h2, img, li, main_, p, section, small, span, text, ul)
+import Html exposing (Html, a, button, div, footer, h2, img, main_, p, section, small, span, text)
 import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
 import Html.Events exposing (onClick)
+import HtmlUtils exposing (ulWithHeading)
 import Http
 import HttpBuilder exposing (withHeader)
 import OpenAccessPaper as OpenAccessPaper exposing (OpenAccessPaper)
@@ -271,28 +272,6 @@ percentDOIsFetched model =
         )
 
 
-ulWithHeading : String -> (a -> Html Msg) -> List a -> List (Html Msg)
-ulWithHeading heading renderElement list =
-    let
-        renderedList =
-            list
-                |> List.map renderElement
-                |> renderList
-    in
-    [ p [] [ text heading ]
-    , renderedList
-    ]
-
-
-renderList : List (Html Msg) -> Html Msg
-renderList list =
-    ul []
-        (List.map
-            (\item -> li [] [ item ])
-            list
-        )
-
-
 
 -- PAPER
 
@@ -416,7 +395,7 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
     List.concat
         [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
         , locationLabelsSorted
-            |> List.take 3
+            |> List.take 1
             |> ulWithHeading ("upload the " ++ articleVersion ++ " version to any of the following:") text
         , [ p [] [ text " You don't have pay a fee to do this." ] ]
         , prerequisites
