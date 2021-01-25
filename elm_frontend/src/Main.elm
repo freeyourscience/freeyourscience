@@ -185,16 +185,13 @@ update msg model =
 classifyPaper : BackendPaper -> Model -> Model
 classifyPaper backendPaper model =
     let
-        paper =
-            toPaper backendPaper
-
         isOpenAccess =
-            paper.isOpenAccess
+            backendPaper.isOpenAccess
 
         oaPathway =
             Maybe.map2 Tuple.pair
-                paper.oaPathway
-                paper.oaPathwayURI
+                backendPaper.oaPathway
+                backendPaper.oaPathwayURI
 
         recommendedPathway =
             Maybe.andThen parsePolicies backendPaper.pathwayDetails
@@ -225,10 +222,10 @@ classifyPaper backendPaper model =
                 |> (\p -> { model | otherPathwayPapers = model.otherPathwayPapers ++ [ p ] })
 
         ( Just True, _, _ ) ->
-            { model | openAccessPapers = model.openAccessPapers ++ [ paper ] }
+            { model | openAccessPapers = model.openAccessPapers ++ [ toPaper backendPaper ] }
 
         _ ->
-            { model | buggyPapers = model.buggyPapers ++ [ paper ] }
+            { model | buggyPapers = model.buggyPapers ++ [ toPaper backendPaper ] }
 
 
 
