@@ -5,6 +5,7 @@ import Array exposing (Array)
 import BackendPaper exposing (BackendPaper, paperDecoder)
 import Browser
 import Browser.Events exposing (Visibility(..))
+import Browser.Navigation exposing (back)
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
 import GeneralTypes exposing (DOI, NamedUrl, PaperMetadata)
@@ -183,10 +184,8 @@ classifyPaper backendPaper model =
         isOpenAccess =
             backendPaper.isOpenAccess
 
-        oaPathway =
-            Maybe.map2 Tuple.pair
-                backendPaper.oaPathway
-                backendPaper.oaPathwayURI
+        pathwayUri =
+            backendPaper.oaPathwayURI
 
         meta =
             { doi = backendPaper.doi
@@ -200,12 +199,12 @@ classifyPaper backendPaper model =
         recommendedPathway =
             Maybe.andThen recommendPathway backendPaper.pathwayDetails
     in
-    case ( isOpenAccess, oaPathway, recommendedPathway ) of
-        ( Just False, Just ( "nocost", pwUri ), Just pathway ) ->
+    case ( isOpenAccess, pathwayUri, recommendedPathway ) of
+        ( Just False, Just pwUri, Just pathway ) ->
             FreePathwayPaper meta pwUri pathway False
                 |> (\p -> { model | freePathwayPapers = Array.push p model.freePathwayPapers })
 
-        ( Just False, Just ( "other", pwUri ), Nothing ) ->
+        ( Just False, Just pwUri, Nothing ) ->
             OtherPathwayPaper meta pwUri
                 |> (\p -> { model | otherPathwayPapers = model.otherPathwayPapers ++ [ p ] })
 
