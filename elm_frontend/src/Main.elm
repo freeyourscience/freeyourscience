@@ -7,7 +7,7 @@ import Browser
 import BuggyPaper exposing (BuggyPaper)
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
-import GeneralTypes exposing (DOI, NamedUrl, PaperMetadata)
+import GeneralTypes exposing (DOI, PaperMetadata, renderUrl)
 import Html exposing (Html, a, button, div, footer, h2, img, li, main_, p, section, small, span, text, ul)
 import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
 import Html.Events exposing (onClick)
@@ -291,11 +291,6 @@ renderList list =
             (\item -> li [] [ item ])
             list
         )
-
-
-renderUrl : NamedUrl -> Html Msg
-renderUrl { url, description } =
-    a [ href url, class "link", class "link-secondary" ] [ text description ]
 
 
 
