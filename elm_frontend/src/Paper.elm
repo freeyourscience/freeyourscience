@@ -2,7 +2,7 @@ module Paper exposing (OtherPathwayPaper, Paper, toPaper)
 
 import BackendPaper exposing (BackendPaper)
 import FreePathwayPaper exposing (NoCostOaPathway, PolicyMetaData, recommendPathway)
-import GeneralTypes exposing (DOI)
+import GeneralTypes exposing (DOI, PaperMetadata)
 
 
 
@@ -24,12 +24,7 @@ type alias Paper =
 
 
 type alias OtherPathwayPaper =
-    { doi : DOI
-    , title : Maybe String
-    , journal : Maybe String
-    , authors : Maybe String
-    , year : Maybe Int
-    , issn : Maybe String
+    { meta : PaperMetadata
     , oaPathwayURI : String
     }
 

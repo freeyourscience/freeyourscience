@@ -7,7 +7,7 @@ import Browser
 import Browser.Events exposing (Visibility(..))
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
-import GeneralTypes exposing (DOI, NamedUrl)
+import GeneralTypes exposing (DOI, NamedUrl, PaperMetadata)
 import Html exposing (..)
 import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
 import Html.Events exposing (..)
@@ -85,15 +85,26 @@ view model =
             in
             compare y2 y1
 
-        indexedPapersYearComp : ( Int, { a | year : Maybe Int } ) -> ( Int, { a | year : Maybe Int } ) -> Order
+        paperMetaCompare : { a | meta : PaperMetadata } -> { a | meta : PaperMetadata } -> Order
+        paperMetaCompare p1 p2 =
+            let
+                y1 =
+                    Maybe.withDefault 9999999999 p1.meta.year
+
+                y2 =
+                    Maybe.withDefault 9999999999 p2.meta.year
+            in
+            compare y2 y1
+
+        indexedPapersYearComp : ( Int, { a | meta : PaperMetadata } ) -> ( Int, { a | meta : PaperMetadata } ) -> Order
         indexedPapersYearComp ( _, p1 ) ( _, p2 ) =
-            optionalYearComparison p1 p2
+            paperMetaCompare p1 p2
 
         paywalledNoCostPathwayPapers =
             List.sortWith indexedPapersYearComp (Array.toIndexedList model.freePathwayPapers)
 
         nonFreePolicyPapers =
-            List.sortWith optionalYearComparison model.otherPathwayPapers
+            List.sortWith paperMetaCompare model.otherPathwayPapers
 
         openAccessPapers =
             List.sortWith optionalYearComparison model.openAccessPapers
@@ -194,17 +205,21 @@ classifyPaper backendPaper model =
                 backendPaper.oaPathway
                 backendPaper.oaPathwayURI
 
-        recommendedPathway =
-            Maybe.andThen recommendPathway backendPaper.pathwayDetails
-    in
-    case ( isOpenAccess, oaPathway, recommendedPathway ) of
-        ( Just False, Just ( "nocost", pwUri ), Just pathway ) ->
+        meta =
             { doi = backendPaper.doi
             , title = backendPaper.title
             , journal = backendPaper.journal
             , authors = backendPaper.authors
             , year = backendPaper.year
             , issn = backendPaper.issn
+            }
+
+        recommendedPathway =
+            Maybe.andThen recommendPathway backendPaper.pathwayDetails
+    in
+    case ( isOpenAccess, oaPathway, recommendedPathway ) of
+        ( Just False, Just ( "nocost", pwUri ), Just pathway ) ->
+            { meta = meta
             , oaPathwayURI = pwUri
             , recommendedPathway = pathway
             , pathwayVisible = False
@@ -212,12 +227,7 @@ classifyPaper backendPaper model =
                 |> (\p -> { model | freePathwayPapers = Array.push p model.freePathwayPapers })
 
         ( Just False, Just ( "other", pwUri ), Nothing ) ->
-            { doi = backendPaper.doi
-            , title = backendPaper.title
-            , journal = backendPaper.journal
-            , authors = backendPaper.authors
-            , year = backendPaper.year
-            , issn = backendPaper.issn
+            { meta = meta
             , oaPathwayURI = pwUri
             }
                 |> (\p -> { model | otherPathwayPapers = model.otherPathwayPapers ++ [ p ] })
@@ -345,12 +355,12 @@ renderFreePathwayPaper ( id, { pathwayVisible, recommendedPathway } as paper ) =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
             [ div []
-                (renderNarrowPaperHeader paper)
+                (renderNarrowPaperHeader paper.meta)
             , div [ class pathwayClass ]
                 (renderRecommendedPathway paper.oaPathwayURI recommendedPathway)
             ]
         , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
-            (renderPathwayButtons pathwayVisible ( id, paper.title ))
+            (renderPathwayButtons pathwayVisible ( id, paper.meta ))
         ]
 
 
@@ -359,21 +369,11 @@ renderNonFreePathwayPaper paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div
             [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-            (renderNarrowPaperHeader paper)
+            (renderNarrowPaperHeader paper.meta)
         ]
 
 
-type alias PaperMeta a =
-    { a
-        | doi : DOI
-        , title : Maybe String
-        , authors : Maybe String
-        , year : Maybe Int
-        , journal : Maybe String
-    }
-
-
-renderNarrowPaperHeader : PaperMeta a -> List (Html Msg)
+renderNarrowPaperHeader : PaperMetadata -> List (Html Msg)
 renderNarrowPaperHeader { title, journal, authors, year, doi } =
     [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" title) ]
     , div [ class "mb-1" ]
@@ -449,8 +449,8 @@ renderPaperHeader ({ journal, authors, year, doi } as paper) =
         ]
 
 
-renderPathwayButtons : Bool -> ( Int, Maybe String ) -> List (Html Msg)
-renderPathwayButtons pathwayIsVisible ( id, title ) =
+renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String } ) -> List (Html Msg)
+renderPathwayButtons pathwayIsVisible ( id, { title } ) =
     let
         paperTitle =
             Maybe.withDefault "Unknown title" title
