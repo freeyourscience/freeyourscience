@@ -4,14 +4,13 @@ import Animation exposing (percent)
 import Array exposing (Array)
 import BackendPaper exposing (BackendPaper, paperDecoder)
 import Browser
-import Browser.Events exposing (Visibility(..))
 import BuggyPaper exposing (BuggyPaper)
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
 import GeneralTypes exposing (DOI, NamedUrl, PaperMetadata)
-import Html exposing (..)
+import Html exposing (Html, a, br, button, div, footer, h2, img, li, main_, p, section, small, span, text, ul)
 import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
-import Html.Events exposing (..)
+import Html.Events exposing (onClick)
 import Http
 import HttpBuilder exposing (withHeader)
 import OpenAccessPaper exposing (OpenAccessPaper)
