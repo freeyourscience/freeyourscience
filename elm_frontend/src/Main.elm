@@ -15,11 +15,6 @@ import HttpBuilder exposing (withHeader)
 import Paper exposing (FreePathwayPaper, NoCostOaPathway, OtherPathwayPaper, Paper, PolicyMetaData, parsePolicies, toPaper)
 
 
-
--- MAIN
--- MODEL
-
-
 type alias Model =
     { initialDOIs : List DOI
     , freePathwayPapers : Array FreePathwayPaper
@@ -35,17 +30,15 @@ type alias Model =
 
 
 
--- SETUP
+-- INIT
 
 
-main : Program Flags Model Msg
-main =
-    Browser.element
-        { init = init
-        , update = update
-        , subscriptions = subscriptions
-        , view = view
-        }
+type alias Flags =
+    { dois : List String
+    , serverURL : String
+    , authorName : String
+    , authorProfileURL : String
+    }
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -65,13 +58,72 @@ init flags =
     )
 
 
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Animation.subscription Animate [ model.style ]
+fetchPaper : String -> String -> Cmd Msg
+fetchPaper serverURL doi =
+    HttpBuilder.get (serverURL ++ "/api/papers?doi=" ++ doi)
+        |> withHeader "Content-Type" "application/json"
+        |> HttpBuilder.withExpect (Http.expectJson GotPaper paperDecoder)
+        |> HttpBuilder.request
+
+
+
+-- VIEW
+
+
+view : Model -> Html Msg
+view model =
+    let
+        optionalYearComparison : { a | year : Maybe Int } -> { a | year : Maybe Int } -> Order
+        optionalYearComparison p1 p2 =
+            let
+                y1 =
+                    Maybe.withDefault 9999999999 p1.year
+
+                y2 =
+                    Maybe.withDefault 9999999999 p2.year
+            in
+            compare y2 y1
+
+        indexedPapersYearComp : ( Int, { a | year : Maybe Int } ) -> ( Int, { a | year : Maybe Int } ) -> Order
+        indexedPapersYearComp ( _, p1 ) ( _, p2 ) =
+            optionalYearComparison p1 p2
+
+        paywalledNoCostPathwayPapers =
+            List.sortWith indexedPapersYearComp (Array.toIndexedList model.freePathwayPapers)
+
+        nonFreePolicyPapers =
+            List.sortWith optionalYearComparison model.otherPathwayPapers
+
+        openAccessPapers =
+            List.sortWith optionalYearComparison model.openAccessPapers
+
+        buggyPapers =
+            List.sortWith optionalYearComparison model.buggyPapers
+    in
+    div []
+        [ span
+            [ class "container"
+            , class "progressbar__container"
+            ]
+            [ span (Animation.render model.style ++ [ class "progressbar_progress" ]) [ text "" ] ]
+        , main_ []
+            [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
+            , renderNonFreePolicyPapers nonFreePolicyPapers
+            , renderOpenAccessPapers openAccessPapers
+            , renderBuggyPapers buggyPapers
+            ]
+        , renderFooter model.authorProfileURL
+        ]
 
 
 
 -- UPDATE
+
+
+type Msg
+    = GotPaper (Result Http.Error BackendPaper)
+    | TogglePathwayDisplay Int
+    | Animate Animation.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -130,73 +182,6 @@ update msg model =
             )
 
 
-
--- VIEW
-
-
-view : Model -> Html Msg
-view model =
-    let
-        indexedPapersYearComp : ( Int, { a | year : Maybe Int } ) -> ( Int, { a | year : Maybe Int } ) -> Order
-        indexedPapersYearComp ( _, p1 ) ( _, p2 ) =
-            optionalYearComparison p1 p2
-
-        paywalledNoCostPathwayPapers =
-            List.sortWith indexedPapersYearComp (Array.toIndexedList model.freePathwayPapers)
-
-        nonFreePolicyPapers =
-            List.sortWith optionalYearComparison model.otherPathwayPapers
-
-        openAccessPapers =
-            List.sortWith optionalYearComparison model.openAccessPapers
-
-        buggyPapers =
-            List.sortWith optionalYearComparison model.buggyPapers
-    in
-    div []
-        [ span
-            [ class "container"
-            , class "progressbar__container"
-            ]
-            [ span (Animation.render model.style ++ [ class "progressbar_progress" ]) [ text "" ] ]
-        , main_ []
-            [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
-            , renderNonFreePolicyPapers nonFreePolicyPapers
-            , renderOpenAccessPapers openAccessPapers
-            , renderBuggyPapers buggyPapers
-            ]
-        , renderFooter model.authorProfileURL
-        ]
-
-
-
--- LOADING BAR
-
-
-numberFetchedPapers : Model -> Int
-numberFetchedPapers model =
-    List.length model.buggyPapers
-        + Array.length model.freePathwayPapers
-        + List.length model.openAccessPapers
-        + List.length model.otherPathwayPapers
-        + model.numFailedDOIRequests
-
-
-percentDOIsFetched : Model -> Float
-percentDOIsFetched model =
-    -- Report at least 10 percent at all times to provide immediate loading feedback.
-    max
-        10
-        (100
-            * (model |> numberFetchedPapers |> toFloat)
-            / (model.initialDOIs |> List.length |> toFloat)
-        )
-
-
-
--- BACKEND-PAPER >>> PAPER
-
-
 classifyPaper : BackendPaper -> Model -> Model
 classifyPaper backendPaper model =
     let
@@ -247,59 +232,53 @@ classifyPaper backendPaper model =
 
 
 
--- API
+-- SUBSCRIPTIONS
 
 
-fetchPaper : String -> String -> Cmd Msg
-fetchPaper serverURL doi =
-    HttpBuilder.get (serverURL ++ "/api/papers?doi=" ++ doi)
-        |> withHeader "Content-Type" "application/json"
-        |> HttpBuilder.withExpect (Http.expectJson GotPaper paperDecoder)
-        |> HttpBuilder.request
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Animation.subscription Animate [ model.style ]
 
 
 
--- TYPES
--- INPUT DATA
+-- MAIN
 
 
-type alias Flags =
-    { dois : List String
-    , serverURL : String
-    , authorName : String
-    , authorProfileURL : String
-    }
-
-
-
--- MODEL
--- MSG
-
-
-type Msg
-    = GotPaper (Result Http.Error BackendPaper)
-    | TogglePathwayDisplay Int
-    | Animate Animation.Msg
+main : Program Flags Model Msg
+main =
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }
 
 
 
--- UTILS
+-- ------------------------------
+-- TO BE EXTRACTED
+-- ------------------------------
+-- LOADING BAR
 
 
-optionalYearComparison : { a | year : Maybe Int } -> { a | year : Maybe Int } -> Order
-optionalYearComparison p1 p2 =
-    let
-        y1 =
-            Maybe.withDefault 9999999999 p1.year
-
-        y2 =
-            Maybe.withDefault 9999999999 p2.year
-    in
-    compare y2 y1
+numberFetchedPapers : Model -> Int
+numberFetchedPapers model =
+    List.length model.buggyPapers
+        + Array.length model.freePathwayPapers
+        + List.length model.openAccessPapers
+        + List.length model.otherPathwayPapers
+        + model.numFailedDOIRequests
 
 
-
--- Views
+percentDOIsFetched : Model -> Float
+percentDOIsFetched model =
+    -- Report at least 10 percent at all times to provide immediate loading feedback.
+    max
+        10
+        (100
+            * (model |> numberFetchedPapers |> toFloat)
+            / (model.initialDOIs |> List.length |> toFloat)
+        )
 
 
 ulWithHeading : String -> (a -> Html Msg) -> List a -> List (Html Msg)
