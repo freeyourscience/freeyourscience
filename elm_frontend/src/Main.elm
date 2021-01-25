@@ -219,17 +219,11 @@ classifyPaper backendPaper model =
     in
     case ( isOpenAccess, oaPathway, recommendedPathway ) of
         ( Just False, Just ( "nocost", pwUri ), Just pathway ) ->
-            { meta = meta
-            , oaPathwayURI = pwUri
-            , recommendedPathway = pathway
-            , pathwayVisible = False
-            }
+            FreePathwayPaper meta pwUri pathway False
                 |> (\p -> { model | freePathwayPapers = Array.push p model.freePathwayPapers })
 
         ( Just False, Just ( "other", pwUri ), Nothing ) ->
-            { meta = meta
-            , oaPathwayURI = pwUri
-            }
+            OtherPathwayPaper meta pwUri
                 |> (\p -> { model | otherPathwayPapers = model.otherPathwayPapers ++ [ p ] })
 
         ( Just True, _, _ ) ->
