@@ -7,9 +7,9 @@ import Browser
 import BuggyPaper exposing (BuggyPaper)
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
-import GeneralTypes exposing (DOI, PaperMetadata, renderUrl)
-import Html exposing (Html, a, button, div, footer, h2, img, main_, p, section, small, span, text)
-import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
+import GeneralTypes exposing (DOI, PaperMetadata, renderPaperMetaData, renderUrl)
+import Html exposing (Html, a, button, div, footer, h2, main_, p, section, small, span, text)
+import Html.Attributes exposing (class, href, target, title)
 import Html.Events exposing (onClick)
 import HtmlUtils exposing (ulWithHeading)
 import Http
@@ -289,7 +289,7 @@ renderFreePathwayPaper ( id, { pathwayVisible, recommendedPathway } as paper ) =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
             [ div []
-                (renderNarrowPaperHeader paper.meta)
+                (renderPaperMetaData paper.meta)
             , div [ class pathwayClass ]
                 (renderRecommendedPathway paper.oaPathwayURI recommendedPathway)
             ]
@@ -303,37 +303,8 @@ renderNonFreePathwayPaper paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div
             [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-            (renderNarrowPaperHeader paper.meta)
+            (renderPaperMetaData paper.meta)
         ]
-
-
-renderNarrowPaperHeader : PaperMetadata -> List (Html Msg)
-renderNarrowPaperHeader { title, journal, authors, year, doi } =
-    [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" title) ]
-    , div [ class "mb-1" ]
-        [ text
-            (String.concat
-                [ journal |> Maybe.withDefault "Unknown journal"
-                , ", "
-                , authors |> Maybe.withDefault "Unknown authors"
-                , " ("
-                , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-                , "), "
-                , doi
-                ]
-            )
-        , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
-            [ img
-                [ src "/static/img/box-arrow-up-right.svg"
-                , alt ""
-                , width 12
-                , height 12
-                , Html.Attributes.title ("Visit article: " ++ Maybe.withDefault "" title)
-                ]
-                []
-            ]
-        ]
-    ]
 
 
 renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String } ) -> List (Html Msg)
