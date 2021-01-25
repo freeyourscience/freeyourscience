@@ -5,6 +5,7 @@ import Array exposing (Array)
 import BackendPaper exposing (BackendPaper, paperDecoder)
 import Browser
 import Browser.Events exposing (Visibility(..))
+import BuggyPaper exposing (BuggyPaper)
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
 import GeneralTypes exposing (DOI, NamedUrl, PaperMetadata)
@@ -13,7 +14,8 @@ import Html.Attributes exposing (alt, class, height, href, src, target, title, w
 import Html.Events exposing (..)
 import Http
 import HttpBuilder exposing (withHeader)
-import Paper exposing (BuggyPaper, OpenAccessPaper, OtherPathwayPaper)
+import OpenAccessPaper exposing (OpenAccessPaper)
+import OtherPathwayPaper exposing (OtherPathwayPaper)
 
 
 type alias Model =
