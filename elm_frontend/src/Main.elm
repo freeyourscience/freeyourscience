@@ -8,12 +8,12 @@ import BuggyPaper exposing (BuggyPaper)
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
 import GeneralTypes exposing (DOI, NamedUrl, PaperMetadata)
-import Html exposing (Html, a, br, button, div, footer, h2, img, li, main_, p, section, small, span, text, ul)
+import Html exposing (Html, a, button, div, footer, h2, img, li, main_, p, section, small, span, text, ul)
 import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
 import Html.Events exposing (onClick)
 import Http
 import HttpBuilder exposing (withHeader)
-import OpenAccessPaper exposing (OpenAccessPaper)
+import OpenAccessPaper as OpenAccessPaper exposing (OpenAccessPaper)
 import OtherPathwayPaper exposing (OtherPathwayPaper)
 
 
@@ -105,7 +105,7 @@ view model =
         , main_ []
             [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
             , renderNonFreePolicyPapers nonFreePolicyPapers
-            , renderOpenAccessPapers model.openAccessPapers
+            , OpenAccessPaper.viewList model.openAccessPapers
             , renderBuggyPapers model.buggyPapers
             ]
         , renderFooter model.authorProfileURL
@@ -302,15 +302,6 @@ renderUrl { url, description } =
 -- PAPER
 
 
-renderOpenAccessPaper : OpenAccessPaper -> Html Msg
-renderOpenAccessPaper paper =
-    div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ div
-            [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-            [ renderPaperHeader paper ]
-        ]
-
-
 renderFreePathwayPaper : ( Int, FreePathwayPaper ) -> Html Msg
 renderFreePathwayPaper ( id, { pathwayVisible, recommendedPathway } as paper ) =
     let
@@ -369,41 +360,6 @@ renderNarrowPaperHeader { title, journal, authors, year, doi } =
             ]
         ]
     ]
-
-
-renderPaperHeader : OpenAccessPaper -> Html Msg
-renderPaperHeader ({ journal, authors, year, doi } as paper) =
-    let
-        paperTitle =
-            paper.title
-    in
-    div
-        [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-        [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" paperTitle) ]
-        , div [ class "mb-1" ]
-            [ text
-                (String.concat
-                    [ journal |> Maybe.withDefault "Unknown journal"
-                    , ", "
-                    , authors |> Maybe.withDefault "Unknown authors"
-                    , " ("
-                    , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-                    , "), "
-                    , doi
-                    ]
-                )
-            , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
-                [ img
-                    [ src "/static/img/box-arrow-up-right.svg"
-                    , alt ""
-                    , width 12
-                    , height 12
-                    , title ("Visit article: " ++ Maybe.withDefault "" paperTitle)
-                    ]
-                    []
-                ]
-            ]
-        ]
 
 
 renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String } ) -> List (Html Msg)
@@ -534,26 +490,6 @@ renderNonFreePolicyPapers papers =
                 ]
             , div [] (List.map renderNonFreePathwayPaper papers)
             ]
-
-
-renderOpenAccessPapers : List OpenAccessPaper -> Html Msg
-renderOpenAccessPapers papers =
-    section [ class "mb-5" ]
-        [ h2 [ class "mb-3" ]
-            [ text "Open Access publications"
-            ]
-        , if List.isEmpty papers then
-            p []
-                [ text "We could not find any of your Open Access publications in the unpaywall.org database."
-                , br [] []
-                , text "In case you think there should be Open Access publications here, help "
-                , a [ href "https://unpaywall.org/sources", target "_blank" ] [ text "unpaywall.org" ]
-                , text " to find them."
-                ]
-
-          else
-            div [] (List.map renderOpenAccessPaper papers)
-        ]
 
 
 renderBuggyPapers : List BuggyPaper -> Html Msg
