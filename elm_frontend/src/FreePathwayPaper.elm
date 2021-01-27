@@ -341,7 +341,7 @@ renderPathwayButtons pathwayIsVisible ( id, { title } ) =
     in
     [ div []
         [ button
-            [ onClick (Msg.MsgForFreePathwayPaper <| Msg.ToggleVisible id)
+            [ onClick (Msg.ToggleVisible id)
             , class style
             , Html.Attributes.title (verb ++ "Open Access pathway for: " ++ paperTitle)
             ]
