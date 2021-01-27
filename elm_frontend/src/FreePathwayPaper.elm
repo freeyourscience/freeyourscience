@@ -1,7 +1,6 @@
 module FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway, viewList)
 
 import BackendPaper exposing (BackendEmbargo, BackendLocation, BackendPermittedOA, BackendPolicy, BackendPrerequisites)
-import FreePathwayPaperMsg
 import GeneralTypes exposing (NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 import Html exposing (Html, a, button, div, h2, p, section, text)
 import Html.Attributes exposing (class, href)
@@ -342,7 +341,7 @@ renderPathwayButtons pathwayIsVisible ( id, { title } ) =
     in
     [ div []
         [ button
-            [ onClick (Msg.MsgForFreePathwayPaper <| FreePathwayPaperMsg.ToggleVisible id)
+            [ onClick (Msg.MsgForFreePathwayPaper <| Msg.ToggleVisible id)
             , class style
             , Html.Attributes.title (verb ++ "Open Access pathway for: " ++ paperTitle)
             ]
