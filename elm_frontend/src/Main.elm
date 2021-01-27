@@ -1,4 +1,4 @@
-module Main exposing (main)
+module Main exposing (Model, main, subscriptions, update, view)
 
 import Animation exposing (percent)
 import Array exposing (Array)

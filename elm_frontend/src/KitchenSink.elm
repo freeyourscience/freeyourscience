@@ -5,7 +5,9 @@ import Array
 import Browser
 import Http
 import Json.Decode as D
-import Main exposing (Model, Msg, update)
+import Main exposing (Model, subscriptions, update, view)
+import Msg exposing (Msg(..))
+import Papers.Backend exposing (BackendPaper, paperDecoder)
 
 
 main : Program () Model Msg
