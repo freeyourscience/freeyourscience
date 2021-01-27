@@ -2,19 +2,19 @@ module Main exposing (main)
 
 import Animation exposing (percent)
 import Array exposing (Array)
-import BackendPaper exposing (BackendPaper, paperDecoder)
 import Browser
-import BuggyPaper exposing (BuggyPaper)
 import Debug
-import FreePathwayPaper exposing (FreePathwayPaper, recommendPathway)
 import GeneralTypes exposing (DOI, PaperMetadata)
 import Html exposing (Html, a, div, footer, main_, p, small, span, text)
 import Html.Attributes exposing (class, href, target)
 import Http
 import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
-import OpenAccessPaper exposing (OpenAccessPaper)
-import OtherPathwayPaper exposing (OtherPathwayPaper)
+import Papers.Backend exposing (BackendPaper, paperDecoder)
+import Papers.Buggy exposing (BuggyPaper)
+import Papers.FreePathway exposing (FreePathwayPaper, recommendPathway)
+import Papers.OpenAccess exposing (OpenAccessPaper)
+import Papers.OtherPathway exposing (OtherPathwayPaper)
 
 
 type alias Model =
@@ -103,10 +103,10 @@ view model =
             ]
             [ span (Animation.render model.style ++ [ class "progressbar_progress" ]) [ text "" ] ]
         , main_ []
-            [ FreePathwayPaper.viewList paywalledNoCostPathwayPapers
-            , OtherPathwayPaper.viewList nonFreePolicyPapers
-            , OpenAccessPaper.viewList model.openAccessPapers
-            , BuggyPaper.viewList model.buggyPapers
+            [ Papers.FreePathway.viewList paywalledNoCostPathwayPapers
+            , Papers.OtherPathway.viewList nonFreePolicyPapers
+            , Papers.OpenAccess.viewList model.openAccessPapers
+            , Papers.Buggy.viewList model.buggyPapers
             ]
         , renderFooter model.authorProfileURL
         ]

@@ -1,8 +1,8 @@
 module Msg exposing (Msg(..))
 
 import Animation
-import BackendPaper exposing (BackendPaper)
 import Http
+import Papers.Backend exposing (BackendPaper)
 
 
 type Msg

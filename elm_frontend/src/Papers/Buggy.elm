@@ -1,4 +1,4 @@
-module BuggyPaper exposing (BuggyPaper, viewList)
+module Papers.Buggy exposing (BuggyPaper, viewList)
 
 import GeneralTypes exposing (DOI)
 import Html exposing (Html, a, div, h2, section, text)
