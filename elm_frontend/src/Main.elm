@@ -6,14 +6,15 @@ import BackendPaper exposing (BackendPaper, paperDecoder)
 import Browser
 import BuggyPaper exposing (BuggyPaper)
 import Debug
-import FreePathwayPaper exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway)
-import GeneralTypes exposing (DOI, PaperMetadata, renderPaperMetaData, renderUrl)
-import Html exposing (Html, a, button, div, footer, h2, main_, p, section, small, span, text)
-import Html.Attributes exposing (class, href, target, title)
-import Html.Events exposing (onClick)
-import HtmlUtils exposing (ulWithHeading)
+import FreePathwayPaper exposing (FreePathwayPaper, recommendPathway)
+import FreePathwayPaperMsg
+import GeneralTypes exposing (DOI, PaperMetadata)
+import Html exposing (Html, a, div, footer, main_, p, small, span, text)
+import Html.Attributes exposing (class, href, target)
 import Http
 import HttpBuilder exposing (withHeader)
+import MainMsg
+import Msg exposing (Msg)
 import OpenAccessPaper exposing (OpenAccessPaper)
 import OtherPathwayPaper exposing (OtherPathwayPaper)
 
@@ -65,7 +66,7 @@ fetchPaper : String -> String -> Cmd Msg
 fetchPaper serverURL doi =
     HttpBuilder.get (serverURL ++ "/api/papers?doi=" ++ doi)
         |> withHeader "Content-Type" "application/json"
-        |> HttpBuilder.withExpect (Http.expectJson GotPaper paperDecoder)
+        |> HttpBuilder.withExpect (Http.expectJson (Msg.MsgForMain << MainMsg.GotPaper) paperDecoder)
         |> HttpBuilder.request
 
 
@@ -104,7 +105,7 @@ view model =
             ]
             [ span (Animation.render model.style ++ [ class "progressbar_progress" ]) [ text "" ] ]
         , main_ []
-            [ renderPaywalledNoCostPathwayPapers paywalledNoCostPathwayPapers
+            [ FreePathwayPaper.viewList paywalledNoCostPathwayPapers
             , OtherPathwayPaper.viewList nonFreePolicyPapers
             , OpenAccessPaper.viewList model.openAccessPapers
             , BuggyPaper.viewList model.buggyPapers
@@ -115,12 +116,6 @@ view model =
 
 
 -- UPDATE
-
-
-type Msg
-    = GotPaper (Result Http.Error BackendPaper)
-    | TogglePathwayDisplay Int
-    | Animate Animation.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -150,33 +145,37 @@ update msg model =
                 |> Maybe.withDefault papers
     in
     case msg of
-        GotPaper (Ok backendPaper) ->
-            ( model
-                |> classifyPaper backendPaper
-                |> updateStyle
-            , Cmd.none
-            )
+        Msg.MsgForMain subMsg ->
+            case subMsg of
+                MainMsg.GotPaper (Ok backendPaper) ->
+                    ( model
+                        |> classifyPaper backendPaper
+                        |> updateStyle
+                    , Cmd.none
+                    )
 
-        GotPaper (Err error) ->
-            let
-                _ =
-                    Debug.log "Error in GotPaper" error
-            in
-            ( { model | numFailedDOIRequests = model.numFailedDOIRequests + 1 }
-            , Cmd.none
-            )
+                MainMsg.GotPaper (Err error) ->
+                    let
+                        _ =
+                            Debug.log "Error in GotPaper" error
+                    in
+                    ( { model | numFailedDOIRequests = model.numFailedDOIRequests + 1 }
+                    , Cmd.none
+                    )
 
-        TogglePathwayDisplay paperId ->
-            ( { model | freePathwayPapers = togglePathwayVisibility model.freePathwayPapers paperId }
-            , Cmd.none
-            )
+                MainMsg.Animate animMsg ->
+                    ( { model
+                        | style = Animation.update animMsg model.style
+                      }
+                    , Cmd.none
+                    )
 
-        Animate animMsg ->
-            ( { model
-                | style = Animation.update animMsg model.style
-              }
-            , Cmd.none
-            )
+        Msg.MsgForFreePathwayPaper subMsg ->
+            case subMsg of
+                FreePathwayPaperMsg.ToggleVisible paperId ->
+                    ( { model | freePathwayPapers = togglePathwayVisibility model.freePathwayPapers paperId }
+                    , Cmd.none
+                    )
 
 
 classifyPaper : BackendPaper -> Model -> Model
@@ -228,7 +227,7 @@ classifyPaper backendPaper model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Animation.subscription Animate [ model.style ]
+    Animation.subscription (Msg.MsgForMain << MainMsg.Animate) [ model.style ]
 
 
 
@@ -270,142 +269,6 @@ percentDOIsFetched model =
             * (model |> numberFetchedPapers |> toFloat)
             / (model.initialDOIs |> List.length |> toFloat)
         )
-
-
-
--- PAPER
-
-
-renderFreePathwayPaper : ( Int, FreePathwayPaper ) -> Html Msg
-renderFreePathwayPaper ( id, { pathwayVisible, recommendedPathway } as paper ) =
-    let
-        pathwayClass =
-            if pathwayVisible then
-                ""
-
-            else
-                "d-none"
-    in
-    div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ div [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-            [ div []
-                (renderPaperMetaData paper.meta)
-            , div [ class pathwayClass ]
-                (renderRecommendedPathway paper.oaPathwayURI recommendedPathway)
-            ]
-        , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
-            (renderPathwayButtons pathwayVisible ( id, paper.meta ))
-        ]
-
-
-renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String } ) -> List (Html Msg)
-renderPathwayButtons pathwayIsVisible ( id, { title } ) =
-    let
-        paperTitle =
-            Maybe.withDefault "Unknown title" title
-
-        verb =
-            if pathwayIsVisible then
-                "Hide"
-
-            else
-                "Show"
-
-        style =
-            if pathwayIsVisible then
-                "btn btn-light"
-
-            else
-                "btn btn-success"
-    in
-    [ div []
-        [ button
-            [ onClick (TogglePathwayDisplay id)
-            , class style
-            , Html.Attributes.title (verb ++ "Open Access pathway for: " ++ paperTitle)
-            ]
-            [ text (verb ++ " Open Access pathway")
-            ]
-        ]
-    ]
-
-
-renderRecommendedPathway : String -> ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
-renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, articleVersions, prerequisites, conditions, embargo, notes } ) =
-    let
-        addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
-        addEmbargo emb prereqs =
-            case ( emb, prereqs ) of
-                ( Just e, Just p ) ->
-                    Just (List.append [ "If " ++ e ++ " have passed since publication" ] p)
-
-                ( Just e, Nothing ) ->
-                    Just [ "If " ++ e ++ " have passed since publication" ]
-
-                ( Nothing, Just p ) ->
-                    Just p
-
-                _ ->
-                    Nothing
-
-        articleVersion =
-            articleVersions
-                |> List.filter (\v -> v == "published")
-                |> List.head
-                |> Maybe.withDefault (String.join " or " articleVersions)
-    in
-    List.concat
-        [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
-        , locationLabelsSorted
-            |> List.take 1
-            |> ulWithHeading ("upload the " ++ articleVersion ++ " version to any of the following:") text
-        , [ p [] [ text " You don't have pay a fee to do this." ] ]
-        , prerequisites
-            |> addEmbargo embargo
-            |> Maybe.map (ulWithHeading "But only:" text)
-            |> Maybe.withDefault [ text "" ]
-        , conditions
-            |> Maybe.map (ulWithHeading "Conditions are:" text)
-            |> Maybe.withDefault [ text "" ]
-        , notes
-            |> Maybe.map (ulWithHeading "Notes regarding this pathway:" text)
-            |> Maybe.withDefault [ text "" ]
-        , policy.additionalUrls
-            |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
-            |> Maybe.withDefault [ text "" ]
-        , [ p []
-                [ policy.notes
-                    |> Maybe.map (String.append "Regarding the policy they note: ")
-                    |> Maybe.withDefault ""
-                    |> text
-                ]
-          ]
-        , [ p []
-                [ text "More information about this and other Open Access policies for this publication can be found in the "
-                , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Sherpa Policy Database" ]
-                ]
-          ]
-        ]
-
-
-
--- PAPER SECTIONS
-
-
-renderPaywalledNoCostPathwayPapers : List ( Int, FreePathwayPaper ) -> Html Msg
-renderPaywalledNoCostPathwayPapers papers =
-    section [ class "mb-5" ]
-        [ h2 []
-            [ text "Unnecessarily paywalled publications"
-            ]
-        , p [ class "fs-6 mb-4" ]
-            [ text
-                ("We found no Open Access version for the following publications. "
-                    ++ "However, the publishers likely allow no-cost re-publication as Open Access."
-                )
-            ]
-        , div [] (List.map renderFreePathwayPaper papers)
-        ]
 
 
 
