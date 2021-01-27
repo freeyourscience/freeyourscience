@@ -1,9 +1,27 @@
-module Msg exposing (Msg(..))
+module Msg exposing (FreePathwayPaperMsg(..), MainMsg(..), Msg(..))
 
-import FreePathwayPaperMsg
-import MainMsg
+import Animation
+import BackendPaper exposing (BackendPaper)
+import Http
 
 
 type Msg
-    = MsgForMain MainMsg.Msg
-    | MsgForFreePathwayPaper FreePathwayPaperMsg.Msg
+    = MsgForMain MainMsg
+    | MsgForFreePathwayPaper FreePathwayPaperMsg
+
+
+
+-- MAIN
+
+
+type MainMsg
+    = GotPaper (Result Http.Error BackendPaper)
+    | Animate Animation.Msg
+
+
+
+-- FREEPATHWAYPAPER
+
+
+type FreePathwayPaperMsg
+    = ToggleVisible Int

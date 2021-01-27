@@ -7,13 +7,11 @@ import Browser
 import BuggyPaper exposing (BuggyPaper)
 import Debug
 import FreePathwayPaper exposing (FreePathwayPaper, recommendPathway)
-import FreePathwayPaperMsg
 import GeneralTypes exposing (DOI, PaperMetadata)
 import Html exposing (Html, a, div, footer, main_, p, small, span, text)
 import Html.Attributes exposing (class, href, target)
 import Http
 import HttpBuilder exposing (withHeader)
-import MainMsg
 import Msg exposing (Msg)
 import OpenAccessPaper exposing (OpenAccessPaper)
 import OtherPathwayPaper exposing (OtherPathwayPaper)
@@ -66,7 +64,7 @@ fetchPaper : String -> String -> Cmd Msg
 fetchPaper serverURL doi =
     HttpBuilder.get (serverURL ++ "/api/papers?doi=" ++ doi)
         |> withHeader "Content-Type" "application/json"
-        |> HttpBuilder.withExpect (Http.expectJson (Msg.MsgForMain << MainMsg.GotPaper) paperDecoder)
+        |> HttpBuilder.withExpect (Http.expectJson (Msg.MsgForMain << Msg.GotPaper) paperDecoder)
         |> HttpBuilder.request
 
 
@@ -147,14 +145,14 @@ update msg model =
     case msg of
         Msg.MsgForMain subMsg ->
             case subMsg of
-                MainMsg.GotPaper (Ok backendPaper) ->
+                Msg.GotPaper (Ok backendPaper) ->
                     ( model
                         |> classifyPaper backendPaper
                         |> updateStyle
                     , Cmd.none
                     )
 
-                MainMsg.GotPaper (Err error) ->
+                Msg.GotPaper (Err error) ->
                     let
                         _ =
                             Debug.log "Error in GotPaper" error
@@ -163,7 +161,7 @@ update msg model =
                     , Cmd.none
                     )
 
-                MainMsg.Animate animMsg ->
+                Msg.Animate animMsg ->
                     ( { model
                         | style = Animation.update animMsg model.style
                       }
@@ -172,7 +170,7 @@ update msg model =
 
         Msg.MsgForFreePathwayPaper subMsg ->
             case subMsg of
-                FreePathwayPaperMsg.ToggleVisible paperId ->
+                Msg.ToggleVisible paperId ->
                     ( { model | freePathwayPapers = togglePathwayVisibility model.freePathwayPapers paperId }
                     , Cmd.none
                     )
@@ -227,7 +225,7 @@ classifyPaper backendPaper model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Animation.subscription (Msg.MsgForMain << MainMsg.Animate) [ model.style ]
+    Animation.subscription (Msg.MsgForMain << Msg.Animate) [ model.style ]
 
 
 
