@@ -1,4 +1,4 @@
-module OpenAccessPaper exposing (OpenAccessPaper, view, viewList)
+module Papers.OpenAccess exposing (OpenAccessPaper, view, viewList)
 
 import GeneralTypes exposing (DOI)
 import Html exposing (Html, a, br, div, h2, img, p, section, text)
