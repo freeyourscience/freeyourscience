@@ -1,9 +1,9 @@
 module MainTest exposing (..)
 
 import Expect
-import Main exposing (parsePolicies, scorePathway)
+import Papers.Backend exposing (BackendPolicy)
+import Papers.FreePathway exposing (NoCostOaPathway, PolicyMetaData, recommendPathway, scorePathway)
 import Test exposing (Test, describe, test)
-import Types exposing (..)
 
 
 recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
@@ -64,7 +64,7 @@ suite =
     describe "main tests"
         [ describe "recommendPathway"
             [ test "valid first prio pathway" <|
-                \_ -> Expect.equal (Just recommendedPathway) (parsePolicies pathwayDetails)
+                \_ -> Expect.equal (Just recommendedPathway) (recommendPathway pathwayDetails)
             ]
         , describe "scoreNoCostPathway"
             [ test "relative score example" <|
