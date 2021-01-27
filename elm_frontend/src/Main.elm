@@ -113,6 +113,23 @@ view model =
 
 
 
+-- VIEW SOURCE PROFILE
+
+
+renderFooter : String -> Html Msg
+renderFooter authorProfileURL =
+    footer [ class "container text-center m-4" ]
+        [ small []
+            [ text "("
+            , a [ href authorProfileURL, target "_blank", class "link-dark" ]
+                [ text "Source Profile"
+                ]
+            , text " that was used to retreive the author's papers.)"
+            ]
+        ]
+
+
+
 -- UPDATE
 
 
@@ -216,33 +233,7 @@ classifyPaper backendPaper model =
 
 
 
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Animation.subscription Msg.Animate [ model.style ]
-
-
-
--- MAIN
-
-
-main : Program Flags Model Msg
-main =
-    Browser.element
-        { init = init
-        , update = update
-        , subscriptions = subscriptions
-        , view = view
-        }
-
-
-
--- ------------------------------
--- TO BE EXTRACTED
--- ------------------------------
--- LOADING BAR
+-- UPDATE LOADING BAR
 
 
 numberFetchedPapers : Model -> Int
@@ -266,17 +257,23 @@ percentDOIsFetched model =
 
 
 
--- SOURCE PROFILE
+-- SUBSCRIPTIONS
 
 
-renderFooter : String -> Html Msg
-renderFooter authorProfileURL =
-    footer [ class "container text-center m-4" ]
-        [ small []
-            [ text "("
-            , a [ href authorProfileURL, target "_blank", class "link-dark" ]
-                [ text "Source Profile"
-                ]
-            , text " that was used to retreive the author's papers.)"
-            ]
-        ]
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Animation.subscription Msg.Animate [ model.style ]
+
+
+
+-- MAIN
+
+
+main : Program Flags Model Msg
+main =
+    Browser.element
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        }
