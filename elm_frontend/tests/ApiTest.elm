@@ -1,10 +1,9 @@
 module ApiTest exposing (..)
 
-import Api exposing (paperDecoder)
 import Expect
 import Json.Decode as D
+import Papers.Backend exposing (BackendPaper, paperDecoder)
 import Test exposing (Test, describe, test)
-import Types exposing (..)
 
 
 fullPaperJson : String
