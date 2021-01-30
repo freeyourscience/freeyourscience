@@ -115,6 +115,7 @@ jsonPapers =
       "oa_pathway_details": [
           {
               "uri": "https://v2.sherpa.ac.uk/id/publisher_policy/4",
+              "notes": "General policy note. Make sure to read this closely!",
               "urls": [
                   {
                       "description": "Copyright & Permissions",
