@@ -1,8 +1,8 @@
 module Papers.Buggy exposing (BuggyPaper, viewList)
 
-import GeneralTypes exposing (DOI)
 import Html exposing (Html, a, div, h2, section, text)
 import Html.Attributes exposing (class, href, target)
+import Papers.Utils exposing (DOI)
 
 
 

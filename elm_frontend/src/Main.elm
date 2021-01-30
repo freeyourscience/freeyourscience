@@ -4,7 +4,6 @@ import Animation exposing (percent)
 import Array exposing (Array)
 import Browser
 import Debug
-import GeneralTypes exposing (DOI, PaperMetadata)
 import Html exposing (Html, a, div, footer, main_, p, small, span, text)
 import Html.Attributes exposing (class, href, target)
 import Http
@@ -15,6 +14,7 @@ import Papers.Buggy exposing (BuggyPaper)
 import Papers.FreePathway exposing (FreePathwayPaper, recommendPathway)
 import Papers.OpenAccess exposing (OpenAccessPaper)
 import Papers.OtherPathway exposing (OtherPathwayPaper)
+import Papers.Utils exposing (DOI, PaperMetadata)
 
 
 type alias Model =

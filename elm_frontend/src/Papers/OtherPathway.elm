@@ -1,8 +1,8 @@
 module Papers.OtherPathway exposing (OtherPathwayPaper, view, viewList)
 
-import GeneralTypes exposing (PaperMetadata, renderPaperMetaData)
 import Html exposing (Html, div, h2, p, section, text)
 import Html.Attributes exposing (class)
+import Papers.Utils exposing (PaperMetadata, renderPaperMetaData)
 
 
 

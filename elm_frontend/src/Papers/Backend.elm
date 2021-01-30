@@ -1,8 +1,8 @@
 module Papers.Backend exposing (BackendEmbargo, BackendLocation, BackendPaper, BackendPermittedOA, BackendPolicy, BackendPrerequisites, paperDecoder)
 
-import GeneralTypes exposing (DOI, NamedUrl)
 import Json.Decode as D exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
+import Papers.Utils exposing (DOI, NamedUrl)
 
 
 

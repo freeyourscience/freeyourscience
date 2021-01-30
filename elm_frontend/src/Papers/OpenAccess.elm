@@ -1,8 +1,8 @@
 module Papers.OpenAccess exposing (OpenAccessPaper, view, viewList)
 
-import GeneralTypes exposing (DOI)
 import Html exposing (Html, a, br, div, h2, img, p, section, text)
 import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
+import Papers.Utils exposing (DOI)
 
 
 

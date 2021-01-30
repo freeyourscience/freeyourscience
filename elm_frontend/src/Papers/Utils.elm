@@ -1,4 +1,4 @@
-module GeneralTypes exposing (DOI, NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
+module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 
 import Html exposing (Html, a, div, img, text)
 import Html.Attributes exposing (alt, class, height, href, src, target, width)
