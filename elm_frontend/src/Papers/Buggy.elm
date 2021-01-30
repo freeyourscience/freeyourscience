@@ -5,19 +5,11 @@ import Html.Attributes exposing (class, href, target)
 import Papers.Utils exposing (DOI)
 
 
-
--- MODEL
-
-
 type alias Paper =
     { doi : DOI
     , journal : Maybe String
     , oaPathway : Maybe String
     }
-
-
-
--- VIEW
 
 
 viewList : List Paper -> Html msg

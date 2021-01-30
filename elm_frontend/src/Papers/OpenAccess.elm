@@ -5,10 +5,6 @@ import Html.Attributes exposing (alt, class, height, href, src, target, title, w
 import Papers.Utils exposing (DOI)
 
 
-
--- TYPES
-
-
 type alias Paper =
     { doi : DOI
     , title : Maybe String

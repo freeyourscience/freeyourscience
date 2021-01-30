@@ -5,10 +5,6 @@ import Html.Attributes exposing (class)
 import Papers.Utils exposing (PaperMetadata, renderPaperMetaData)
 
 
-
--- TYPES
-
-
 type alias Paper =
     { meta : PaperMetadata
     , oaPathwayURI : String
