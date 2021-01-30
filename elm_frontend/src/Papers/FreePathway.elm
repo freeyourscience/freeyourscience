@@ -378,7 +378,7 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
     List.concat
         [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
         , locationLabelsSorted
-            |> List.take 1
+            |> List.take 3
             |> ulWithHeading ("upload the " ++ articleVersion ++ " version to any of the following:") text
         , [ p [] [ text " You don't have pay a fee to do this." ] ]
         , prerequisites
