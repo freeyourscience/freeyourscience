@@ -1,4 +1,4 @@
-module Papers.FreePathway exposing (FreePathwayPaper, NoCostOaPathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
+module Papers.FreePathway exposing (FreePathwayPaper, NoCostOaPathway, Pathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
 
 import GeneralTypes exposing (NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 import Html exposing (Html, a, button, div, h2, p, section, text)

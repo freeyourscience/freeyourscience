@@ -2,8 +2,34 @@ module MainTest exposing (..)
 
 import Expect
 import Papers.Backend exposing (BackendPolicy)
-import Papers.FreePathway exposing (NoCostOaPathway, PolicyMetaData, recommendPathway, scorePathway)
+import Papers.FreePathway exposing (NoCostOaPathway, Pathway, PolicyMetaData, recommendPathway, scorePathway)
 import Test exposing (Test, describe, test)
+
+
+pathway : Pathway
+pathway =
+    { additionalOaFee = "no"
+    , articleVersions = Just [ "submitted" ]
+    , locationSorted =
+        { location = [ "this_journal", "any_repository" ]
+        , namedRepository = Nothing
+        }
+    , prerequisites = Just [ "If Required by Funder" ]
+    , embargo = Just "12 months"
+    , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
+    , notes = Just [ "Pathway specific notes" ]
+    }
+
+
+noCostOaPathway : NoCostOaPathway
+noCostOaPathway =
+    { articleVersions = [ "submitted" ]
+    , locationLabelsSorted = [ "Non-commercial repositories", "PubMed Central", "Author's homepage", "Academic social networks" ]
+    , prerequisites = Just [ "If Required by Funder" ]
+    , embargo = Just "12 months"
+    , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
+    , notes = Just [ "Pathway specific notes" ]
+    }
 
 
 recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
@@ -12,13 +38,7 @@ recommendedPathway =
       , profileUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
       , notes = Just "Notes about this policy"
       }
-    , { articleVersions = [ "submitted" ]
-      , locationLabelsSorted = [ "Non-commercial repositories", "PubMed Central", "Author's homepage", "Academic social networks" ]
-      , prerequisites = Just [ "If Required by Funder" ]
-      , embargo = Just "12 months"
-      , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
-      , notes = Just [ "Pathway specific notes" ]
-      }
+    , noCostOaPathway
     )
 
 
@@ -70,29 +90,23 @@ suite =
             [ test "relative score example" <|
                 let
                     liberalPathway =
-                        { articleVersions = Just [ "published" ]
-                        , locationSorted =
-                            { location = [ "any_repository" ]
-                            , namedRepository = Nothing
-                            }
-                        , additionalOaFee = "no"
-                        , prerequisites = Nothing
-                        , conditions = Nothing
-                        , embargo = Nothing
-                        , notes = Nothing
+                        { pathway
+                            | articleVersions = Just [ "published" ]
+                            , locationSorted =
+                                { location = [ "any_repository" ]
+                                , namedRepository = Nothing
+                                }
+                            , additionalOaFee = "no"
                         }
 
                     restrictivePathway =
-                        { articleVersions = Just [ "submitted" ]
-                        , locationSorted =
-                            { location = [ "this_journal" ]
-                            , namedRepository = Nothing
-                            }
-                        , additionalOaFee = "no"
-                        , prerequisites = Nothing
-                        , conditions = Nothing
-                        , embargo = Nothing
-                        , notes = Nothing
+                        { pathway
+                            | articleVersions = Just [ "submitted" ]
+                            , locationSorted =
+                                { location = [ "this_journal" ]
+                                , namedRepository = Nothing
+                                }
+                            , additionalOaFee = "no"
                         }
                 in
                 \_ -> Expect.greaterThan (scorePathway restrictivePathway) (scorePathway liberalPathway)
