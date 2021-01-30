@@ -9,20 +9,20 @@ import Html.Attributes exposing (class, href, target)
 import Http
 import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
-import Papers.Backend exposing (BackendPaper, paperDecoder)
-import Papers.Buggy exposing (BuggyPaper)
-import Papers.FreePathway exposing (FreePathwayPaper, recommendPathway)
-import Papers.OpenAccess exposing (OpenAccessPaper)
-import Papers.OtherPathway exposing (OtherPathwayPaper)
+import Papers.Backend as Backend
+import Papers.Buggy as Buggy
+import Papers.FreePathway as FreePathway
+import Papers.OpenAccess as OpenAccess
+import Papers.OtherPathway as OtherPathway
 import Papers.Utils exposing (DOI, PaperMetadata)
 
 
 type alias Model =
     { initialDOIs : List DOI
-    , freePathwayPapers : Array FreePathwayPaper
-    , otherPathwayPapers : List OtherPathwayPaper
-    , openAccessPapers : List OpenAccessPaper
-    , buggyPapers : List BuggyPaper
+    , freePathwayPapers : Array FreePathway.Paper
+    , otherPathwayPapers : List OtherPathway.Paper
+    , openAccessPapers : List OpenAccess.Paper
+    , buggyPapers : List Buggy.Paper
     , numFailedDOIRequests : Int
     , authorName : String
     , authorProfileURL : String
@@ -64,7 +64,7 @@ fetchPaper : String -> String -> Cmd Msg
 fetchPaper serverURL doi =
     HttpBuilder.get (serverURL ++ "/api/papers?doi=" ++ doi)
         |> withHeader "Content-Type" "application/json"
-        |> HttpBuilder.withExpect (Http.expectJson Msg.GotPaper paperDecoder)
+        |> HttpBuilder.withExpect (Http.expectJson Msg.GotPaper Backend.paperDecoder)
         |> HttpBuilder.request
 
 
@@ -103,10 +103,10 @@ view model =
             ]
             [ span (Animation.render model.style ++ [ class "progressbar_progress" ]) [ text "" ] ]
         , main_ []
-            [ Papers.FreePathway.viewList paywalledNoCostPathwayPapers
-            , Papers.OtherPathway.viewList nonFreePolicyPapers
-            , Papers.OpenAccess.viewList model.openAccessPapers
-            , Papers.Buggy.viewList model.buggyPapers
+            [ FreePathway.viewList paywalledNoCostPathwayPapers
+            , OtherPathway.viewList nonFreePolicyPapers
+            , OpenAccess.viewList model.openAccessPapers
+            , Buggy.viewList model.buggyPapers
             ]
         , renderFooter model.authorProfileURL
         ]
@@ -151,7 +151,7 @@ update msg model =
                         model.style
             }
 
-        togglePathwayVisibility : Array FreePathwayPaper -> Int -> Array FreePathwayPaper
+        togglePathwayVisibility : Array FreePathway.Paper -> Int -> Array FreePathway.Paper
         togglePathwayVisibility papers id =
             papers
                 |> Array.get id
@@ -189,7 +189,7 @@ update msg model =
             )
 
 
-classifyPaper : BackendPaper -> Model -> Model
+classifyPaper : Backend.Paper -> Model -> Model
 classifyPaper backendPaper model =
     let
         isOpenAccess =
@@ -208,19 +208,19 @@ classifyPaper backendPaper model =
             }
 
         recommendedPathway =
-            Maybe.andThen recommendPathway backendPaper.pathwayDetails
+            Maybe.andThen FreePathway.recommendPathway backendPaper.pathwayDetails
     in
     case ( isOpenAccess, pathwayUri, recommendedPathway ) of
         ( Just False, Just pwUri, Just pathway ) ->
-            FreePathwayPaper meta pwUri pathway False
+            FreePathway.Paper meta pwUri pathway False
                 |> (\p -> { model | freePathwayPapers = Array.push p model.freePathwayPapers })
 
         ( Just False, Just pwUri, Nothing ) ->
-            OtherPathwayPaper meta pwUri
+            OtherPathway.Paper meta pwUri
                 |> (\p -> { model | otherPathwayPapers = model.otherPathwayPapers ++ [ p ] })
 
         ( Just True, _, _ ) ->
-            OpenAccessPaper meta.doi
+            OpenAccess.Paper meta.doi
                 meta.title
                 meta.journal
                 meta.authors
@@ -229,7 +229,7 @@ classifyPaper backendPaper model =
                 |> (\p -> { model | openAccessPapers = model.openAccessPapers ++ [ p ] })
 
         _ ->
-            { model | buggyPapers = model.buggyPapers ++ [ BuggyPaper backendPaper.doi backendPaper.journal backendPaper.oaPathway ] }
+            { model | buggyPapers = model.buggyPapers ++ [ Buggy.Paper backendPaper.doi backendPaper.journal backendPaper.oaPathway ] }
 
 
 

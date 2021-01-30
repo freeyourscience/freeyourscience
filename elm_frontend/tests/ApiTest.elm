@@ -2,7 +2,7 @@ module ApiTest exposing (..)
 
 import Expect
 import Json.Decode as D
-import Papers.Backend exposing (BackendPaper, paperDecoder)
+import Papers.Backend as Backend
 import Test exposing (Test, describe, test)
 
 
@@ -129,7 +129,7 @@ oaPathwayNull =
 """
 
 
-fullPaperElm : BackendPaper
+fullPaperElm : Backend.Paper
 fullPaperElm =
     { doi = "10.1002/STAB.201710469"
     , title = Just "Zukunft Robotik - Automatisierungspotentiale im Stahl- und Metallleichtbau"
@@ -176,9 +176,12 @@ suite =
         [ test "Successful decoding of full paper" <|
             let
                 decodedPaper =
-                    D.decodeString paperDecoder fullPaperJson
+                    D.decodeString Backend.paperDecoder fullPaperJson
             in
             \_ -> Expect.equal (Ok fullPaperElm) decodedPaper
         , test "Handle null for oa_pathway_details" <|
-            \_ -> Expect.equal (Ok { fullPaperElm | pathwayDetails = Nothing }) (D.decodeString paperDecoder oaPathwayNull)
+            \_ ->
+                Expect.equal
+                    (Ok { fullPaperElm | pathwayDetails = Nothing })
+                    (D.decodeString Backend.paperDecoder oaPathwayNull)
         ]

@@ -1,4 +1,4 @@
-module Papers.Buggy exposing (BuggyPaper, viewList)
+module Papers.Buggy exposing (Paper, viewList)
 
 import Html exposing (Html, a, div, h2, section, text)
 import Html.Attributes exposing (class, href, target)
@@ -9,7 +9,7 @@ import Papers.Utils exposing (DOI)
 -- MODEL
 
 
-type alias BuggyPaper =
+type alias Paper =
     { doi : DOI
     , journal : Maybe String
     , oaPathway : Maybe String
@@ -20,7 +20,7 @@ type alias BuggyPaper =
 -- VIEW
 
 
-viewList : List BuggyPaper -> Html msg
+viewList : List Paper -> Html msg
 viewList papers =
     if List.isEmpty papers then
         text ""

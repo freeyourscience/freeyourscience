@@ -1,4 +1,4 @@
-module Papers.OpenAccess exposing (OpenAccessPaper, view, viewList)
+module Papers.OpenAccess exposing (Paper, view, viewList)
 
 import Html exposing (Html, a, br, div, h2, img, p, section, text)
 import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
@@ -9,7 +9,7 @@ import Papers.Utils exposing (DOI)
 -- TYPES
 
 
-type alias OpenAccessPaper =
+type alias Paper =
     { doi : DOI
     , title : Maybe String
     , journal : Maybe String
@@ -19,7 +19,7 @@ type alias OpenAccessPaper =
     }
 
 
-view : OpenAccessPaper -> Html msg
+view : Paper -> Html msg
 view paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div
@@ -28,7 +28,7 @@ view paper =
         ]
 
 
-viewList : List OpenAccessPaper -> Html msg
+viewList : List Paper -> Html msg
 viewList papers =
     section [ class "mb-5" ]
         [ h2 [ class "mb-3" ]
@@ -48,7 +48,7 @@ viewList papers =
         ]
 
 
-renderPaperHeader : OpenAccessPaper -> Html msg
+renderPaperHeader : Paper -> Html msg
 renderPaperHeader ({ journal, authors, year, doi } as paper) =
     let
         paperTitle =

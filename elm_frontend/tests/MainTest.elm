@@ -1,7 +1,7 @@
 module MainTest exposing (..)
 
 import Expect
-import Papers.Backend exposing (BackendPolicy)
+import Papers.Backend exposing (Policy)
 import Papers.FreePathway exposing (NoCostOaPathway, Pathway, PolicyMetaData, recommendPathway, scorePathway)
 import Test exposing (Test, describe, test)
 
@@ -42,7 +42,7 @@ recommendedPathway =
     )
 
 
-pathwayDetails : List BackendPolicy
+pathwayDetails : List Policy
 pathwayDetails =
     [ { urls =
             Just

@@ -7,7 +7,7 @@ import Http
 import Json.Decode as D
 import Main exposing (Model, subscriptions, update, view)
 import Msg exposing (Msg(..))
-import Papers.Backend exposing (BackendPaper, paperDecoder)
+import Papers.Backend as Backend exposing (paperDecoder)
 
 
 main : Program () Model Msg
@@ -63,7 +63,7 @@ decodePaperMessage jsonPaper =
                 |> GotPaper
 
 
-decodeJsonPaper : String -> Result D.Error BackendPaper
+decodeJsonPaper : String -> Result D.Error Backend.Paper
 decodeJsonPaper paperJson =
     paperJson
         |> D.decodeString paperDecoder

@@ -1,11 +1,11 @@
-module Papers.FreePathway exposing (FreePathwayPaper, NoCostOaPathway, Pathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
+module Papers.FreePathway exposing (NoCostOaPathway, Paper, Pathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
 
 import Html exposing (Html, a, button, div, h2, p, section, text)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
 import HtmlUtils exposing (ulWithHeading)
 import Msg exposing (Msg)
-import Papers.Backend exposing (BackendEmbargo, BackendLocation, BackendPermittedOA, BackendPolicy, BackendPrerequisites)
+import Papers.Backend exposing (Embargo, Location, PermittedOA, Policy, Prerequisites)
 import Papers.Utils exposing (NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 import String.Extra exposing (humanize)
 
@@ -14,7 +14,7 @@ import String.Extra exposing (humanize)
 -- TYPES
 
 
-type alias FreePathwayPaper =
+type alias Paper =
     { meta : PaperMetadata
     , oaPathwayURI : String
     , recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
@@ -41,7 +41,7 @@ type alias NoCostOaPathway =
 
 type alias Pathway =
     { additionalOaFee : String
-    , locationSorted : BackendLocation
+    , locationSorted : Location
     , articleVersions : Maybe (List String)
     , conditions : Maybe (List String)
     , prerequisites : Maybe (List String)
@@ -55,7 +55,7 @@ type alias Pathway =
 -- Logic for going from backend policies to a single recommended pathway (if is exists)
 
 
-recommendPathway : List BackendPolicy -> Maybe ( PolicyMetaData, NoCostOaPathway )
+recommendPathway : List Policy -> Maybe ( PolicyMetaData, NoCostOaPathway )
 recommendPathway policies =
     -- TODO: move scoring extraction & construction into locally scoped function
     policies
@@ -92,14 +92,14 @@ noCostOaPathway ( metadata, pathway ) =
 -- UPDATE - PARSING BACKEND DATA
 
 
-flattenPolicies : List BackendPolicy -> List ( PolicyMetaData, Pathway )
+flattenPolicies : List Policy -> List ( PolicyMetaData, Pathway )
 flattenPolicies policies =
     policies
         |> List.map extractPathways
         |> List.concatMap (\( meta, pathways ) -> pathways |> List.map (Tuple.pair meta))
 
 
-extractPathways : BackendPolicy -> ( PolicyMetaData, List Pathway )
+extractPathways : Policy -> ( PolicyMetaData, List Pathway )
 extractPathways backendPolicy =
     ( backendPolicy
         |> parsePolicyMetaData
@@ -109,10 +109,10 @@ extractPathways backendPolicy =
     )
 
 
-parsePathway : BackendPermittedOA -> Pathway
+parsePathway : PermittedOA -> Pathway
 parsePathway { articleVersions, location, prerequisites, conditions, additionalOaFee, embargo, publicNotes } =
     let
-        embargoToString : BackendEmbargo -> String
+        embargoToString : Embargo -> String
         embargoToString { amount, units } =
             String.join " " [ String.fromInt amount, units ]
     in
@@ -132,7 +132,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
     }
 
 
-parsePolicyMetaData : BackendPolicy -> PolicyMetaData
+parsePolicyMetaData : Policy -> PolicyMetaData
 parsePolicyMetaData { policyUrl, urls, notes } =
     { profileUrl = policyUrl
     , additionalUrls = urls
@@ -140,13 +140,13 @@ parsePolicyMetaData { policyUrl, urls, notes } =
     }
 
 
-parsePrequisites : BackendPrerequisites -> List String
+parsePrequisites : Prerequisites -> List String
 parsePrequisites { prerequisites_phrases } =
     prerequisites_phrases
         |> List.map (\item -> item.phrase)
 
 
-humanizeLocations : BackendLocation -> List String
+humanizeLocations : Location -> List String
 humanizeLocations { location, namedRepository } =
     location
         |> List.map humanize
@@ -277,7 +277,7 @@ scoreAllowedLocation location =
 -- VIEW
 
 
-viewList : List ( Int, FreePathwayPaper ) -> Html Msg
+viewList : List ( Int, Paper ) -> Html Msg
 viewList papers =
     section [ class "mb-5" ]
         [ h2 []
@@ -293,7 +293,7 @@ viewList papers =
         ]
 
 
-view : ( Int, FreePathwayPaper ) -> Html Msg
+view : ( Int, Paper ) -> Html Msg
 view ( id, { pathwayVisible, recommendedPathway } as paper ) =
     let
         pathwayClass =

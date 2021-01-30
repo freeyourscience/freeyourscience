@@ -1,4 +1,4 @@
-module Papers.OtherPathway exposing (OtherPathwayPaper, view, viewList)
+module Papers.OtherPathway exposing (Paper, view, viewList)
 
 import Html exposing (Html, div, h2, p, section, text)
 import Html.Attributes exposing (class)
@@ -9,13 +9,13 @@ import Papers.Utils exposing (PaperMetadata, renderPaperMetaData)
 -- TYPES
 
 
-type alias OtherPathwayPaper =
+type alias Paper =
     { meta : PaperMetadata
     , oaPathwayURI : String
     }
 
 
-view : OtherPathwayPaper -> Html msg
+view : Paper -> Html msg
 view paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div
@@ -24,7 +24,7 @@ view paper =
         ]
 
 
-viewList : List OtherPathwayPaper -> Html msg
+viewList : List Paper -> Html msg
 viewList papers =
     if List.isEmpty papers then
         text ""

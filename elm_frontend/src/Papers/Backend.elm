@@ -1,4 +1,4 @@
-module Papers.Backend exposing (BackendEmbargo, BackendLocation, BackendPaper, BackendPermittedOA, BackendPolicy, BackendPrerequisites, paperDecoder)
+module Papers.Backend exposing (Embargo, Location, Paper, PermittedOA, Policy, Prerequisites, paperDecoder)
 
 import Json.Decode as D exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
@@ -9,7 +9,7 @@ import Papers.Utils exposing (DOI, NamedUrl)
 -- TYPES
 
 
-type alias BackendPaper =
+type alias Paper =
     { doi : DOI
     , title : Maybe String
     , journal : Maybe String
@@ -19,50 +19,50 @@ type alias BackendPaper =
     , isOpenAccess : Maybe Bool
     , oaPathway : Maybe String
     , oaPathwayURI : Maybe String
-    , pathwayDetails : Maybe (List BackendPolicy)
+    , pathwayDetails : Maybe (List Policy)
     , oaLocationURL : Maybe String
     }
 
 
-type alias BackendPolicy =
+type alias Policy =
     { urls : Maybe (List NamedUrl)
-    , permittedOA : Maybe (List BackendPermittedOA)
+    , permittedOA : Maybe (List PermittedOA)
     , policyUrl : String -- TODO: this should come from oaPathwayURI
     , notes : Maybe String
     }
 
 
-type alias BackendPermittedOA =
+type alias PermittedOA =
     { additionalOaFee : String
-    , location : BackendLocation
+    , location : Location
     , articleVersions : List String
     , conditions : Maybe (List String)
-    , prerequisites : Maybe BackendPrerequisites
-    , embargo : Maybe BackendEmbargo
+    , prerequisites : Maybe Prerequisites
+    , embargo : Maybe Embargo
     , publicNotes : Maybe (List String)
     }
 
 
-type alias BackendPrerequisites =
+type alias Prerequisites =
     { prerequisites : List String
-    , prerequisites_phrases : List BackendPhrase
+    , prerequisites_phrases : List Phrase
     }
 
 
-type alias BackendPhrase =
+type alias Phrase =
     { value : String
     , phrase : String
     , language : String
     }
 
 
-type alias BackendLocation =
+type alias Location =
     { location : List String
     , namedRepository : Maybe (List String)
     }
 
 
-type alias BackendEmbargo =
+type alias Embargo =
     { amount : Int
     , units : String
     }
@@ -79,38 +79,38 @@ namedUrlDecoder =
         |> required "url" D.string
 
 
-locationDecoder : Decoder BackendLocation
+locationDecoder : Decoder Location
 locationDecoder =
-    D.succeed BackendLocation
+    D.succeed Location
         |> required "location" (D.list D.string)
         |> optional "named_repository" (D.maybe (D.list D.string)) Nothing
 
 
-prerequisitesDecoder : Decoder BackendPrerequisites
+prerequisitesDecoder : Decoder Prerequisites
 prerequisitesDecoder =
-    D.succeed BackendPrerequisites
+    D.succeed Prerequisites
         |> required "prerequisites" (D.list D.string)
         |> required "prerequisites_phrases" (D.list phraseDecoder)
 
 
-phraseDecoder : Decoder BackendPhrase
+phraseDecoder : Decoder Phrase
 phraseDecoder =
-    D.succeed BackendPhrase
+    D.succeed Phrase
         |> required "value" D.string
         |> required "phrase" D.string
         |> required "language" D.string
 
 
-embargoDecoder : Decoder BackendEmbargo
+embargoDecoder : Decoder Embargo
 embargoDecoder =
-    D.succeed BackendEmbargo
+    D.succeed Embargo
         |> required "amount" D.int
         |> required "units" D.string
 
 
-permittedOADecoder : Decoder BackendPermittedOA
+permittedOADecoder : Decoder PermittedOA
 permittedOADecoder =
-    D.succeed BackendPermittedOA
+    D.succeed PermittedOA
         |> required "additional_oa_fee" D.string
         |> required "location" locationDecoder
         |> required "article_version" (D.list D.string)
@@ -120,18 +120,18 @@ permittedOADecoder =
         |> optional "public_notes" (D.nullable (D.list D.string)) Nothing
 
 
-policyDetailsDecoder : Decoder BackendPolicy
+policyDetailsDecoder : Decoder Policy
 policyDetailsDecoder =
-    D.succeed BackendPolicy
+    D.succeed Policy
         |> required "urls" (D.nullable (D.list namedUrlDecoder))
         |> required "permitted_oa" (D.nullable (D.list permittedOADecoder))
         |> required "uri" D.string
         |> optional "notes" (D.nullable D.string) Nothing
 
 
-paperDecoder : Decoder BackendPaper
+paperDecoder : Decoder Paper
 paperDecoder =
-    D.succeed BackendPaper
+    D.succeed Paper
         |> required "doi" D.string
         |> required "title" (D.nullable D.string)
         |> required "journal" (D.nullable D.string)
