@@ -12,6 +12,7 @@ type alias Paper =
     , authors : Maybe String
     , year : Maybe Int
     , issn : Maybe String
+    , oaLocationURL : String
     }
 
 
@@ -45,7 +46,7 @@ viewList papers =
 
 
 renderPaperHeader : Paper -> Html msg
-renderPaperHeader ({ journal, authors, year, doi } as paper) =
+renderPaperHeader ({ journal, authors, year, doi, oaLocationURL } as paper) =
     let
         paperTitle =
             paper.title
@@ -65,7 +66,7 @@ renderPaperHeader ({ journal, authors, year, doi } as paper) =
                     , doi
                     ]
                 )
-            , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
+            , a [ href oaLocationURL, class "link-secondary", target "_blank" ]
                 [ img
                     [ src "/static/img/box-arrow-up-right.svg"
                     , alt ""

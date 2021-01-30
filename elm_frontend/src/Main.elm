@@ -226,6 +226,10 @@ classifyPaper backendPaper model =
                 meta.authors
                 meta.year
                 meta.issn
+                (Maybe.withDefault
+                    ("https://doi.org/" ++ meta.doi)
+                    backendPaper.oaLocationURL
+                )
                 |> (\p -> { model | openAccessPapers = model.openAccessPapers ++ [ p ] })
 
         _ ->
