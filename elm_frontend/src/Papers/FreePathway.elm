@@ -358,10 +358,10 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
         addEmbargo emb prereqs =
             case ( emb, prereqs ) of
                 ( Just e, Just p ) ->
-                    Just (List.append [ "If " ++ e ++ " have passed since publication" ] p)
+                    Just (List.append [ e ++ " have passed since publication" ] p)
 
                 ( Just e, Nothing ) ->
-                    Just [ "If " ++ e ++ " have passed since publication" ]
+                    Just [ e ++ " have passed since publication" ]
 
                 ( Nothing, Just p ) ->
                     Just p
@@ -376,17 +376,17 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
                 |> Maybe.withDefault (String.join " or " articleVersions)
     in
     List.concat
-        [ [ p [] [ text "The publisher has a policy that lets you:" ] ]
-        , locationLabelsSorted
+        [ locationLabelsSorted
             |> List.take 3
-            |> ulWithHeading ("upload the " ++ articleVersion ++ " version to any of the following:") text
-        , [ p [] [ text " You don't have pay a fee to do this." ] ]
-        , prerequisites
-            |> addEmbargo embargo
-            |> Maybe.map (ulWithHeading "But only:" text)
-            |> Maybe.withDefault [ text "" ]
+            |> ulWithHeading ("Upload the " ++ articleVersion ++ " version to:") text
+        , [ p [] [ text " You do not have to pay a fee to the publisher." ] ]
         , conditions
+            |> addEmbargo embargo
             |> Maybe.map (ulWithHeading "Conditions are:" text)
+            |> Maybe.withDefault [ text "" ]
+        , [ text "-----------" ]
+        , prerequisites
+            |> Maybe.map (ulWithHeading "But only:" text)
             |> Maybe.withDefault [ text "" ]
         , notes
             |> Maybe.map (ulWithHeading "Notes regarding this pathway:" text)
