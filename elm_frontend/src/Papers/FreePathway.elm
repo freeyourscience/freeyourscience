@@ -1,7 +1,7 @@
 module Papers.FreePathway exposing (NoCostOaPathway, Paper, Pathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
 
-import Html exposing (Html, a, br, button, div, h2, li, p, section, text, ul)
-import Html.Attributes exposing (class, href)
+import Html exposing (Html, a, br, button, div, h2, hr, li, p, section, small, text, ul)
+import Html.Attributes exposing (class, href, style)
 import Html.Events exposing (onClick)
 import HtmlUtils exposing (renderList, ulWithHeading)
 import Msg exposing (Msg)
@@ -410,22 +410,26 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
             |> addEmbargo embargo
             |> Maybe.map (ulWithHeading "Conditions are:" text)
             |> Maybe.withDefault [ text "" ]
-        , [ text "-----------" ]
-        , [ p []
-                [ text "The above pathway is part of an Open Access policy deposited by the publisher in the Sherpa Policy Database."
-                , br [] []
-                , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Visit this policy." ]
-                ]
-          ]
-        , publisherNotes
-        , policy.additionalUrls
-            |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
-            |> Maybe.withDefault [ text "" ]
-        , [ p []
-                [ policy.notes
-                    |> Maybe.map (String.append "Regarding the policy they note: ")
-                    |> Maybe.withDefault ""
-                    |> text
-                ]
+        , [ small [ class "mt-4", style "display" "block" ]
+                (List.concat
+                    [ [ p []
+                            [ text "The above pathway is part of an Open Access policy deposited by the publisher in the Sherpa Policy Database."
+                            , br [] []
+                            , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Visit this policy." ]
+                            ]
+                      ]
+                    , publisherNotes
+                    , policy.additionalUrls
+                        |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
+                        |> Maybe.withDefault [ text "" ]
+                    , [ p []
+                            [ policy.notes
+                                |> Maybe.map (String.append "Regarding the policy they note: ")
+                                |> Maybe.withDefault ""
+                                |> text
+                            ]
+                      ]
+                    ]
+                )
           ]
         ]
