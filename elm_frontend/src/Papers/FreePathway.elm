@@ -1,9 +1,9 @@
 module Papers.FreePathway exposing (NoCostOaPathway, Paper, Pathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
 
-import Html exposing (Html, a, br, button, div, h2, p, section, text)
+import Html exposing (Html, a, br, button, div, h2, li, p, section, text, ul)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
-import HtmlUtils exposing (ulWithHeading, renderList)
+import HtmlUtils exposing (renderList, ulWithHeading)
 import Msg exposing (Msg)
 import Papers.Backend exposing (Embargo, Location, PermittedOA, Policy, Prerequisites)
 import Papers.Utils exposing (NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
@@ -355,8 +355,8 @@ renderRecommendedPathway : String -> ( PolicyMetaData, NoCostOaPathway ) -> List
 renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, articleVersions, prerequisites, conditions, embargo, notes } ) =
     let
         addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
-        addEmbargo emb prereqs =
-            case ( emb, prereqs ) of
+        addEmbargo emb pqs =
+            case ( emb, pqs ) of
                 ( Just e, Just p ) ->
                     Just (List.append [ e ++ " have passed since publication" ] p)
 
@@ -374,6 +374,32 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
                 |> List.filter (\v -> v == "published")
                 |> List.head
                 |> Maybe.withDefault (String.join " or " articleVersions)
+
+        publisherNotes =
+            case ( notes, prerequisites ) of
+                ( Nothing, Nothing ) ->
+                    [ text "" ]
+
+                ( Just nts, Nothing ) ->
+                    nts |> ulWithHeading "The publisher notes:" text
+
+                ( Nothing, Just pqs ) ->
+                    pqs |> ulWithHeading "The publisher notes the following prerequisites:" text
+
+                ( Just nts, Just pqs ) ->
+                    let
+                        notesList =
+                            nts |> List.map text |> List.map (\l -> li [] [ l ])
+
+                        prerequisitesList =
+                            [ li [] [ text "Prerequisites to consider:" ]
+                            , pqs |> List.map text |> renderList
+                            ]
+                    in
+                    [ p [ class "mb-0" ]
+                        [ text "The publisher notes:" ]
+                    , ul [] (notesList ++ prerequisitesList)
+                    ]
     in
     List.concat
         [ locationLabelsSorted
@@ -391,15 +417,7 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
                 , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Visit this policy." ]
                 ]
           ]
-        , [p [class "mb-0"] [text "The publisher notes:"]]
-        , [notes
-            |> Maybe.map (List.map text)
-            |> Maybe.map (renderList)
-            |> Maybe.withDefault ( text "" )
-        ]
-        , prerequisites
-            |> Maybe.map (ulWithHeading "But only:" text)
-            |> Maybe.withDefault [ text "" ]
+        , publisherNotes
         , policy.additionalUrls
             |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
             |> Maybe.withDefault [ text "" ]
