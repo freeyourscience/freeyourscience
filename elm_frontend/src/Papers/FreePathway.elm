@@ -307,7 +307,7 @@ view ( id, { pathwayVisible, recommendedPathway } as paper ) =
         [ div [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
             [ div []
                 (renderPaperMetaData paper.meta)
-            , div [ class pathwayClass ]
+            , div [ class pathwayClass, class "mt-4" ]
                 (renderRecommendedPathway paper.oaPathwayURI recommendedPathway)
             ]
         , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
