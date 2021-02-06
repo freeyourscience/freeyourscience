@@ -1,6 +1,7 @@
 module HtmlUtils exposing (ulWithHeading)
 
 import Html exposing (Html, li, p, text, ul)
+import Html.Attributes exposing (class)
 
 
 ulWithHeading : String -> (a -> Html msg) -> List a -> List (Html msg)
@@ -11,7 +12,7 @@ ulWithHeading heading renderElement list =
                 |> List.map renderElement
                 |> renderList
     in
-    [ p [] [ text heading ]
+    [ p [ class "mb-0" ] [ text heading ]
     , renderedList
     ]
 
