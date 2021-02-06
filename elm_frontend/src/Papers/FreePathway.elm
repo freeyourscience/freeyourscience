@@ -1,6 +1,6 @@
 module Papers.FreePathway exposing (NoCostOaPathway, Paper, Pathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
 
-import Html exposing (Html, a, button, div, h2, p, section, text)
+import Html exposing (Html, a, br, button, div, h2, p, section, text)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
 import HtmlUtils exposing (ulWithHeading)
@@ -385,6 +385,12 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
             |> Maybe.map (ulWithHeading "Conditions are:" text)
             |> Maybe.withDefault [ text "" ]
         , [ text "-----------" ]
+        , [ p []
+                [ text "The above pathway is part of an Open Access policy deposited by the publisher in the Sherpa Policy Database."
+                , br [] []
+                , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Visit this policy." ]
+                ]
+          ]
         , prerequisites
             |> Maybe.map (ulWithHeading "But only:" text)
             |> Maybe.withDefault [ text "" ]
@@ -399,11 +405,6 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
                     |> Maybe.map (String.append "Regarding the policy they note: ")
                     |> Maybe.withDefault ""
                     |> text
-                ]
-          ]
-        , [ p []
-                [ text "More information about this and other Open Access policies for this publication can be found in the "
-                , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Sherpa Policy Database" ]
                 ]
           ]
         ]
