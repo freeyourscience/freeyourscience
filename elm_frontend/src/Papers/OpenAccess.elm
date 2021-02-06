@@ -19,10 +19,7 @@ type alias Paper =
 view : Paper -> Html msg
 view paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ div
-            [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-            [ renderPaperHeader paper ]
-        ]
+        [ renderPaperHeader paper ]
 
 
 viewList : List Paper -> Html msg
@@ -52,7 +49,7 @@ renderPaperHeader ({ journal, authors, year, doi, oaLocationURL } as paper) =
             paper.title
     in
     div
-        [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
+        [ class "paper-details col-12 fs-6 mb-2 mb-md-0" ]
         [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" paperTitle) ]
         , div [ class "mb-1" ]
             [ text
