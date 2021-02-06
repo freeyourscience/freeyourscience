@@ -1,6 +1,6 @@
 module Papers.FreePathway exposing (NoCostOaPathway, Paper, Pathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
 
-import Html exposing (Html, a, br, button, div, h2, li, p, section, small, text, ul)
+import Html exposing (Html, a, br, button, div, h2, li, p, section, small, strong, text, ul)
 import Html.Attributes exposing (class, href, style)
 import Html.Events exposing (onClick)
 import HtmlUtils exposing (renderList, ulWithHeading)
@@ -404,7 +404,12 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
     List.concat
         [ locationLabelsSorted
             |> List.take 3
-            |> ulWithHeading [ text ("Upload the " ++ articleVersion ++ " version to:") ] text
+            |> ulWithHeading
+                [ text "Upload the "
+                , strong [] [ text (articleVersion ++ " version") ]
+                , text " to:"
+                ]
+                text
         , [ p [] [ text " You do not have to pay a fee to the publisher." ] ]
         , conditions
             |> addEmbargo embargo
