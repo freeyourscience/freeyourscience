@@ -1,4 +1,4 @@
-module HtmlUtils exposing (ulWithHeading)
+module HtmlUtils exposing (ulWithHeading, renderList)
 
 import Html exposing (Html, li, p, text, ul)
 import Html.Attributes exposing (class)

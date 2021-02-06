@@ -3,7 +3,7 @@ module Papers.FreePathway exposing (NoCostOaPathway, Paper, Pathway, PolicyMetaD
 import Html exposing (Html, a, br, button, div, h2, p, section, text)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
-import HtmlUtils exposing (ulWithHeading)
+import HtmlUtils exposing (ulWithHeading, renderList)
 import Msg exposing (Msg)
 import Papers.Backend exposing (Embargo, Location, PermittedOA, Policy, Prerequisites)
 import Papers.Utils exposing (NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
@@ -391,11 +391,14 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
                 , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Visit this policy." ]
                 ]
           ]
+        , [p [class "mb-0"] [text "The publisher notes:"]]
+        , [notes
+            |> Maybe.map (List.map text)
+            |> Maybe.map (renderList)
+            |> Maybe.withDefault ( text "" )
+        ]
         , prerequisites
             |> Maybe.map (ulWithHeading "But only:" text)
-            |> Maybe.withDefault [ text "" ]
-        , notes
-            |> Maybe.map (ulWithHeading "Notes regarding this pathway:" text)
             |> Maybe.withDefault [ text "" ]
         , policy.additionalUrls
             |> Maybe.map (ulWithHeading "The publisher has provided the following links to further information:" renderUrl)
