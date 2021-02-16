@@ -60,4 +60,7 @@ def get_author_with_papers(orcid: str) -> Optional[Author]:
 
 
 def is_orcid(orcid: str) -> bool:
-    return re.match("[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}", orcid) is not None
+    return (
+        re.match("[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}", orcid)
+        is not None
+    )
