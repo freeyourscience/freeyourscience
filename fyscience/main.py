@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from fyscience.routers.api import api_router
+from fyscience.routers.html import html_router
 from fyscience.routers.deps import TEMPLATE_PATH
 
 
@@ -16,6 +17,7 @@ templates = Jinja2Templates(directory=TEMPLATE_PATH)
 
 app = FastAPI(title="Free Your Science")
 app.include_router(api_router)
+app.include_router(html_router, include_in_schema=False)
 app.mount("/static", StaticFiles(directory=STATIC_PATH), name="static")
 
 app.add_middleware(
