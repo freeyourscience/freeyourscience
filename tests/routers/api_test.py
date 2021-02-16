@@ -8,9 +8,9 @@ from fyscience.schemas import (
     PaperWithOAStatus,
 )
 from fyscience import main
-from fyscience.deps import Settings, get_settings
+from fyscience.routers.deps import Settings, get_settings
 from fyscience.semantic_scholar import Author
-from fyscience.api import _is_doi_query
+from fyscience.routers.api import _is_doi_query
 
 
 def get_settings_override():
@@ -39,14 +39,14 @@ def test_get_publications_for_author_html(
     url = f"/search?query={author}"
 
     monkeypatch.setattr(
-        f"fyscience.api.{provider}",
+        f"fyscience.routers.api.{provider}",
         lambda *a, **kw: Author(
             name="Dummy Author", papers=[FullPaper(doi="10.1007/s00580-005-0536-0")]
         ),
     )
 
     monkeypatch.setattr(
-        "fyscience.api._construct_paper",
+        "fyscience.routers.api._construct_paper",
         lambda *a, **kw: FullPaper(
             issn="1618-5641",
             doi="10.1007/s00580-005-0536-0",
@@ -60,7 +60,7 @@ def test_get_publications_for_author_html(
     r = client.get(url)
     assert r.ok
 
-    monkeypatch.setattr(f"fyscience.api.{provider}", lambda *a, **kw: None)
+    monkeypatch.setattr(f"fyscience.routers.api.{provider}", lambda *a, **kw: None)
 
     r = client.get(url)
     assert r.status_code == 404
@@ -80,7 +80,7 @@ def test_get_publications_for_author(
     url = f"/api/authors?profile={profile}"
 
     monkeypatch.setattr(
-        f"fyscience.api.{provider}",
+        f"fyscience.routers.api.{provider}",
         lambda *a, **kw: Author(
             name="Dummy Author", papers=[FullPaper(doi="10.1007/s00580-005-0536-0")]
         ),
@@ -89,7 +89,7 @@ def test_get_publications_for_author(
     r = client.get(url)
     assert r.ok
 
-    monkeypatch.setattr(f"fyscience.api.{provider}", lambda *a, **kw: None)
+    monkeypatch.setattr(f"fyscience.routers.api.{provider}", lambda *a, **kw: None)
 
     r = client.get(url)
     assert r.status_code == 404
@@ -112,7 +112,7 @@ def test_get_publications_for_author_without_profile_arg(client: TestClient) -> 
 def test_no_author(author, provider, monkeypatch, client: TestClient) -> None:
     url = f"/search?query={author}"
 
-    monkeypatch.setattr(f"fyscience.api.{provider}", lambda *a, **kw: None)
+    monkeypatch.setattr(f"fyscience.routers.api.{provider}", lambda *a, **kw: None)
 
     r = client.get(url)
     assert not r.ok
@@ -133,7 +133,7 @@ def test_no_publications_for_author(
     url = f"/search?query={author}"
 
     monkeypatch.setattr(
-        f"fyscience.api.{provider}",
+        f"fyscience.routers.api.{provider}",
         lambda *a, **kw: Author(name="Dummy Author", papers=[]),
     )
 
@@ -172,17 +172,17 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     oa_pathway = OAPathway.nocost.value
 
     monkeypatch.setattr(
-        "fyscience.api.unpaywall_get_paper",
+        "fyscience.routers.api.unpaywall_get_paper",
         lambda *a, **kw: FullPaper(doi=doi, issn=issn, is_open_access=is_open_access),
     )
     monkeypatch.setattr(
-        "fyscience.api.validate_oa_status_from_s2",
+        "fyscience.routers.api.validate_oa_status_from_s2",
         lambda *a, **kw: PaperWithOAStatus(
             doi=doi, issn=issn, is_open_access=is_open_access
         ),
     )
     monkeypatch.setattr(
-        "fyscience.api.oa_pathway",
+        "fyscience.routers.api.oa_pathway",
         lambda paper, **kw: PaperWithOAPathway(oa_pathway=oa_pathway, **paper.dict()),
     )
 

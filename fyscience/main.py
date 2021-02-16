@@ -6,8 +6,8 @@ from fastapi.exception_handlers import http_exception_handler
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from fyscience.api import api_router
-from fyscience.deps import TEMPLATE_PATH
+from fyscience.routers.api import api_router
+from fyscience.routers.deps import TEMPLATE_PATH
 
 
 STATIC_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "static")

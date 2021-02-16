@@ -11,7 +11,7 @@ from fyscience.unpaywall import get_paper as unpaywall_get_paper
 from fyscience.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
 from fyscience.oa_status import validate_oa_status_from_s2
 from fyscience import orcid, semantic_scholar, crossref
-from fyscience.deps import get_settings, Settings, TEMPLATE_PATH
+from fyscience.routers.deps import get_settings, Settings, TEMPLATE_PATH
 
 
 api_router = APIRouter()

@@ -4,7 +4,9 @@ from functools import lru_cache
 from pydantic import BaseSettings
 
 
-TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "templates")
+TEMPLATE_PATH = os.path.join(
+    os.path.abspath(os.path.dirname(__file__)), "..", "templates"
+)
 
 
 class Settings(BaseSettings):
