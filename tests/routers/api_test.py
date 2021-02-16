@@ -54,52 +54,6 @@ def test_get_publications_for_author_without_profile_arg(client: TestClient) -> 
     assert r.status_code == 422
 
 
-@pytest.mark.parametrize(
-    "author,provider",
-    [
-        (51453144, "semantic_scholar.get_author_with_papers"),
-        ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
-        ("firstname lastname", "crossref.get_author_with_papers"),
-    ],
-)
-def test_no_author(author, provider, monkeypatch, client: TestClient) -> None:
-    url = f"/search?query={author}"
-
-    monkeypatch.setattr(f"fyscience.routers.api.{provider}", lambda *a, **kw: None)
-
-    r = client.get(url)
-    assert not r.ok
-    assert r.status_code == 404
-
-
-@pytest.mark.parametrize(
-    "author,provider",
-    [
-        (51453144, "semantic_scholar.get_author_with_papers"),
-        ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
-        ("firstname lastname", "crossref.get_author_with_papers"),
-    ],
-)
-def test_no_publications_for_author(
-    author, provider, monkeypatch, client: TestClient
-) -> None:
-    url = f"/search?query={author}"
-
-    monkeypatch.setattr(
-        f"fyscience.routers.api.{provider}",
-        lambda *a, **kw: Author(name="Dummy Author", papers=[]),
-    )
-
-    r = client.get(url)
-    assert r.ok
-
-
-def test_search_missing_args(client: TestClient) -> None:
-    r = client.get("/search")
-    assert not r.ok
-    assert r.status_code == 422
-
-
 def test_get_paper(monkeypatch, client: TestClient) -> None:
     issn = "1618-5641"
     doi = "10.1007/s00580-005-0536-8"
