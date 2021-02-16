@@ -202,6 +202,21 @@ def get_search_result_html(
         )
 
 
-@api_router.get("/about", response_class=HTMLResponse, include_in_schema=False)
-def get_about_html(request: Request):
-    return templates.TemplateResponse("about.html", {"request": request})
+@api_router.get("/glossary", response_class=HTMLResponse, include_in_schema=False)
+def get_glossary_html(request: Request):
+    return templates.TemplateResponse("glossary.html", {"request": request})
+
+
+@api_router.get("/republish", response_class=HTMLResponse, include_in_schema=False)
+def get_republish_html(request: Request):
+    return templates.TemplateResponse("republish.html", {"request": request})
+
+
+@api_router.get("/legal", response_class=HTMLResponse, include_in_schema=False)
+def get_legal_html(request: Request):
+    return templates.TemplateResponse("legal.html", {"request": request})
+
+
+@api_router.get("/team", response_class=HTMLResponse, include_in_schema=False)
+def get_team_html(request: Request):
+    return templates.TemplateResponse("team.html", {"request": request})
