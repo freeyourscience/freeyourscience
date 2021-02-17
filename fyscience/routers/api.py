@@ -72,8 +72,9 @@ def get_author_with_papers(profile: str, settings: Settings = Depends(get_settin
     search method, which is not fully populated with all information.
     To fetch fully populated papers, use ``GET api/papers?doi=...``
     """
-    if orcid.is_orcid(profile):
-        author = orcid.get_author_with_papers(profile)
+    extracted_orcid = orcid.extract_orcid(profile)
+    if extracted_orcid is not None:
+        author = orcid.get_author_with_papers(extracted_orcid)
     else:
         author_id = semantic_scholar.extract_profile_id_from_url(profile)
         if author_id.isnumeric():

@@ -2,7 +2,7 @@ import os
 import pytest
 
 from requests import Response
-from fyscience.orcid import get_author_with_papers, is_orcid
+from fyscience.orcid import get_author_with_papers, is_orcid, extract_orcid
 
 
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), "assets")
@@ -43,3 +43,16 @@ def test_get_author_with_papers(monkeypatch):
 )
 def test_is_orchid(orcid, expected):
     assert is_orcid(orcid) == expected
+
+
+@pytest.mark.parametrize(
+    "input,expected",
+    [
+        ("1234-4321-1234-111X", "1234-4321-1234-111X"),
+        ("https://orcid.org/1234-4321-1234-111X", "1234-4321-1234-111X"),
+        ("1111", None),
+        ("https://freeyourscience.org", None),
+    ],
+)
+def test_extract_orcid(input, expected):
+    assert extract_orcid(input) == expected

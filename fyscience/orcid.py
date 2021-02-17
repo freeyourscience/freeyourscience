@@ -64,3 +64,11 @@ def is_orcid(orcid: str) -> bool:
         re.match("[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}", orcid)
         is not None
     )
+
+
+def extract_orcid(orcid: str) -> Optional[str]:
+    url_prefix = "https://orcid.org/"
+    if orcid.startswith(url_prefix):
+        orcid = orcid[len(url_prefix) :]
+
+    return orcid if is_orcid(orcid) else None

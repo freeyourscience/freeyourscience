@@ -23,6 +23,11 @@ main.app.dependency_overrides[get_settings] = get_settings_override
     "profile,provider",
     [
         (51453144, "semantic_scholar.get_author_with_papers"),
+        (
+            "https://www.semanticscholar.org/author/Lukas-Gro%C3%9Fberger/51453144",
+            "semantic_scholar.get_author_with_papers",
+        ),
+        ("https://orcid.org/0000-0000-0000-0000", "orcid.get_author_with_papers"),
         ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
         ("firstname lastname", "crossref.get_author_with_papers"),
     ],
