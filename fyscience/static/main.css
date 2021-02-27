@@ -65,3 +65,7 @@ div.paper-details {
   outline: 2px solid transparent;
   box-sizing: border-box;
 }
+
+.team-portrait {
+  max-width: 200px;
+}
