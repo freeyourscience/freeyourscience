@@ -28,7 +28,7 @@ div.paper-details {
   border: none;
 }
 
-.usersteps__step--active::before{
+.usersteps__step--active::before {
   color: #0d6efd;
 }
 
@@ -47,7 +47,7 @@ div.paper-details {
   height: 4px;
   background: transparent;
   opacity: 1;
-  transition: opacity .4s linear .4s;
+  transition: opacity 0.4s linear 0.4s;
   display: flex;
   overflow: hidden;
   border-radius: 6px;
@@ -60,8 +60,8 @@ div.paper-details {
 .progressbar_progress {
   background-color: rgb(121, 184, 255);
   width: 100%;
-  box-shadow: 0 0 10px rgba(121,184,255,.7);
-  transition: width .4s ease;
+  box-shadow: 0 0 10px rgba(121, 184, 255, 0.7);
+  transition: width 0.4s ease;
   outline: 2px solid transparent;
   box-sizing: border-box;
 }
