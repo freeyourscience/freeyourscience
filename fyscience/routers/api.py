@@ -75,9 +75,13 @@ def get_author_with_papers(profile: str, settings: Settings = Depends(get_settin
     extracted_orcid = orcid.extract_orcid(profile)
     if extracted_orcid is not None:
         author = orcid.get_author_with_papers(extracted_orcid)
+
     else:
         author_id = semantic_scholar.extract_profile_id_from_url(profile)
-        if author_id.isnumeric():
+        if not author_id.isnumeric():
+            author_id = semantic_scholar.get_author_id(profile, settings.s2_api_key)
+
+        if author_id is not None:
             # TODO: Semantic scholar only seems to have the DOI of the preprint and not
             #       the finally published paper's DOI
             #       (see e.g. semantic scholar ID 51453144)

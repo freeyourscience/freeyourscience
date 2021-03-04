@@ -128,3 +128,19 @@ def extract_profile_id_from_url(url: str) -> Optional[str]:
     url_without_params = url_without_params.rstrip("/")
     author_id = url_without_params.split("/")[-1]
     return author_id
+
+
+def get_author_id(author_name: str, api_key: str = None) -> Optional[str]:
+    """Get S2 author ID via the name search."""
+    r = requests.get(
+        "https://www.semanticscholar.org/api/1/completion",
+        params={"q": author_name, "fresh": "false"},
+    )
+    if not r.ok:
+        return None
+
+    suggestions = r.json().get("suggestions")
+    if not suggestions:
+        return None
+
+    return suggestions[0]["linkedId"]
