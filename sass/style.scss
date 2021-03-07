@@ -109,3 +109,10 @@ dd {
   @include base.f5;
   margin: 0 0 1.5rem 1rem;
 }
+
+.video {
+  width: 100%;
+  height: 40vh;
+  margin-bottom: 1rem;
+  background-color: base.$color-section-background;
+}
