@@ -26,7 +26,14 @@
 <body>
     <header>
         <a href="/" class="header--title">Free Your Science</a>
-        <nav>About</nav>
+        <nav class="nav-submenu">
+            <a href="#" class="nav-submenu__title" aria-haspopup="true" aria-expanded="false">About</a>
+            <ul class="nav-submenu__list">
+                <li><a href="/legal" class="nav-submenu__item">Re-publishing</a></li>
+                <li><a href="/team" class="nav-submenu__item">Team</a></li>
+                <li><a href="#" class="nav-submenu__item">Technology</a></li>
+            </ul>
+        </nav>
     </header>
 
     {% block content %}{% endblock %}
@@ -38,5 +45,22 @@
         </small>
     </footer>
 </body>
+
+<script>
+    var menuItems = document.querySelectorAll('.nav-submenu');
+    Array.prototype.forEach.call(menuItems, function(el, i){
+        el.querySelector('a').addEventListener("click",  function(event){
+            if (this.parentNode.className == "nav-submenu") {
+                this.parentNode.className = "nav-submenu--open";
+                this.setAttribute('aria-expanded', "true");
+            } else {
+                this.parentNode.className = "nav-submenu";
+                this.setAttribute('aria-expanded', "false");
+            }
+            event.preventDefault();
+            return false;
+        });
+    });
+</script>
 
 </html>
