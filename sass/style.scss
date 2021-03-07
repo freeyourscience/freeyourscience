@@ -95,3 +95,14 @@ small {
   @include base.f6;
   margin-top: 0;
 }
+
+a:link,
+a:visited {
+  color: base.$color-blue;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    color: base.$color-blue;
+  }
+}
