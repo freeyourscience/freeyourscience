@@ -1,3 +1,9 @@
+@use 'settings';
+
+html {
+  font-size: (settings.$base-font-measure / 16px) * 100%;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Helvetica, sans-serif;
