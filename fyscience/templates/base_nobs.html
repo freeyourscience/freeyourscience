@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <meta name="robots" content="none" />
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <link type="image/x-icon" href="static/favicon.ico" rel="shortcut icon">
+
+    <title>{% block title %}Free Your Science{% endblock %}</title>
+
+    <link rel="stylesheet" href="static/main.css">
+
+    {% block header %}{% endblock %}
+
+</head>
+
+<body>
+    <header>
+        <a href="/">
+            <h1>Free Your Science</h1>
+        </a>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <small>
+            Built and run by Daniel Harhoff and Lukas Grossberger<br />
+            Contact us via <a href="mailto:team@freeyourscience.org">team@freeyourscience.org</a>
+        </small>
+    </footer>
+</body>
+
+</html>
