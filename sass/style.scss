@@ -15,11 +15,29 @@ body {
 header {
   max-width: 1100px;
   margin: 5rem auto 7rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 }
 
 .header--title {
   @include base.f2;
   font-weight: bold;
+  color: base.$color-text;
+}
+
+.header--title:link,
+.header--title:visited {
+  color: base.$color-text;
+
+  &:hover,
+  &:active {
+    color: base.$color-text-secondary;
+  }
+}
+
+header > nav {
+  @include base.f3;
 }
 
 main {
