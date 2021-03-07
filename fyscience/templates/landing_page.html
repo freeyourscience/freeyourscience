@@ -1,40 +1,35 @@
-{% import 'search_macros.html' as search %}
 {% extends "base_nobs.html" %}
 {% block content %}
-<div>
-	<main>
-		<ol>
-			<li>
-				<div>
-					<h2>Find your paywalled publications</h2>
-					<p> Paywalls make it harder for other researchers to use and cite your work. </p>
-					{{ search.form("") }}
-				</div>
-			</li>
-			<li>
-				<div>
-					<h2> Learn about Open Access pathways</h2>
-					<p> Many publishers have policies that allow for no-cost re-publication. </p>
-				</div>
-			</li>
-			<li>
-				<div>
-					<h2>Re-publish your work Open Access</h2>
-					<p> Upload an additional version of your work to e.g. arXiv or your library in accordance with the
-						publisher policy.<br />
-						Figure out <a href="/republish">the basics of re-publication</a>.
-					</p>
-				</div>
-			</li>
-		</ol>
-		<p>
-			Learn more about the
-			<a href="/team">team</a>,
-			how this is <a href="/legal">legal</a>,
-			what all these <a href="/about">words</a>
-			about Open Sciences mean.
-		</p>
-	</main>
-</div>
+<main>
+	<h1>Re-publish your paywalled work open access today for free</h1>
+	<form method="GET" action="/search" id="search-form">
+		<p>Find publications of yours with free open access pathways.</p>
+		<input type="text" name="query"
+			placeholder="Author name, ORCID or DOI" required value="{{ search_string }}">
+		<button type="submit">Search</button>
+	</form>
+	<section>
+		<h2>What we provide for authors</h2>
+		<p>Free Your Science is out to show authors like you which of your paywalled publications you can re-publish open access today and how to do it.</p>
 
+		<h3>Find your paywalled publications</h3>
+		<p>
+			Publishers can keep your publications behind paywalls.
+			This limits your scientific reach to readers with paid subscriptions.
+			We help you to find these publications.
+		</p>
+
+		<h3>Identify open access pathways</h3>
+		<p>
+			Many publishers allow open access re-publication of your work, free of charge, today.
+			Using a publisher policy database, we find the best pathway for your work to become open access.
+		</p>
+
+		<h3>Learn to re-publish open access</h3>
+		<p>
+			Depending on the identified pathway you can deposit your manuscript in places like arXiv or PubMed.
+			Our About pages help you understand this process.
+		</p>
+	</section>
+</main>
 {% endblock %}
