@@ -8,25 +8,27 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Helvetica, sans-serif;
+  padding: 0 1rem;
 }
 
 header {
   max-width: 1100px;
-  margin: auto;
+  margin: 5rem auto 7rem;
 }
 
 .header--title {
-  @include base.f3;
+  @include base.f2;
   font-weight: bold;
 }
 
 main {
   max-width: 900px;
-  margin: auto;
+  margin: 0 auto 5rem;
 }
 
 footer {
   text-align: center;
+  margin: 0 auto 3rem;
 }
 
 h1,
@@ -37,12 +39,26 @@ h5 {
   font-weight: bold;
 }
 
+h1,
+h2 {
+  margin-top: 4rem;
+}
+
+h3,
+h4,
+h5 {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
 h1 {
   @include base.f1;
+  margin-bottom: 4rem;
 }
 
 h2 {
   @include base.f2;
+  margin-bottom: 2rem;
 }
 
 h3 {
@@ -59,8 +75,21 @@ h5 {
 
 p {
   @include base.f5;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+ul,
+ol {
+  margin: 0 0 1.5rem;
+}
+
+li {
+  @include base.f5;
+  margin: 0 0 0.5rem;
 }
 
 small {
   @include base.f6;
+  margin-top: 0;
 }
