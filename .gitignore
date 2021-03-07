@@ -1,6 +1,9 @@
 # Project specific
 pathway.json
 fyscience/static/authorPapers.js
+fyscience/static/style.css
+fyscience/static/style.css.map
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

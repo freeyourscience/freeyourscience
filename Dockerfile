@@ -21,6 +21,12 @@ EXPOSE 8080
 CMD ["uvicorn", "--reload", "--host", "0.0.0.0", "--port", "8080", "--log-level", "info", "fyscience.main:app"]
 
 
+FROM node:lts-alpine as sass
+
+RUN npm install -g sass
+COPY sass /sass
+RUN sass /sass/style.scss /style.css
+
 
 FROM base as prod
 RUN apk add --no-cache --virtual .build-deps gcc libc-dev make \
@@ -29,6 +35,7 @@ RUN apk add --no-cache --virtual .build-deps gcc libc-dev make \
 
 COPY fyscience /app/fyscience
 RUN pip install --no-cache /app
+COPY --from=sass /style.css /app/fyscience/static/style.css
 
 COPY gunicorn_conf.py /app
 EXPOSE 80
