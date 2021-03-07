@@ -19,11 +19,17 @@ $color-background: #dfe2e2;
 }
 
 @mixin f1 {
-  @include font-sizing(64px, 64px);
+  @include font-sizing(48px, 48px);
+  @media screen and (min-width: px-to-rem(690px)) {
+    @include font-sizing(64px, 64px);
+  }
 }
 
 @mixin f2 {
   @include font-sizing(32px, 32px);
+  @media screen and (min-width: px-to-rem(690px)) {
+    @include font-sizing(40px, 40px);
+  }
 }
 
 @mixin f3 {
