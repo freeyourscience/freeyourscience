@@ -1,7 +1,7 @@
 @use 'base';
 
 header {
-  max-width: 1100px;
+  max-width: base.px-to-rem(900px);
   margin: 5rem auto 7rem;
   display: flex;
   align-items: baseline;

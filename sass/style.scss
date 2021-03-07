@@ -14,7 +14,7 @@ body {
 }
 
 main {
-  max-width: 900px;
+  max-width: base.px-to-rem(700px);
   margin: 0 auto 5rem;
 }
 
@@ -72,16 +72,6 @@ p {
   margin-bottom: 1.5rem;
 }
 
-ul,
-ol {
-  margin: 0 0 1.5rem;
-}
-
-li {
-  @include base.f5;
-  margin: 0 0 0.5rem;
-}
-
 small {
   @include base.f6;
   margin-top: 0;
@@ -96,4 +86,26 @@ a:visited {
   &:active {
     color: base.$color-blue;
   }
+}
+
+dl,
+ul,
+ol {
+  margin: 0 0 1.5rem;
+}
+
+li {
+  @include base.f5;
+  margin: 0 0 0.5rem;
+}
+
+dt {
+  @include base.f5;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+dd {
+  @include base.f5;
+  margin: 0 0 1.5rem 1rem;
 }
