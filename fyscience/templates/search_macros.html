@@ -1,0 +1,7 @@
+{% macro form(search_string) -%}
+<form method="GET" action="/search" id="search-form">
+    <input type="text" name="query"
+        placeholder="Author name, ORCID or DOI" required value="{{ search_string }}">
+    <button type="submit">Search</button>
+</form>
+{%- endmacro -%}
