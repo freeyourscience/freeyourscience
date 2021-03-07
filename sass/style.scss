@@ -1,4 +1,5 @@
 @use 'base';
+@use 'normalize';
 
 html {
   font-size: (base.$font-measure / 16px) * 100%;
