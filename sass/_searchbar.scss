@@ -1,0 +1,21 @@
+@use 'base';
+
+.search {
+  display: flex;
+  margin-bottom: 6rem;
+}
+
+.search__input {
+  flex-grow: 1;
+  border: 1px solid base.$color-background;
+  padding: base.px-to-rem(12px) 1rem base.px-to-rem(10px);
+}
+
+.search__button {
+  flex-shrink: 0;
+  border: 1px solid base.$color-blue;
+  padding: base.px-to-rem(3px) 1rem 0;
+  color: white;
+  background-color: base.$color-blue;
+  font-weight: bold;
+}

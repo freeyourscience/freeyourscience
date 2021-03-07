@@ -1,6 +1,7 @@
 @use 'base';
 @use 'normalize';
 @use 'header';
+@use 'searchbar';
 
 html {
   font-size: (base.$font-measure / 16px) * 100%;
