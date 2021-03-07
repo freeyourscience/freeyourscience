@@ -1,7 +1,7 @@
-@use 'settings';
+@use 'base';
 
 html {
-  font-size: (settings.$base-font-measure / 16px) * 100%;
+  font-size: (base.$font-measure / 16px) * 100%;
 }
 
 body {
@@ -14,6 +14,11 @@ header {
   margin: auto;
 }
 
+.header--title {
+  @include base.f3;
+  font-weight: bold;
+}
+
 main {
   max-width: 900px;
   margin: auto;
@@ -21,4 +26,40 @@ main {
 
 footer {
   text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: bold;
+}
+
+h1 {
+  @include base.f1;
+}
+
+h2 {
+  @include base.f2;
+}
+
+h3 {
+  @include base.f3;
+}
+
+h4 {
+  @include base.f4;
+}
+
+h5 {
+  @include base.f5;
+}
+
+p {
+  @include base.f5;
+}
+
+small {
+  @include base.f6;
 }

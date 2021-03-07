@@ -1,0 +1,37 @@
+$font-measure: 16px;
+$increment: 0.25rem;
+
+@function px-to-rem($px) {
+  @return ($px / $font-measure) * 1rem;
+}
+
+@mixin font-sizing($font-size, $line-height) {
+  $font-size-in-rem: px-to-rem($font-size);
+
+  font-size: $font-size-in-rem;
+  line-height: $line-height/ $font-size;
+}
+
+@mixin f1 {
+  @include font-sizing(64px, 64px);
+}
+
+@mixin f2 {
+  @include font-sizing(32px, 32px);
+}
+
+@mixin f3 {
+  @include font-sizing(24px, 32px);
+}
+
+@mixin f4 {
+  @include font-sizing(18px, 28px);
+}
+
+@mixin f5 {
+  @include font-sizing(16px, 24px);
+}
+
+@mixin f6 {
+  @include font-sizing(14px, 20px);
+}
