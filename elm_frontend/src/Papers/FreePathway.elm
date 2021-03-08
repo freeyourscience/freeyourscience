@@ -345,9 +345,7 @@ renderPathwayButtons pathwayIsVisible ( id, { title } ) =
             , class "pathway__button"
             , Html.Attributes.title (verb ++ " open access pathway for: " ++ paperTitle)
             ]
-            [ text (verb ++ " open")
-            , br [] []
-            , text "access pathway"
+            [ text (verb ++ " pathway")
             ]
         ]
 

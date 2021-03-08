@@ -22,7 +22,7 @@ main.author {
 
 .pathway__button {
   flex-shrink: 0;
-  padding: base.px-to-rem(6px) 1rem base.px-to-rem(5px);
+  padding: 0.75rem;
   font-weight: bold;
   @include base.f4;
   cursor: pointer;
