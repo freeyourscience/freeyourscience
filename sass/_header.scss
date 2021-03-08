@@ -2,14 +2,14 @@
 
 header {
   max-width: base.px-to-rem(900px);
-  margin: 5rem auto 7rem;
+  margin: 5rem auto 6rem;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
 }
 
 .header--title {
-  @include base.f2;
+  @include base.f3;
   font-weight: bold;
   color: base.$color-text;
   flex-shrink: 0;
@@ -26,7 +26,7 @@ header {
 }
 
 header > nav {
-  @include base.f3;
+  @include base.f4;
 }
 
 .nav-submenu,
