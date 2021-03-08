@@ -3,6 +3,7 @@
 .search {
   display: flex;
   margin-bottom: 6rem;
+  flex-wrap: wrap;
 }
 
 .search__input {
@@ -18,4 +19,10 @@
   color: white;
   background-color: base.$color-blue;
   font-weight: bold;
+}
+
+.search__small {
+  color: base.$color-text-secondary;
+  flex: 0 0 100%;
+  padding: 0.5rem;
 }
