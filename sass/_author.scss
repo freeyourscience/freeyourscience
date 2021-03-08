@@ -3,6 +3,8 @@
 .publications__item {
   display: flex;
   border-top: 1px solid base.$color-background;
+  padding-top: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .publications__item__info {
@@ -14,15 +16,49 @@
   flex-shrink: 0;
 }
 
-.publications__item__info__title {
+.pathway__button {
+  flex-shrink: 0;
+  padding: base.px-to-rem(6px) 1rem base.px-to-rem(5px);
+  font-weight: bold;
   @include base.f4;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  line-height: 1.5rem;
+}
+
+.pathway__button--show {
+  border: 1px solid base.$color-green;
+  background-color: base.$color-green;
+  color: white;
+}
+
+.pathway__button--hide {
+  border: 1px solid base.$color-background;
+  background-color: base.$color-background;
+  color: base.$color-text;
+}
+
+.publications__item__info__title {
+  @include base.f3;
   font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+  margin-bottom: 0.25rem;
 }
 
-.publications__item__info__details {
-  display: none;
+.publications__item__info__journal {
+  font-weight: bold;
+}
+
+.publications__item__info__pathway {
+  margin-top: 1rem;
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+  p + p {
+    margin-top: 1rem;
+  }
 }

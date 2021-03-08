@@ -1,6 +1,6 @@
 module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 
-import Html exposing (Html, a, div, text)
+import Html exposing (Html, a, div, span, text)
 import Html.Attributes exposing (class, href, target)
 
 
@@ -35,17 +35,19 @@ renderPaperMetaData { title, journal, authors, year, doi } =
         [ text (Maybe.withDefault "Unknown title" title)
         ]
     , div [ class "" ]
-        [ text
+        [ span [ class "publications__item__info__journal" ]
+            [ journal |> Maybe.withDefault "Unknown journal" |> text
+            ]
+        , text
             (String.concat
-                [ journal |> Maybe.withDefault "Unknown journal"
-                , ", "
+                [ " | "
                 , authors |> Maybe.withDefault "Unknown authors"
                 , " ("
                 , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-                , "), "
-                , doi
+                , ") | "
                 ]
             )
+        , span [ class "publications__item__info__doi" ] [ text doi ]
         , a [ href ("https://doi.org/" ++ doi), target "_blank" ]
             [ text " ↗️"
             ]

@@ -307,7 +307,7 @@ view ( id, { pathwayVisible, recommendedPathway } as paper ) =
         [ div [ class "publications__item__info" ]
             [ div []
                 (renderPaperMetaData paper.meta)
-            , div [ class pathwayVisibleClass ]
+            , div [ class pathwayVisibleClass, class "publications__item__info__pathway" ]
                 (renderRecommendedPathway paper.oaPathwayURI recommendedPathway)
             ]
         , renderPathwayButtons pathwayVisible ( id, paper.meta )
@@ -331,20 +331,23 @@ renderPathwayButtons pathwayIsVisible ( id, { title } ) =
             else
                 "Show"
 
-        style =
+        pathwayVisibleClass =
             if pathwayIsVisible then
-                "btn btn-light"
+                "pathway__button--hide"
 
             else
-                "btn btn-success"
+                "pathway__button--show"
     in
     div [ class "publications__item__buttons" ]
         [ button
             [ onClick (Msg.ToggleVisible id)
-            , class style
+            , class pathwayVisibleClass
+            , class "pathway__button"
             , Html.Attributes.title (verb ++ " open access pathway for: " ++ paperTitle)
             ]
-            [ text (verb ++ " pathway")
+            [ text (verb ++ " open")
+            , br [] []
+            , text "access pathway"
             ]
         ]
 
