@@ -27,3 +27,25 @@
   flex: 0 0 100%;
   padding: 0.5rem;
 }
+
+.search__progressbar__container {
+  z-index: 99999;
+  background: transparent;
+  opacity: 1;
+  transition: opacity 0.4s linear 0.4s;
+  flex: 0 0 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  outline: 1px solid transparent;
+  box-sizing: border-box;
+}
+
+.search__progressbar__progress {
+  background-color: base.$color-blue;
+  width: 100%;
+  box-shadow: 0 0 10px base.$color-blue;
+  transition: width 0.4s ease;
+  outline: 2px solid transparent;
+  box-sizing: border-box;
+  height: 2px;
+}

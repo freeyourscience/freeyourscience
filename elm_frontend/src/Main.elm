@@ -4,8 +4,9 @@ import Animation exposing (percent)
 import Array exposing (Array)
 import Browser
 import Debug
-import Html exposing (Html, a, div, footer, main_, p, small, span, text)
+import Html exposing (Html, a, div, footer, h1, main_, p, small, text)
 import Html.Attributes exposing (class, href, target)
+import HtmlUtils exposing (viewSearchBar)
 import Http
 import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
@@ -97,13 +98,12 @@ view model =
             List.sortWith paperMetaCompare model.otherPathwayPapers
     in
     div []
-        [ span
-            [ class "container"
-            , class "progressbar__container"
-            ]
-            [ span (Animation.render model.style ++ [ class "progressbar_progress" ]) [ text "" ] ]
-        , main_ []
-            [ FreePathway.viewList paywalledNoCostPathwayPapers
+        [ main_ []
+            [ h1 [] [ text "Results" ]
+            , viewSearchBar model.authorName
+                "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI"
+                (Animation.render model.style)
+            , FreePathway.viewList paywalledNoCostPathwayPapers
             , OtherPathway.viewList nonFreePolicyPapers
             , OpenAccess.viewList model.openAccessPapers
             , Buggy.viewList model.buggyPapers

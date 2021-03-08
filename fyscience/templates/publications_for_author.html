@@ -11,15 +11,7 @@ Free Your Science | {{ author.name }}
 {% endblock %}
 
 {% block content %}
-<main>
-    <h1>Results</h1>
-    {{ search.form(
-    search_string,
-    "If you can't find your publications using your name try
-    your ORCID, Semantic Scholar ID or an individual DOI"
-    ) }}
-    <div id="publicationsForAuthor"></div>
-</main>
+<div id="publicationsForAuthor"></div>
 <script>
     var app = Elm.Main.init({
         node: document.getElementById('publicationsForAuthor'),
