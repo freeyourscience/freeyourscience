@@ -1,0 +1,28 @@
+@use 'base';
+
+.publications__item {
+  display: flex;
+  border-top: 1px solid base.$color-background;
+}
+
+.publications__item__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.publications__item__buttons {
+  flex-shrink: 0;
+}
+
+.publications__item__info__title {
+  @include base.f4;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.publications__item__info__details {
+  display: none;
+}

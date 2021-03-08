@@ -279,14 +279,14 @@ scoreAllowedLocation location =
 
 viewList : List ( Int, Paper ) -> Html Msg
 viewList papers =
-    section [ class "mb-5" ]
+    section []
         [ h2 []
-            [ text "Unnecessarily paywalled publications"
+            [ text "Paywalled publications with free open access pathway"
             ]
-        , p [ class "fs-6 mb-4" ]
+        , p []
             [ text
-                ("We found no Open Access version for the following publications. "
-                    ++ "However, the publishers likely allow no-cost re-publication as Open Access."
+                ("We found no open access version for the following publications. "
+                    ++ "However, the publishers appear to allow no-cost re-publication as open access."
                 )
             ]
         , div [] (List.map view papers)
@@ -296,22 +296,21 @@ viewList papers =
 view : ( Int, Paper ) -> Html Msg
 view ( id, { pathwayVisible, recommendedPathway } as paper ) =
     let
-        pathwayClass =
+        pathwayVisibleClass =
             if pathwayVisible then
                 ""
 
             else
-                "d-none"
+                "hidden"
     in
-    div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ div [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
+    div [ class "publications__item" ]
+        [ div [ class "publications__item__info" ]
             [ div []
                 (renderPaperMetaData paper.meta)
-            , div [ class pathwayClass, class "mt-4" ]
+            , div [ class pathwayVisibleClass ]
                 (renderRecommendedPathway paper.oaPathwayURI recommendedPathway)
             ]
-        , div [ class "col-12 col-md-3 fs-6 text-md-end" ]
-            (renderPathwayButtons pathwayVisible ( id, paper.meta ))
+        , renderPathwayButtons pathwayVisible ( id, paper.meta )
         ]
 
 
@@ -319,7 +318,7 @@ view ( id, { pathwayVisible, recommendedPathway } as paper ) =
 -- VIEW ELEMENTS
 
 
-renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String } ) -> List (Html Msg)
+renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String } ) -> Html Msg
 renderPathwayButtons pathwayIsVisible ( id, { title } ) =
     let
         paperTitle =
@@ -339,16 +338,15 @@ renderPathwayButtons pathwayIsVisible ( id, { title } ) =
             else
                 "btn btn-success"
     in
-    [ div []
+    div [ class "publications__item__buttons" ]
         [ button
             [ onClick (Msg.ToggleVisible id)
             , class style
-            , Html.Attributes.title (verb ++ "Open Access pathway for: " ++ paperTitle)
+            , Html.Attributes.title (verb ++ " open access pathway for: " ++ paperTitle)
             ]
-            [ text (verb ++ " Open Access pathway")
+            [ text (verb ++ " pathway")
             ]
         ]
-    ]
 
 
 renderRecommendedPathway : String -> ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)

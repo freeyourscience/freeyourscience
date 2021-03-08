@@ -1,7 +1,7 @@
 module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 
-import Html exposing (Html, a, div, img, text)
-import Html.Attributes exposing (alt, class, height, href, src, target, width)
+import Html exposing (Html, a, div, text)
+import Html.Attributes exposing (class, href, target)
 
 
 type alias DOI =
@@ -26,13 +26,15 @@ type alias NamedUrl =
 
 renderUrl : NamedUrl -> Html msg
 renderUrl { url, description } =
-    a [ href url, class "link", class "link-secondary" ] [ text description ]
+    a [ href url ] [ text description ]
 
 
 renderPaperMetaData : PaperMetadata -> List (Html msg)
 renderPaperMetaData { title, journal, authors, year, doi } =
-    [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" title) ]
-    , div [ class "mb-1" ]
+    [ div [ class "publications__item__info__title" ]
+        [ text (Maybe.withDefault "Unknown title" title)
+        ]
+    , div [ class "" ]
         [ text
             (String.concat
                 [ journal |> Maybe.withDefault "Unknown journal"
@@ -44,15 +46,8 @@ renderPaperMetaData { title, journal, authors, year, doi } =
                 , doi
                 ]
             )
-        , a [ href ("https://doi.org/" ++ doi), class "link-secondary", target "_blank" ]
-            [ img
-                [ src "/static/img/box-arrow-up-right.svg"
-                , alt ""
-                , width 12
-                , height 12
-                , Html.Attributes.title ("Visit article: " ++ Maybe.withDefault "" title)
-                ]
-                []
+        , a [ href ("https://doi.org/" ++ doi), target "_blank" ]
+            [ text " ↗️"
             ]
         ]
     ]
