@@ -1,6 +1,6 @@
 module Papers.OtherPathway exposing (Paper, view, viewList)
 
-import Html exposing (Html, div, h2, p, section, text)
+import Html exposing (Html, div, h3, p, section, text)
 import Html.Attributes exposing (class)
 import Papers.Utils exposing (PaperMetadata, renderPaperMetaData)
 
@@ -27,7 +27,7 @@ viewList papers =
 
     else
         section [ class "mb-5" ]
-            [ h2 []
+            [ h3 []
                 [ text "Publications with non-free publisher policies"
                 ]
             , p [ class "fs-6 mb-4" ]

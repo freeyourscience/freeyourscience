@@ -4,7 +4,7 @@ import Animation exposing (percent)
 import Array exposing (Array)
 import Browser
 import Debug
-import Html exposing (Html, a, div, footer, h1, main_, p, small, text)
+import Html exposing (Html, a, div, footer, h1, h2, main_, p, small, text)
 import Html.Attributes exposing (class, href, target)
 import HtmlUtils exposing (viewSearchBar)
 import Http
@@ -104,9 +104,13 @@ view model =
                 "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI"
                 (Animation.render model.style)
             , FreePathway.viewList paywalledNoCostPathwayPapers
-            , OtherPathway.viewList nonFreePolicyPapers
-            , OpenAccess.viewList model.openAccessPapers
-            , Buggy.viewList model.buggyPapers
+            , h2 [] [ text "Other search results" ]
+            , p [] [ text "For completeness, here are the other publications we found for your search." ]
+            , div [ class "author__otherresults" ]
+                [ OtherPathway.viewList nonFreePolicyPapers
+                , OpenAccess.viewList model.openAccessPapers
+                , Buggy.viewList model.buggyPapers
+                ]
             ]
         , renderFooter model.authorProfileURL
         ]

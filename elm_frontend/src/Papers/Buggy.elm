@@ -1,6 +1,6 @@
 module Papers.Buggy exposing (Paper, viewList)
 
-import Html exposing (Html, a, div, h2, section, text)
+import Html exposing (Html, a, div, h3, section, text)
 import Html.Attributes exposing (class, href, target)
 import Papers.Utils exposing (DOI)
 
@@ -19,7 +19,7 @@ viewList papers =
 
     else
         section [ class "mb-5" ]
-            [ h2 []
+            [ h3 []
                 [ text "Publications we had issues with"
                 ]
             , div [ class "container" ]

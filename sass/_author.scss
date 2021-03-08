@@ -55,7 +55,6 @@ main.author {
 .publications__item__info__journal {
   font-weight: bold;
 }
-
 .publications__item__info__pathway {
   margin-top: 1rem;
 
@@ -64,5 +63,16 @@ main.author {
   }
   p + p {
     margin-top: 1rem;
+  }
+}
+
+.author__otherresults {
+  .publications__item__info__title {
+    @include base.f5;
+    font-weight: normal;
+  }
+
+  .publications__item__info__journal {
+    font-weight: normal;
   }
 }

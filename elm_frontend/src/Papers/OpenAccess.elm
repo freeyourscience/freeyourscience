@@ -1,6 +1,6 @@
 module Papers.OpenAccess exposing (Paper, view, viewList)
 
-import Html exposing (Html, a, br, div, h2, p, section, text)
+import Html exposing (Html, a, br, div, h3, p, section, text)
 import Html.Attributes exposing (class, href, target)
 import Papers.Utils exposing (DOI, renderPaperMetaData)
 
@@ -18,25 +18,28 @@ type alias Paper =
 
 view : Paper -> Html msg
 view paper =
-    div []
-        (renderPaperMetaData
-            { title = paper.title
-            , journal = paper.journal
-            , authors = paper.authors
-            , year = paper.year
-            , doi = paper.doi
-            , issn = paper.issn
-            , url = Just paper.oaLocationURL
-            }
-        )
+    div [ class "publications__item" ]
+        [ div [ class "publications__item__info" ]
+            (renderPaperMetaData
+                { title = paper.title
+                , journal = paper.journal
+                , authors = paper.authors
+                , year = paper.year
+                , doi = paper.doi
+                , issn = paper.issn
+                , url = Just paper.oaLocationURL
+                }
+            )
+        ]
 
 
 viewList : List Paper -> Html msg
 viewList papers =
     section [ class "mb-5" ]
-        [ h2 [ class "mb-3" ]
+        [ h3 [ class "mb-3" ]
             [ text "Open Access publications"
             ]
+        , p [] [ text "Open access versions of these publications have been successfully indexed by Unpaywall.org" ]
         , if List.isEmpty papers then
             p []
                 [ text "We could not find any of your Open Access publications in the unpaywall.org database."

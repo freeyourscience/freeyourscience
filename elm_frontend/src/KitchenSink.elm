@@ -102,6 +102,19 @@ jsonPapers =
         "oa_location_url": "https://oa-location.url"
     }"""
     , """{
+        "doi": "10.1371/journal.pcbi.1006283",
+        "title": "Unsupervised clustering of temporal patterns in high-dimensional neuronal ensembles using a novel dissimilarity measure",
+        "journal": "PLOS Computational Biology",
+        "authors": "Lukas Grossberger et al.",
+        "year": 2018,
+        "issn": "1553-734X",
+        "is_open_access": true,
+        "oa_pathway": "already_oa",
+        "oa_pathway_uri": null,
+        "oa_pathway_details": null,
+        "oa_location_url": "https://oa-location.url"
+    }"""
+    , """{
       "doi": "10.1021/acsnano.8b01396",
       "title": "Nanometer-Resolved Mapping of Cell-Substrate Distances of Contracting Cardiomyocytes Using Surface Plasmon Resonance Microscopy",
       "journal": "ACS Nano",
