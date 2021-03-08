@@ -1,7 +1,8 @@
-{% macro form(search_string) -%}
+{% macro form(search_string, small_note) -%}
 <form method="GET" action="/search" id="search-form" class="search">
-    <input type="text" name="query" class="search__input"
-        placeholder="Author name, ORCID or DOI" required value="{{ search_string }}">
+    <input type="text" name="query" class="search__input" placeholder="Author name, ORCID or DOI" required
+        value="{{ search_string }}">
     <button type="submit" class="search__button">Search</button>
+    <small class="search__small">{{ small_note }}</small>
 </form>
 {%- endmacro -%}

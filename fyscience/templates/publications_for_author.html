@@ -1,8 +1,6 @@
 {# TODO: Make sure only english phrases and not just the first are displayed. #}
-{# TODO: Do someting like the Routes to OA section at https://v2.sherpa.ac.uk/id/publisher_policy/2252 #}
 {% import 'search_macros.html' as search %}
-{% import 'paper_macros.html' as paper_page %}
-{% extends "base.html" %}
+{% extends "base_nobs.html" %}
 
 {% block title %}
 Free Your Science | {{ author.name }}
@@ -13,29 +11,24 @@ Free Your Science | {{ author.name }}
 {% endblock %}
 
 {% block content %}
-<div class="container fs-5">
-    <section class="my-5">
-        {{ search.form(search_string) }}
-    </section>
+<main>
+    <h1>Results</h1>
+    {{ search.form(
+    search_string,
+    "If you can't find your publications using your name try
+    your ORCID, Semantic Scholar ID or an individual DOI"
+    ) }}
     <div id="publicationsForAuthor"></div>
-    <script>
-        var app = Elm.Main.init({
-            node: document.getElementById('publicationsForAuthor'),
-            flags: {
-                "dois": {{ dois | safe }},
-        "authorName": "{{ author.name }}",
-            "authorProfileURL": "{{ author.profile_url }}",
-                "serverURL": "{{ serverURL }}"
-            }
-        });
-    </script>
-</div>
-
-<script type="text/javascript">
-    document.querySelectorAll('.link-oa-incorrect').forEach(e => {
-        e.addEventListener('click', () => {
-            alert("What a nice suprise!\nWe'll look into it.")
-        })
+</main>
+<script>
+    var app = Elm.Main.init({
+        node: document.getElementById('publicationsForAuthor'),
+        flags: {
+            "dois": {{ dois | safe }},
+    "authorName": "{{ author.name }}",
+        "authorProfileURL": "{{ author.profile_url }}",
+            "serverURL": "{{ serverURL }}"
+        }
     });
 </script>
 {% endblock %}
