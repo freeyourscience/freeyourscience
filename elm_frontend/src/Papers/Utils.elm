@@ -1,6 +1,6 @@
 module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 
-import Html exposing (Html, a, div, span, text)
+import Html exposing (Html, a, div, h3, span, text)
 import Html.Attributes exposing (class, href, target)
 
 
@@ -32,7 +32,7 @@ renderUrl { url, description } =
 
 renderPaperMetaData : PaperMetadata -> List (Html msg)
 renderPaperMetaData { title, journal, authors, year, doi, url } =
-    [ div [ class "publications__item__info__title" ]
+    [ h3 [ class "publications__item__info__title" ]
         [ text (Maybe.withDefault "Unknown title" title)
         ]
     , div [ class "" ]
