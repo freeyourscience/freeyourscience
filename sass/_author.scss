@@ -1,5 +1,9 @@
 @use 'base';
 
+main.author {
+  max-width: base.px-to-rem(880px);
+}
+
 .publications__item {
   display: flex;
   border-top: 1px solid base.$color-background;

@@ -98,7 +98,7 @@ view model =
             List.sortWith paperMetaCompare model.otherPathwayPapers
     in
     div []
-        [ main_ []
+        [ main_ [ class "author" ]
             [ h1 [] [ text "Results" ]
             , viewSearchBar model.authorName
                 "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI"
