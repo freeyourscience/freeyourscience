@@ -35,24 +35,7 @@
         </nav>
     </header>
 
-    <main>
-        <h1>Results</h1>
-        <form method="GET" action="/search" id="search-form" class="search">
-            <input type="text" name="query" class="search__input" placeholder="Author name, ORCID or DOI" required
-                value="{{ search_string }}">
-            <button type="submit" class="search__button">Search</button>
-            <small class="search__small">
-                If you can't find your publications using your name try
-                your ORCID, Semantic Scholar ID or an individual DOI
-            </small>
-        </form>
-        <div id="content">
-        </div>
-    </main>
-
-    <script>
-        var app = Elm.KitchenSink.init({ node: document.getElementById('content') });
-    </script>
+    <div id="content"></div>
 
     <footer>
         <small>
@@ -60,6 +43,10 @@
             Contact us via <a href="mailto:team@freeyourscience.org">team@freeyourscience.org</a>
         </small>
     </footer>
+
+    <script>
+        var app = Elm.KitchenSink.init({ node: document.getElementById('content') });
+    </script>
 </body>
 
 <script>
