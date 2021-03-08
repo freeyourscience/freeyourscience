@@ -66,11 +66,6 @@ main.author {
 }
 
 .author__otherresults {
-  .publications__item__info__title {
-    @include base.f5;
-    font-weight: normal;
-  }
-
   .publications__item__info__journal {
     font-weight: normal;
   }

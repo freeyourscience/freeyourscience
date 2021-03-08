@@ -20,7 +20,7 @@ view : Paper -> Html msg
 view paper =
     div [ class "publications__item" ]
         [ div [ class "publications__item__info" ]
-            (renderPaperMetaData
+            (renderPaperMetaData div
                 { title = paper.title
                 , journal = paper.journal
                 , authors = paper.authors

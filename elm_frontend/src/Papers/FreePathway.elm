@@ -1,6 +1,6 @@
 module Papers.FreePathway exposing (NoCostOaPathway, Paper, Pathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
 
-import Html exposing (Html, a, br, button, div, h2, li, p, section, small, strong, text, ul)
+import Html exposing (Html, a, br, button, div, h2, h3, li, p, section, small, strong, text, ul)
 import Html.Attributes exposing (class, href, style)
 import Html.Events exposing (onClick)
 import HtmlUtils exposing (renderList, ulWithHeading)
@@ -306,7 +306,7 @@ view ( id, { pathwayVisible, recommendedPathway } as paper ) =
     div [ class "publications__item" ]
         [ div [ class "publications__item__info" ]
             [ div []
-                (renderPaperMetaData paper.meta)
+                (renderPaperMetaData h3 paper.meta)
             , div [ class pathwayVisibleClass, class "publications__item__info__pathway" ]
                 (renderRecommendedPathway paper.oaPathwayURI recommendedPathway)
             ]
