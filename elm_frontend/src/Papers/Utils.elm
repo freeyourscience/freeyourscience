@@ -15,6 +15,7 @@ type alias PaperMetadata =
     , authors : Maybe String
     , year : Maybe Int
     , issn : Maybe String
+    , url : Maybe String
     }
 
 
@@ -30,7 +31,7 @@ renderUrl { url, description } =
 
 
 renderPaperMetaData : PaperMetadata -> List (Html msg)
-renderPaperMetaData { title, journal, authors, year, doi } =
+renderPaperMetaData { title, journal, authors, year, doi, url } =
     [ div [ class "publications__item__info__title" ]
         [ text (Maybe.withDefault "Unknown title" title)
         ]
@@ -48,7 +49,7 @@ renderPaperMetaData { title, journal, authors, year, doi } =
                 ]
             )
         , span [ class "publications__item__info__doi" ] [ text doi ]
-        , a [ href ("https://doi.org/" ++ doi), target "_blank" ]
+        , a [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url), target "_blank" ]
             [ text " ↗️"
             ]
         ]

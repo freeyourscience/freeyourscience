@@ -205,6 +205,7 @@ classifyPaper backendPaper model =
             , authors = backendPaper.authors
             , year = backendPaper.year
             , issn = backendPaper.issn
+            , url = Nothing
             }
 
         recommendedPathway =

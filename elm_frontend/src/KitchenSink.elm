@@ -99,7 +99,7 @@ jsonPapers =
         "oa_pathway": "already_oa",
         "oa_pathway_uri": null,
         "oa_pathway_details": null,
-        "oa_location_url": null
+        "oa_location_url": "https://oa-location.url"
     }"""
     , """{
       "doi": "10.1021/acsnano.8b01396",

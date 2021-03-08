@@ -1,8 +1,8 @@
 module Papers.OpenAccess exposing (Paper, view, viewList)
 
-import Html exposing (Html, a, br, div, h2, img, p, section, text)
-import Html.Attributes exposing (alt, class, height, href, src, target, title, width)
-import Papers.Utils exposing (DOI)
+import Html exposing (Html, a, br, div, h2, p, section, text)
+import Html.Attributes exposing (class, href, target)
+import Papers.Utils exposing (DOI, renderPaperMetaData)
 
 
 type alias Paper =
@@ -18,8 +18,17 @@ type alias Paper =
 
 view : Paper -> Html msg
 view paper =
-    div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ renderPaperHeader paper ]
+    div []
+        (renderPaperMetaData
+            { title = paper.title
+            , journal = paper.journal
+            , authors = paper.authors
+            , year = paper.year
+            , doi = paper.doi
+            , issn = paper.issn
+            , url = Just paper.oaLocationURL
+            }
+        )
 
 
 viewList : List Paper -> Html msg
@@ -39,39 +48,4 @@ viewList papers =
 
           else
             div [] (List.map view papers)
-        ]
-
-
-renderPaperHeader : Paper -> Html msg
-renderPaperHeader ({ journal, authors, year, doi, oaLocationURL } as paper) =
-    let
-        paperTitle =
-            paper.title
-    in
-    div
-        [ class "paper-details col-12 fs-6 mb-2 mb-md-0" ]
-        [ div [ class "fs-5 mb-1" ] [ text (Maybe.withDefault "Unknown title" paperTitle) ]
-        , div [ class "mb-1" ]
-            [ text
-                (String.concat
-                    [ journal |> Maybe.withDefault "Unknown journal"
-                    , ", "
-                    , authors |> Maybe.withDefault "Unknown authors"
-                    , " ("
-                    , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-                    , "), "
-                    , doi
-                    ]
-                )
-            , a [ href oaLocationURL, class "link-secondary", target "_blank" ]
-                [ img
-                    [ src "/static/img/box-arrow-up-right.svg"
-                    , alt ""
-                    , width 12
-                    , height 12
-                    , title ("Visit article: " ++ Maybe.withDefault "" paperTitle)
-                    ]
-                    []
-                ]
-            ]
         ]
