@@ -36,21 +36,21 @@ renderPaperMetaData { title, journal, authors, year, doi, url } =
         [ text (Maybe.withDefault "Unknown title" title)
         ]
     , div [ class "" ]
-        [ span [ class "publications__item__info__journal" ]
+        [ text "in "
+        , span [ class "publications__item__info__journal" ]
             [ journal |> Maybe.withDefault "Unknown journal" |> text
             ]
         , text
             (String.concat
-                [ " | "
+                [ " by "
                 , authors |> Maybe.withDefault "Unknown authors"
                 , " ("
                 , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-                , ") | "
+                , ")"
                 ]
             )
-        , span [ class "publications__item__info__doi" ] [ text doi ]
         , a [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url), target "_blank" ]
-            [ text " ↗️"
+            [ text " ↗"
             ]
         ]
     ]
