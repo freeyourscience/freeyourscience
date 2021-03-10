@@ -13,6 +13,19 @@ def test_get_landing_page(endpoint, client: TestClient) -> None:
     assert r.ok
 
 
+def test_hit_error_page(client: TestClient) -> None:
+    r = client.get("/foobar")
+    print(r)
+    assert r.status_code == 404
+
+
+def test_hit_human_error_page(client: TestClient) -> None:
+    r = client.get("/foobar", headers=({"Accept": "text/html"}))
+    print(r)
+    assert r.status_code == 404
+    assert b"Go back" in r.content
+
+
 @pytest.mark.parametrize(
     "author,provider",
     [
