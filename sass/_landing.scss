@@ -17,7 +17,8 @@
 
 .for-authors--icon {
   margin-right: 1rem;
-  font-size: 4rem;
+  max-width: 30vw;
+  max-height: base.px-to-rem(96px);
 }
 
 .for-authors--text {
