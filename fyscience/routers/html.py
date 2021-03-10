@@ -95,19 +95,19 @@ def get_search_result_html(
         )
 
 
-@html_router.get("/glossary", response_class=HTMLResponse)
-def get_glossary_html(request: Request):
-    return templates.TemplateResponse("glossary.html", {"request": request})
+@html_router.get("/technology", response_class=HTMLResponse)
+def get_technology_html(request: Request):
+    return templates.TemplateResponse("technology.html", {"request": request})
 
 
-@html_router.get("/republish", response_class=HTMLResponse)
-def get_republish_html(request: Request):
-    return templates.TemplateResponse("republish.html", {"request": request})
+@html_router.get("/howto", response_class=HTMLResponse)
+def get_howto_html(request: Request):
+    return templates.TemplateResponse("howto.html", {"request": request})
 
 
-@html_router.get("/legal", response_class=HTMLResponse)
-def get_legal_html(request: Request):
-    return templates.TemplateResponse("legal.html", {"request": request})
+@html_router.get("/republishing", response_class=HTMLResponse)
+def get_republishing_html(request: Request):
+    return templates.TemplateResponse("republishing.html", {"request": request})
 
 
 @html_router.get("/team", response_class=HTMLResponse)

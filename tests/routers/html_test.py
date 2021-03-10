@@ -6,10 +6,10 @@ from fyscience.routers.html import _is_doi_query
 
 
 @pytest.mark.parametrize(
-    "endpoint", ["/", "/team", "/legal", "/glossary", "/republish"]
+    "endpoint", ["/", "/team", "/howto", "/technology", "/republishing"]
 )
 def test_get_landing_page(endpoint, client: TestClient) -> None:
-    r = client.get("/")
+    r = client.get(endpoint)
     assert r.ok
 
 
