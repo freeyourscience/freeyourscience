@@ -12,15 +12,29 @@
 }
 
 .for-authors--item {
-  display: flex;
+  display: grid;
+  margin-top: 3rem;
+}
+
+.for-authors--heading {
+  grid-column: 1/3;
+  margin-top: 0;
+  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+    grid-column: 2;
+  }
 }
 
 .for-authors--icon {
-  margin-right: 1rem;
-  max-width: 30vw;
+  grid-column: 1;
   max-height: base.px-to-rem(96px);
+  margin-right: 1rem;
+  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+    grid-row: 1/3;
+    margin-right: 2rem;
+  }
 }
 
 .for-authors--text {
+  grid-column: 2;
   margin-bottom: 0rem;
 }
