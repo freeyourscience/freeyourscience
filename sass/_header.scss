@@ -2,10 +2,13 @@
 
 header {
   max-width: base.px-to-rem(900px);
-  margin: 5rem auto 6rem;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  margin: 2rem auto 5rem;
+  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+    margin: 5rem auto 8rem;
+  }
 }
 
 .header--title {
