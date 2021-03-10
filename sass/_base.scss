@@ -33,7 +33,10 @@ $color-background: #dfe2e2;
 }
 
 @mixin f3 {
-  @include font-sizing(24px, 32px);
+  @include font-sizing(20px, 28px);
+  @media screen and (min-width: px-to-rem(690px)) {
+    @include font-sizing(24px, 32px);
+  }
 }
 
 @mixin f4 {
