@@ -4,14 +4,15 @@
 @use 'searchbar';
 @use 'landing';
 @use 'author';
+@use 'team';
 
 html {
   font-size: (base.$font-measure / 16px) * 100%;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Helvetica, sans-serif;
   color: base.$color-text;
   padding: 0 1rem;
 }
@@ -122,8 +123,4 @@ dd {
 
 .hidden {
   display: none;
-}
-
-.team-portrait {
-  max-width: 200px;
 }
