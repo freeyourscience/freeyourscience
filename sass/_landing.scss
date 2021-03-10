@@ -1,5 +1,11 @@
 @use 'base';
 
+.landing--title {
+  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+    margin-bottom: 6rem;
+  }
+}
+
 .landing--blurb {
   @include base.f3;
   margin-bottom: 0.5rem;
