@@ -1,4 +1,5 @@
 $font-measure: 16px;
+$breakpoint: 690px;
 
 $color-text: #0b0c0c;
 $color-text-secondary: #505a5f;
@@ -19,21 +20,21 @@ $color-background: #dfe2e2;
 
 @mixin f1 {
   @include font-sizing(48px, 48px);
-  @media screen and (min-width: px-to-rem(690px)) {
+  @media screen and (min-width: px-to-rem($breakpoint)) {
     @include font-sizing(64px, 64px);
   }
 }
 
 @mixin f2 {
   @include font-sizing(32px, 32px);
-  @media screen and (min-width: px-to-rem(690px)) {
+  @media screen and (min-width: px-to-rem($breakpoint)) {
     @include font-sizing(40px, 40px);
   }
 }
 
 @mixin f3 {
   @include font-sizing(20px, 28px);
-  @media screen and (min-width: px-to-rem(690px)) {
+  @media screen and (min-width: px-to-rem($breakpoint)) {
     @include font-sizing(24px, 32px);
   }
 }
