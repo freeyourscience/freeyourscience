@@ -37,14 +37,14 @@ viewList : List Paper -> Html msg
 viewList papers =
     section [ class "mb-5" ]
         [ h3 [ class "mb-3" ]
-            [ text "Open Access publications"
+            [ text "Open access publications"
             ]
         , p [] [ text "Open access versions of these publications have been successfully indexed by Unpaywall.org" ]
         , if List.isEmpty papers then
             p []
-                [ text "We could not find any of your Open Access publications in the unpaywall.org database."
+                [ text "We could not find any of your open access publications in the unpaywall.org database."
                 , br [] []
-                , text "In case you think there should be Open Access publications here, help "
+                , text "In case you think there should be open access publications here, help "
                 , a [ href "https://unpaywall.org/sources", target "_blank" ] [ text "unpaywall.org" ]
                 , text " to find them."
                 ]

@@ -15,12 +15,12 @@ Free Your Science | {{ paper.doi }}
         <section class="mb-4 mt-4">
             <h1 class="fs-3">
                 {% if paper.is_open_access %}
-                This paper is already Open Access
+                This paper is already open access
                 {% elif category == "paywalled_nocost" %}
-                This paper does not seem to be Open Access yet<br />
-                but it has no-cost Open Access publisher policies
+                This paper does not seem to be open access yet<br />
+                but it has no-cost open access publisher policies
                 {% elif category == "other_policies" %}
-                This paper does not seem to be Open Access<br />
+                This paper does not seem to be open access<br />
                 and it only has non-free publisher policies
                 {% elif category == "issues" %}
                 We had issues finding information for the given DOI

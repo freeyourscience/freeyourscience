@@ -32,8 +32,8 @@ viewList papers =
                 ]
             , p [ class "fs-6 mb-4" ]
                 [ text
-                    ("The following publications do not seem to have any no-cost Open Access "
-                        ++ "re-publishing pathways, or do not allow Open Access publishing at all."
+                    ("The following publications do not seem to have any no-cost open access "
+                        ++ "re-publishing pathways, or do not allow open access publishing at all."
                     )
                 ]
             , div [] (List.map view papers)

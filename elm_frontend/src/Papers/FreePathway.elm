@@ -417,7 +417,7 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
         , [ small [ class "mt-4", style "display" "block" ]
                 (List.concat
                     [ [ p []
-                            [ text "The above pathway is part of an Open Access policy deposited by the publisher in the Sherpa Policy Database."
+                            [ text "The above pathway is part of an open access policy deposited by the publisher in the Sherpa Policy Database."
                             , br [] []
                             , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Visit this policy." ]
                             ]

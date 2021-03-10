@@ -20,12 +20,12 @@
 <div class="col-12 col-md-3 fs-6 text-md-end">
     <div class="publisher-policy">
         <a href='{{ paper.oa_pathway_uri }}' target="_blank" class="btn btn-success text-decoration-none"
-            title="View Open Access pathways for: {{ paper.journal }}">
-            View Open Access pathways
+            title="View open access pathways for: {{ paper.journal }}">
+            View open access pathways
         </a><br />
         {% if not paper.is_open_access %}
         <a href="#" class="link-secondary text-decoration-none link-oa-incorrect"
-            title="Is there an Open Access version for: {{ paper.title }}">Already Open Access?</a>
+            title="Is there an open access version for: {{ paper.title }}">Already open access?</a>
         {% endif %}
     </div>
 </div>
