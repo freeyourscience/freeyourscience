@@ -59,6 +59,17 @@ main.author {
   margin-bottom: 0.25rem;
 }
 
+a.howto-link {
+  color: base.$color-green;
+  font-weight: bold;
+  margin-bottom:1.25rem;
+  display:block;
+
+  &:hover{
+    color: base.$color-green;
+  }
+}
+
 .publications__item__info__pathway {
   margin-top: 1rem;
 

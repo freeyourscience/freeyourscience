@@ -414,6 +414,10 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
             |> addEmbargo embargo
             |> Maybe.map (ulWithHeading [ text "Conditions are:" ] text)
             |> Maybe.withDefault [ text "" ]
+        , [ a [ class "howto-link", href "/howto" ]
+                [ text "How to re-publish?"
+                ]
+          ]
         , [ small [ class "mt-4", style "display" "block" ]
                 (List.concat
                     [ [ p []
