@@ -5,29 +5,36 @@ main.author {
 }
 
 .publications__item {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   border-top: 1px solid base.$color-background;
   padding-top: 1rem;
   margin-bottom: 1.5rem;
+  grid-row-gap: 0.5rem;
+  row-gap: 0.5rem;
+
+  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+    grid-template-columns: minmax(0, 1fr) base.px-to-rem(180px);
+    grid-column-gap: 0.5rem;
+    column-gap: 0.5rem;
+  }
 }
 
 .publications__item__info {
-  flex: 1;
-  min-width: 0;
+  max-width:100%;
 }
 
 .publications__item__buttons {
-  flex-shrink: 0;
+  max-width:100%;
 }
 
 .pathway__button {
-  flex-shrink: 0;
   padding: 0.75rem;
   font-weight: bold;
   @include base.f4;
   cursor: pointer;
-  margin-left: 0.5rem;
   line-height: 1.5rem;
+  width:100%;
 }
 
 .pathway__button--show {
