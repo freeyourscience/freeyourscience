@@ -1,8 +1,7 @@
 module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 
-import Html exposing (Html, a, div, h3, span, text)
+import Html exposing (Attribute, Html, a, div, text)
 import Html.Attributes exposing (class, href, target)
-import Html exposing (Attribute)
 
 
 type alias DOI =
@@ -37,13 +36,10 @@ renderPaperMetaData titleElement { title, journal, authors, year, doi, url } =
         [ text (Maybe.withDefault "Unknown title" title)
         ]
     , div [ class "" ]
-        [ text "in "
-        , span [ class "publications__item__info__journal" ]
-            [ journal |> Maybe.withDefault "Unknown journal" |> text
-            ]
-        , text
+        [ text
             (String.concat
-                [ " by "
+                [ journal |> Maybe.withDefault "Unknown journal"
+                , ", "
                 , authors |> Maybe.withDefault "Unknown authors"
                 , " ("
                 , year |> Maybe.map String.fromInt |> Maybe.withDefault ""

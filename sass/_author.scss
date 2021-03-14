@@ -50,6 +50,7 @@ main.author {
 }
 
 .publications__item__info__title {
+  @include base.f4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -58,9 +59,6 @@ main.author {
   margin-bottom: 0.25rem;
 }
 
-.publications__item__info__journal {
-  font-weight: bold;
-}
 .publications__item__info__pathway {
   margin-top: 1rem;
 
