@@ -14,7 +14,7 @@ main.author {
   row-gap: 0.5rem;
 
   @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
-    grid-template-columns: minmax(0, 1fr) base.px-to-rem(180px);
+    grid-template-columns: minmax(0, 1fr) base.px-to-rem(160px);
     grid-column-gap: 1rem;
     column-gap: 1rem;
   }
