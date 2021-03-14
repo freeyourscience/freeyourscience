@@ -39,7 +39,6 @@
             <ul class="nav-submenu__list">
                 <li><a href="/legal" class="nav-submenu__item">Re-publishing</a></li>
                 <li><a href="/team" class="nav-submenu__item">Team</a></li>
-                <li><a href="#" class="nav-submenu__item">Technology</a></li>
             </ul>
         </nav>
     </header>
@@ -56,8 +55,8 @@
 
 <script>
     var menuItems = document.querySelectorAll('.nav-submenu');
-    Array.prototype.forEach.call(menuItems, function(el, i){
-        el.querySelector('a').addEventListener("click",  function(event){
+    Array.prototype.forEach.call(menuItems, function (el, i) {
+        el.querySelector('a').addEventListener("click", function (event) {
             if (this.parentNode.className == "nav-submenu") {
                 this.parentNode.className = "nav-submenu--open";
                 this.setAttribute('aria-expanded', "true");
