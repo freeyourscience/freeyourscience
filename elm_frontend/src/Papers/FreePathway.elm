@@ -418,7 +418,7 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
                 [ text "How to re-publish?"
                 ]
           ]
-        , [ small [ class "mt-4", style "display" "block" ]
+        , [ small [ style "display" "block" ]
                 (List.concat
                     [ [ p []
                             [ text "The above pathway is part of an open access policy deposited by the publisher in the Sherpa Policy Database."

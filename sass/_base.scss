@@ -121,9 +121,12 @@ p {
   margin-bottom: 1.5rem;
 }
 
-small {
+small,
+small > p,
+small li {
   @include f6;
   margin-top: 0;
+
 }
 
 a:link,
