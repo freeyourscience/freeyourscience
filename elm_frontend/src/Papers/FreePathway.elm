@@ -281,7 +281,7 @@ viewList : List ( Int, Paper ) -> Html Msg
 viewList papers =
     section []
         [ h2 []
-            [ text "Paywalled publications with free open access pathway"
+            [ text "Paywalled with free open access pathway"
             ]
         , p []
             [ text
