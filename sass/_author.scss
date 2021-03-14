@@ -30,11 +30,9 @@ main.author {
 
 .pathway__button {
   padding: 0.75rem;
-  font-weight: bold;
   @include base.f4;
   cursor: pointer;
-  line-height: 1.5rem;
-  width:100%;
+  line-height: 1;
 }
 
 .pathway__button--show {
