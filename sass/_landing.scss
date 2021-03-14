@@ -7,7 +7,10 @@
 }
 
 .landing--blurb {
-  @include base.f3;
+  @include base.font-sizing(20px, 25px);
+  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+    @include base.font-sizing(22px, 30px);
+  }
   margin-bottom: 0.5rem;
 }
 
