@@ -1,10 +1,12 @@
-{% import 'search_macros.html' as search %}
 {% extends "base.html" %}
 {% block content %}
 <main>
 	<h1 class="landing--title">Re-publish your paywalled work open access today for free</h1>
 	<p class="landing--blurb">Find publications of yours with free open access pathways.</p>
-	{{ search.form("", "") }}
+	<form method="GET" action="/search" id="search-form" class="search">
+		<input type="text" name="query" class="search__input" placeholder="Author name, ORCID or DOI" required>
+		<button type="submit" class="search__button">Search</button>
+	</form>
 	<section>
 		<h2>What we provide for authors</h2>
 		<p>Free Your Science is out to show authors like you which of your paywalled publications you can re-publish
