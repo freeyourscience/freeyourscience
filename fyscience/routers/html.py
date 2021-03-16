@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from loguru import logger
 
 from fyscience.schemas import OAPathway, FullPaper
-from fyscience.routers.api import get_paper, get_author_with_papers
+from fyscience.routers.api import get_author_with_papers
 from fyscience.routers.deps import get_settings, Settings, TEMPLATE_PATH
 
 html_router = APIRouter()
@@ -24,19 +24,13 @@ def _is_paywalled_and_nocost(paper: FullPaper) -> bool:
 def _render_paper_page(
     doi: str, settings: Settings, request: Request
 ) -> templates.TemplateResponse:
-    paper = get_paper(doi=doi, settings=settings)
-
-    if _is_paywalled_and_nocost(paper):
-        category = "paywalled_nocost"
-    elif paper.is_open_access:
-        category = "already_oa"
-    elif paper.oa_pathway is OAPathway.other:
-        category = "other_policies"
-    else:
-        category = "issues"
+    host = request.headers["host"]
+    serverURL = (
+        "https://" + host if host.endswith("freeyourscience.org") else "http://" + host
+    )
 
     return templates.TemplateResponse(
-        "paper.html", {"request": request, "paper": paper, "category": category}
+        "paper.html", {"request": request, "doi": doi, "serverURL": serverURL}
     )
 
 

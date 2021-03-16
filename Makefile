@@ -2,7 +2,8 @@
 
 elm:
 	cd elm_frontend \
-		&& elm make src/Main.elm --output ../fyscience/static/authorPapers.js \
+		&& elm make src/Author.elm --output ../fyscience/static/authorPapers.js \
+		&& elm make src/Paper.elm --output ../fyscience/static/singlePaper.js \
 		&& elm make src/KitchenSink.elm --output dist/kitchenSink.js
 
 elm-test:

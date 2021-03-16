@@ -1,4 +1,14 @@
-module Papers.FreePathway exposing (NoCostOaPathway, Paper, Pathway, PolicyMetaData, recommendPathway, scorePathway, viewList)
+module Papers.FreePathway exposing
+    ( NoCostOaPathway
+    , Paper
+    , Pathway
+    , PolicyMetaData
+    , recommendPathway
+    , renderRecommendedPathway
+    , scorePathway
+    , viewList
+    , viewPublicationItemInfo
+    )
 
 import Html exposing (Html, a, br, button, div, h2, h3, li, p, section, small, strong, text, ul)
 import Html.Attributes exposing (class, href, style)
@@ -293,24 +303,29 @@ viewList papers =
         ]
 
 
-view : ( Int, Paper ) -> Html Msg
-view ( id, { pathwayVisible, recommendedPathway } as paper ) =
+viewPublicationItemInfo : Paper -> Html Msg
+viewPublicationItemInfo paper =
     let
         pathwayVisibleClass =
-            if pathwayVisible then
+            if paper.pathwayVisible then
                 ""
 
             else
                 "hidden"
     in
+    div [ class "publications__item__info" ]
+        [ div []
+            (renderPaperMetaData h3 paper.meta)
+        , div [ class pathwayVisibleClass, class "publications__item__info__pathway" ]
+            (renderRecommendedPathway paper.oaPathwayURI paper.recommendedPathway)
+        ]
+
+
+view : ( Int, Paper ) -> Html Msg
+view ( id, paper ) =
     div [ class "publications__item" ]
-        [ div [ class "publications__item__info" ]
-            [ div []
-                (renderPaperMetaData h3 paper.meta)
-            , div [ class pathwayVisibleClass, class "publications__item__info__pathway" ]
-                (renderRecommendedPathway paper.oaPathwayURI recommendedPathway)
-            ]
-        , renderPathwayButtons pathwayVisible ( id, paper.meta )
+        [ viewPublicationItemInfo paper
+        , renderPathwayButtons paper.pathwayVisible ( id, paper.meta )
         ]
 
 

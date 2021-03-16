@@ -13,7 +13,7 @@ Free Your Science | {{ author.name }}
 {% block content %}
 <div id="publicationsForAuthor"></div>
 <script>
-    var app = Elm.Main.init({
+    var app = Elm.Author.init({
         node: document.getElementById('publicationsForAuthor'),
         flags: {
             "dois": {{ dois | safe }},

@@ -2,10 +2,10 @@ module KitchenSink exposing (main)
 
 import Animation
 import Array
+import Author exposing (Model, subscriptions, update, view)
 import Browser
 import Http
 import Json.Decode as D
-import Main exposing (Model, subscriptions, update, view)
 import Msg exposing (Msg(..))
 import Papers.Backend as Backend exposing (paperDecoder)
 

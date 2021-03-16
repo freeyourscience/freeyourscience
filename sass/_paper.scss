@@ -1,0 +1,9 @@
+@use 'base';
+
+main.paper {
+  max-width: base.px-to-rem(900px);
+
+  .search {
+    margin-bottom: 4rem;
+  }
+}

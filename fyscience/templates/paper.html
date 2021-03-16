@@ -1,42 +1,18 @@
-{% import 'paper_macros.html' as paper_page %}
-{% import 'search_macros.html' as search %}
-{% extends "base.html" %}
+{% extends "base_nobs.html" %}
 
-{% block title %}
-Free Your Science | {{ paper.doi }}
+{% block header %}
+<script src="static/singlePaper.js"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container fs-5">
-    <main>
-        <section class="my-5">
-            {{ search.form(paper.doi) }}
-        </section>
-        <section class="mb-4 mt-4">
-            <h1 class="fs-3">
-                {% if paper.is_open_access %}
-                This paper is already open access
-                {% elif category == "paywalled_nocost" %}
-                This paper does not seem to be open access yet<br />
-                but it has no-cost open access publisher policies
-                {% elif category == "other_policies" %}
-                This paper does not seem to be open access<br />
-                and it only has non-free publisher policies
-                {% elif category == "issues" %}
-                We had issues finding information for the given DOI
-                {% endif %}
-            </h1>
-            <div class="row mb-3 author-pubs mb-4 pt-3">
-                {% if category != "issues" %}
-                {{ paper_page.minimal(paper) }}
-                {% if category == "paywalled_nocost" or category == "other_policies" %}
-                {{ paper_page.pathway_details(paper) }}
-                {% endif %}
-                {% else %}
-                <p>{{paper.doi}}</p>
-                {% endif %}
-            </div>
-        </section>
-    </main>
-</div>
+<div id="singlePaper"></div>
+<script>
+    var app = Elm.Paper.init({
+        node: document.getElementById('singlePaper'),
+        flags: {
+            "doi": "{{ doi }}",
+            "serverURL": "{{ serverURL }}"
+        }
+    });
+</script>
 {% endblock %}

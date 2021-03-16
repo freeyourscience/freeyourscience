@@ -24,13 +24,23 @@ jobs:
         run: make elm-test
 
       - name: Build
-        run: cd elm_frontend && elm make src/Main.elm --output authorPapers.js
+        run: |
+          cd elm_frontend
+          elm make src/Author.elm --output authorPapers.js
+          elm make src/Paper.elm --output singlePaper.js
 
-      - name: Archive Artifact
+      - name: Archive Author.js
         uses: actions/upload-artifact@v2
         with:
           name: publications-for-authors-js
           path: elm_frontend/authorPapers.js
+          retention-days: 1
+
+      - name: Archive Paper.js
+        uses: actions/upload-artifact@v2
+        with:
+          name: single-paper-js
+          path: elm_frontend/singlePaper.js
           retention-days: 1
 
   python-and-docker:
@@ -53,10 +63,16 @@ jobs:
           username: erkannt # TODO: Update this to a fyscience technical user
           password: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Download Artifacts
+      - name: Download Author.js
         uses: actions/download-artifact@v2
         with:
           name: publications-for-authors-js
+          path: fyscience/static/
+
+      - name: Download Paper.js
+        uses: actions/download-artifact@v2
+        with:
+          name: single-paper-js
           path: fyscience/static/
 
       - name: Test

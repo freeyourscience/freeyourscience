@@ -1,6 +1,7 @@
 # Project specific
 pathway.json
 fyscience/static/authorPapers.js
+fyscience/static/singlePaper.js
 fyscience/static/style.css
 fyscience/static/style.css.map
 
