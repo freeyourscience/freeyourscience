@@ -4,7 +4,7 @@ fyscience/static/authorPapers.js
 fyscience/static/singlePaper.js
 fyscience/static/style.css
 fyscience/static/style.css.map
-
+.sass-cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
