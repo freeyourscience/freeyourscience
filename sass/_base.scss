@@ -1,48 +1,5 @@
 @use 'settings';
-
-@function px-to-rem($px) {
-  @return ($px / settings.$font-measure) * 1rem;
-}
-
-@mixin font-sizing($font-size, $line-height) {
-  $font-size-in-rem: px-to-rem($font-size);
-
-  font-size: $font-size-in-rem;
-  line-height: $line-height/ $font-size;
-}
-
-@mixin f1 {
-  @include font-sizing(48px, 48px);
-  @media screen and (min-width: px-to-rem(settings.$breakpoint)) {
-    @include font-sizing(64px, 64px);
-  }
-}
-
-@mixin f2 {
-  @include font-sizing(32px, 32px);
-  @media screen and (min-width: px-to-rem(settings.$breakpoint)) {
-    @include font-sizing(40px, 40px);
-  }
-}
-
-@mixin f3 {
-  @include font-sizing(20px, 28px);
-  @media screen and (min-width: px-to-rem(settings.$breakpoint)) {
-    @include font-sizing(24px, 32px);
-  }
-}
-
-@mixin f4 {
-  @include font-sizing(18px, 28px);
-}
-
-@mixin f5 {
-  @include font-sizing(16px, 24px);
-}
-
-@mixin f6 {
-  @include font-sizing(14px, 20px);
-}
+@use 'utils';
 
 html {
   font-size: (settings.$font-measure / 16px) * 100%;
@@ -56,7 +13,7 @@ body {
 }
 
 main {
-  max-width: px-to-rem(700px);
+  max-width: utils.px-to-rem(700px);
   margin: 0 auto 5rem;
 }
 
@@ -87,29 +44,29 @@ h5 {
 }
 
 h1 {
-  @include f1;
+  @include utils.f1;
   margin-bottom: 4rem;
 }
 
 h2 {
-  @include f2;
+  @include utils.f2;
   margin-bottom: 2rem;
 }
 
 h3 {
-  @include f3;
+  @include utils.f3;
 }
 
 h4 {
-  @include f4;
+  @include utils.f4;
 }
 
 h5 {
-  @include f5;
+  @include utils.f5;
 }
 
 p {
-  @include f5;
+  @include utils.f5;
   margin-top: 0;
   margin-bottom: 1.5rem;
 }
@@ -117,7 +74,7 @@ p {
 small,
 small > p,
 small li {
-  @include f6;
+  @include utils.f6;
   margin-top: 0;
 
 }
@@ -140,18 +97,18 @@ ol {
 }
 
 li {
-  @include f5;
+  @include utils.f5;
   margin: 0 0 0.5rem;
 }
 
 dt {
-  @include f5;
+  @include utils.f5;
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
 dd {
-  @include f5;
+  @include utils.f5;
   margin: 0 0 1.5rem 1rem;
 }
 

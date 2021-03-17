@@ -1,7 +1,7 @@
-@use 'base';
+@use 'utils';
 
 main.paper {
-  max-width: base.px-to-rem(900px);
+  max-width: utils.px-to-rem(900px);
 
   .search {
     margin-bottom: 4rem;

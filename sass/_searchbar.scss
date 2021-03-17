@@ -1,4 +1,4 @@
-@use 'base';
+@use 'utils';
 @use 'settings';
 
 .search {
@@ -10,13 +10,13 @@
 .search__input {
   flex-grow: 1;
   border: 1px solid settings.$color-background;
-  padding: base.px-to-rem(12px) 1rem base.px-to-rem(10px);
+  padding: utils.px-to-rem(12px) 1rem utils.px-to-rem(10px);
 }
 
 .search__button {
   flex-shrink: 0;
   border: 1px solid settings.$color-blue;
-  padding: base.px-to-rem(3px) 1rem 0;
+  padding: utils.px-to-rem(3px) 1rem 0;
   color: white;
   background-color: settings.$color-blue;
   font-weight: bold;

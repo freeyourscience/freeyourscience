@@ -1,10 +1,10 @@
-@use 'base';
+@use 'utils';
 @use 'settings';
 
 $button-width: 9rem;
 
 main.author {
-  max-width: base.px-to-rem(900px);
+  max-width: utils.px-to-rem(900px);
 }
 
 .publications__item {
@@ -16,7 +16,7 @@ main.author {
   grid-row-gap: 0.5rem;
   row-gap: 0.5rem;
 
-  @media screen and (min-width: base.px-to-rem(settings.$breakpoint)) {
+  @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
     grid-template-columns: minmax(0, 1fr) $button-width;
     grid-column-gap: 1rem;
     column-gap: 1rem;
@@ -33,7 +33,7 @@ main.author {
 
 .pathway__button {
   padding: 0.75rem;
-  @include base.f4;
+  @include utils.f4;
   cursor: pointer;
   line-height: 1;
   width: 100%;
@@ -53,7 +53,7 @@ main.author {
 }
 
 .publications__item__info__title {
-  @include base.f4;
+  @include utils.f4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
