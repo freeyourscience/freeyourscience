@@ -1,4 +1,5 @@
 @use 'base';
+@use 'settings';
 
 header {
   max-width: base.px-to-rem(900px);
@@ -6,7 +7,7 @@ header {
   align-items: baseline;
   justify-content: space-between;
   margin: 2rem auto 5rem;
-  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+  @media screen and (min-width: base.px-to-rem(settings.$breakpoint)) {
     margin: 5rem auto 8rem;
   }
 }
@@ -14,17 +15,17 @@ header {
 .header--title {
   @include base.f3;
   font-weight: bold;
-  color: base.$color-text;
+  color: settings.$color-text;
   flex-shrink: 0;
 }
 
 .header--title:link,
 .header--title:visited {
-  color: base.$color-text;
+  color: settings.$color-text;
 
   &:hover,
   &:active {
-    color: base.$color-text;
+    color: settings.$color-text;
   }
 }
 
@@ -58,22 +59,22 @@ header > nav {
 
 .nav-submenu__title:link,
 .nav-submenu__title:visited {
-  color: base.$color-text;
+  color: settings.$color-text;
   text-decoration: none;
 
   &:hover,
   &:active {
-    color: base.$color-text;
+    color: settings.$color-text;
   }
 }
 
 .nav-submenu__item:link,
 .nav-submenu__item:visited {
-  color: base.$color-text-secondary;
+  color: settings.$color-text-secondary;
   text-decoration: none;
 
   &:hover,
   &:active {
-    color: base.$color-text;
+    color: settings.$color-text;
   }
 }

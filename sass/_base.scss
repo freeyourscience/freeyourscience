@@ -1,14 +1,7 @@
-$font-measure: 16px;
-$breakpoint: 690px;
-
-$color-text: #0b0c0c;
-$color-text-secondary: #505a5f;
-$color-blue: #1d70b8;
-$color-green: #198754;
-$color-background: #dfe2e2;
+@use 'settings';
 
 @function px-to-rem($px) {
-  @return ($px / $font-measure) * 1rem;
+  @return ($px / settings.$font-measure) * 1rem;
 }
 
 @mixin font-sizing($font-size, $line-height) {
@@ -20,21 +13,21 @@ $color-background: #dfe2e2;
 
 @mixin f1 {
   @include font-sizing(48px, 48px);
-  @media screen and (min-width: px-to-rem($breakpoint)) {
+  @media screen and (min-width: px-to-rem(settings.$breakpoint)) {
     @include font-sizing(64px, 64px);
   }
 }
 
 @mixin f2 {
   @include font-sizing(32px, 32px);
-  @media screen and (min-width: px-to-rem($breakpoint)) {
+  @media screen and (min-width: px-to-rem(settings.$breakpoint)) {
     @include font-sizing(40px, 40px);
   }
 }
 
 @mixin f3 {
   @include font-sizing(20px, 28px);
-  @media screen and (min-width: px-to-rem($breakpoint)) {
+  @media screen and (min-width: px-to-rem(settings.$breakpoint)) {
     @include font-sizing(24px, 32px);
   }
 }
@@ -52,13 +45,13 @@ $color-background: #dfe2e2;
 }
 
 html {
-  font-size: ($font-measure / 16px) * 100%;
+  font-size: (settings.$font-measure / 16px) * 100%;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Helvetica, sans-serif;
-  color: $color-text;
+  color: settings.$color-text;
   padding: 0 1rem;
 }
 
@@ -69,7 +62,7 @@ main {
 
 footer {
   text-align: center;
-  color: $color-text-secondary;
+  color: settings.$color-text-secondary;
   margin: 0 auto 3rem;
 }
 
@@ -131,12 +124,12 @@ small li {
 
 a:link,
 a:visited {
-  color: $color-blue;
+  color: settings.$color-blue;
   text-decoration: none;
 
   &:hover,
   &:active {
-    color: $color-blue;
+    color: settings.$color-blue;
   }
 }
 
@@ -166,7 +159,7 @@ dd {
   width: 100%;
   height: 40vh;
   margin-bottom: 1rem;
-  background-color: $color-background;
+  background-color: settings.$color-background;
 }
 
 .hidden {

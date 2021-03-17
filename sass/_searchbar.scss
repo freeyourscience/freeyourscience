@@ -1,4 +1,5 @@
 @use 'base';
+@use 'settings';
 
 .search {
   display: flex;
@@ -8,22 +9,22 @@
 
 .search__input {
   flex-grow: 1;
-  border: 1px solid base.$color-background;
+  border: 1px solid settings.$color-background;
   padding: base.px-to-rem(12px) 1rem base.px-to-rem(10px);
 }
 
 .search__button {
   flex-shrink: 0;
-  border: 1px solid base.$color-blue;
+  border: 1px solid settings.$color-blue;
   padding: base.px-to-rem(3px) 1rem 0;
   color: white;
-  background-color: base.$color-blue;
+  background-color: settings.$color-blue;
   font-weight: bold;
   cursor: pointer;
 }
 
 .search__small {
-  color: base.$color-text-secondary;
+  color: settings.$color-text-secondary;
   flex: 0 0 100%;
   padding: 0.5rem;
 }
@@ -41,9 +42,9 @@
 }
 
 .search__progressbar__progress {
-  background-color: base.$color-blue;
+  background-color: settings.$color-blue;
   width: 100%;
-  box-shadow: 0 0 10px base.$color-blue;
+  box-shadow: 0 0 10px settings.$color-blue;
   transition: width 0.4s ease;
   outline: 2px solid transparent;
   box-sizing: border-box;

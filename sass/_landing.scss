@@ -1,14 +1,15 @@
 @use 'base';
+@use 'settings';
 
 .landing--title {
-  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+  @media screen and (min-width: base.px-to-rem(settings.$breakpoint)) {
     margin-bottom: 6rem;
   }
 }
 
 .landing--blurb {
   @include base.font-sizing(20px, 25px);
-  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+  @media screen and (min-width: base.px-to-rem(settings.$breakpoint)) {
     @include base.font-sizing(22px, 30px);
   }
   margin-bottom: 0.5rem;
@@ -22,7 +23,7 @@
 .for-authors--heading {
   grid-column: 1/3;
   margin-top: 0;
-  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+  @media screen and (min-width: base.px-to-rem(settings.$breakpoint)) {
     grid-column: 2;
   }
 }
@@ -31,7 +32,7 @@
   grid-column: 1;
   max-height: base.px-to-rem(96px);
   margin-right: 1rem;
-  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+  @media screen and (min-width: base.px-to-rem(settings.$breakpoint)) {
     grid-row: 1/3;
     margin-right: 2rem;
   }

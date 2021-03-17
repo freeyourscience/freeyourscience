@@ -1,4 +1,5 @@
 @use 'base';
+@use 'settings';
 
 $button-width: 9rem;
 
@@ -9,13 +10,13 @@ main.author {
 .publications__item {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  border-top: 1px solid base.$color-background;
+  border-top: 1px solid settings.$color-background;
   padding-top: 1rem;
   margin-bottom: 1.5rem;
   grid-row-gap: 0.5rem;
   row-gap: 0.5rem;
 
-  @media screen and (min-width: base.px-to-rem(base.$breakpoint)) {
+  @media screen and (min-width: base.px-to-rem(settings.$breakpoint)) {
     grid-template-columns: minmax(0, 1fr) $button-width;
     grid-column-gap: 1rem;
     column-gap: 1rem;
@@ -40,15 +41,15 @@ main.author {
 }
 
 .pathway__button--show {
-  border: 1px solid base.$color-green;
-  background-color: base.$color-green;
+  border: 1px solid settings.$color-green;
+  background-color: settings.$color-green;
   color: white;
 }
 
 .pathway__button--hide {
-  border: 1px solid base.$color-background;
-  background-color: base.$color-background;
-  color: base.$color-text;
+  border: 1px solid settings.$color-background;
+  background-color: settings.$color-background;
+  color: settings.$color-text;
 }
 
 .publications__item__info__title {
@@ -62,13 +63,13 @@ main.author {
 }
 
 a.howto-link {
-  color: base.$color-green;
+  color: settings.$color-green;
   font-weight: bold;
   margin-bottom:1.5rem;
   display:block;
 
   &:hover{
-    color: base.$color-green;
+    color: settings.$color-green;
   }
 }
 
