@@ -70,22 +70,23 @@ view model =
                 "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI"
                 []
     in
-    main_ [ class "paper" ]
-        (case model.paper of
-            Just (FP paper) ->
+    case model.paper of
+        Just (FP paper) ->
+            main_ [ class "paper", class "freepathway" ]
                 [ h1 [] [ text "Re-publish open access today" ]
-                , searchBar
                 , { paper | pathwayVisible = True }
                     |> FreePathway.viewPublicationItemInfo
                 ]
 
-            Just (OP paper) ->
+        Just (OP paper) ->
+            main_ [ class "paper", class "otherpathway" ]
                 [ h1 [] [ text "Paywalled with non-free policy" ]
                 , searchBar
                 , text ("OP" ++ Maybe.withDefault "" paper.meta.title)
                 ]
 
-            Just (OA paper) ->
+        Just (OA paper) ->
+            main_ [ class "paper", class "openaccess" ]
                 [ h1 [] [ text "Already open access" ]
                 , searchBar
                 , div [ class "publications__item__info" ]
@@ -101,7 +102,8 @@ view model =
                     )
                 ]
 
-            Nothing ->
+        Nothing ->
+            main_ [ class "paper" ]
                 [ h1 []
                     [ if model.error then
                         text "Not found"
@@ -111,7 +113,6 @@ view model =
                     ]
                 , searchBar
                 ]
-        )
 
 
 

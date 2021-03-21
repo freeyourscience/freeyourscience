@@ -7,3 +7,10 @@ main.paper {
     margin-bottom: 4rem;
   }
 }
+
+main.freepathway .publications__item__info__title {
+  @include base.f3;
+  overflow: inherit;
+  text-overflow: inherit;
+  white-space: inherit;
+}
