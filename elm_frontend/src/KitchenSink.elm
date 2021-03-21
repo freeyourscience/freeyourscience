@@ -89,6 +89,19 @@ jsonPapers =
         "oa_location_url": null
     }"""
     , """{
+        "doi": "10.1007/978-3-642-123-8",
+        "title": "Geotechnik Hydrogeologie",
+        "journal": null,
+        "authors": "Holger Schreiner et al.",
+        "year": 1997,
+        "issn": null,
+        "is_open_access": false,
+        "oa_location_url": null,
+        "oa_pathway": null,
+        "oa_pathway_uri": null,
+        "oa_pathway_details": null
+    }"""
+    , """{
         "doi": "10.1371/journal.pcbi.1006283",
         "title": "Unsupervised clustering of temporal patterns in high-dimensional neuronal ensembles using a novel dissimilarity measure",
         "journal": "PLOS Computational Biology",

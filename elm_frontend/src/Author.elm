@@ -238,7 +238,7 @@ classifyPaper backendPaper model =
                 |> (\p -> { model | openAccessPapers = model.openAccessPapers ++ [ p ] })
 
         _ ->
-            { model | buggyPapers = model.buggyPapers ++ [ Buggy.Paper backendPaper.doi backendPaper.journal backendPaper.oaPathway ] }
+            { model | buggyPapers = model.buggyPapers ++ [ Buggy.Paper meta backendPaper.oaPathway ] }
 
 
 

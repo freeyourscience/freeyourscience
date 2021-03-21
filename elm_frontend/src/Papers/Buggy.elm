@@ -1,15 +1,44 @@
 module Papers.Buggy exposing (Paper, viewList)
 
-import Html exposing (Html, a, div, h3, section, text)
-import Html.Attributes exposing (class, href, target)
-import Papers.Utils exposing (DOI)
+import Html exposing (Html, div, h3, p, section, text)
+import Html.Attributes exposing (style)
+import Papers.Utils exposing (PaperMetadata, renderPaperMetaData)
 
 
 type alias Paper =
-    { doi : DOI
-    , journal : Maybe String
+    { meta : PaperMetadata
     , oaPathway : Maybe String
     }
+
+
+renderPaperMetaDataWithIssues : PaperMetadata -> List (Html msg)
+renderPaperMetaDataWithIssues metaData =
+    let
+        issueStyle =
+            [ style "margin-top" "0.5rem" ]
+    in
+    renderPaperMetaData div metaData
+        ++ [ case ( metaData.issn, metaData.journal ) of
+                ( Nothing, Nothing ) ->
+                    p issueStyle
+                        [ text "↯ Could not find the venue's ISSN and thus no open access policies."
+                        ]
+
+                ( Just issn, Just journal ) ->
+                    p issueStyle
+                        [ text ("↯ Could not find open access policies for \"" ++ journal ++ "\" (ISSN: " ++ issn ++ ")")
+                        ]
+
+                ( Just issn, Nothing ) ->
+                    p issueStyle
+                        [ text ("↯ Could not find open access policies for ISSN: " ++ issn)
+                        ]
+
+                ( Nothing, Just journal ) ->
+                    p issueStyle
+                        [ text ("↯ Could not find the ISSN for \"" ++ journal ++ "\" and thus no open access policies.")
+                        ]
+           ]
 
 
 viewList : List Paper -> Html msg
@@ -18,25 +47,8 @@ viewList papers =
         text ""
 
     else
-        section [ class "mb-5" ]
-            [ h3 []
-                [ text "Publications we had issues with"
-                ]
-            , div [ class "container" ]
-                (List.map
-                    (\p ->
-                        div []
-                            [ a [ href ("https://doi.org/" ++ p.doi), target "_blank", class "link-secondary" ]
-                                [ text p.doi
-                                ]
-                            , case p.oaPathway of
-                                Just _ ->
-                                    text (" (unknown publisher policy for: " ++ Maybe.withDefault "Unknown Journal" p.journal ++ ")")
-
-                                _ ->
-                                    text ""
-                            ]
-                    )
-                    papers
-                )
-            ]
+        section []
+            (h3 [] [ text "Publications with insufficient information" ]
+                :: List.concat
+                    (papers |> List.map (\paper -> renderPaperMetaDataWithIssues paper.meta))
+            )
