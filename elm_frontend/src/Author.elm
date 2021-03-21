@@ -128,7 +128,7 @@ renderFooter authorProfileURL =
             , a [ href authorProfileURL, target "_blank", class "link-dark" ]
                 [ text "Source Profile"
                 ]
-            , text " that was used to retreive the author's papers.)"
+            , text " that was used to retreive the author's publications.)"
             ]
         ]
 
