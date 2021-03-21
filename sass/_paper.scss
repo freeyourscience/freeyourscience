@@ -6,11 +6,12 @@ main.paper {
   .search {
     margin-bottom: 4rem;
   }
-}
 
-main.freepathway .publications__item__info__title {
-  @include base.f3;
-  overflow: inherit;
-  text-overflow: inherit;
-  white-space: inherit;
+  .publications__item__info__title {
+    @include base.f3;
+    overflow: inherit;
+    text-overflow: inherit;
+    white-space: inherit;
+    font-weight: bold;
+  }
 }
