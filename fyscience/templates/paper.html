@@ -14,5 +14,8 @@
             "serverURL": "{{ serverURL }}"
         }
     });
+    app.ports.title.subscribe(function (title) {
+        document.title = title;
+    });
 </script>
 {% endblock %}

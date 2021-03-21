@@ -1,4 +1,4 @@
-module Paper exposing (..)
+port module Paper exposing (..)
 
 import Browser
 import Debug
@@ -27,6 +27,9 @@ type alias Model =
     , paper : Maybe SomePaper
     , error : Bool
     }
+
+
+port title : String -> Cmd a
 
 
 
@@ -123,10 +126,20 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Msg.GotPaper (Ok backendPaper) ->
-            ( model
-                |> classifyPaper backendPaper
-            , Cmd.none
-            )
+            let
+                modelWithClassifiedPaper =
+                    model |> classifyPaper backendPaper
+            in
+            case modelWithClassifiedPaper.paper of
+                Just (FP _) ->
+                    ( modelWithClassifiedPaper
+                    , title "Free Your Science | Re-publish open access today"
+                    )
+
+                _ ->
+                    ( modelWithClassifiedPaper
+                    , title "Free Your Science"
+                    )
 
         Msg.GotPaper (Err error) ->
             let
