@@ -45,7 +45,9 @@ type alias PermittedOA =
 
 type alias Prerequisites =
     { prerequisites : List String
-    , prerequisites_phrases : List Phrase
+    , prerequisitesPhrases : List Phrase
+    , prerequisitesFunders : Maybe (List Funder)
+    , prerequisitesSubjects : Maybe (List String)
     }
 
 
@@ -53,6 +55,16 @@ type alias Phrase =
     { value : String
     , phrase : String
     , language : String
+    }
+
+
+type alias Funder =
+    { funderMetadata : FunderMetadata }
+
+
+type alias FunderMetadata =
+    { name : String
+    , url : String
     }
 
 
@@ -91,6 +103,8 @@ prerequisitesDecoder =
     D.succeed Prerequisites
         |> required "prerequisites" (D.list D.string)
         |> required "prerequisites_phrases" (D.list phraseDecoder)
+        |> optional "prerequisites_funders" (D.maybe (D.list funderDecoder)) Nothing
+        |> optional "prequisite_subjects" (D.maybe (D.list D.string)) Nothing
 
 
 phraseDecoder : Decoder Phrase
@@ -99,6 +113,19 @@ phraseDecoder =
         |> required "value" D.string
         |> required "phrase" D.string
         |> required "language" D.string
+
+
+funderDecoder : Decoder Funder
+funderDecoder =
+    D.succeed Funder
+        |> required "funder_metadata" funderMetadataDecoder
+
+
+funderMetadataDecoder : Decoder FunderMetadata
+funderMetadataDecoder =
+    D.succeed FunderMetadata
+        |> required "name" D.string
+        |> required "url" D.string
 
 
 embargoDecoder : Decoder Embargo

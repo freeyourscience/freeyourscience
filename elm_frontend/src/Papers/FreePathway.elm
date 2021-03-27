@@ -151,8 +151,8 @@ parsePolicyMetaData { policyUrl, urls, notes } =
 
 
 parsePrequisites : Prerequisites -> List String
-parsePrequisites { prerequisites_phrases } =
-    prerequisites_phrases
+parsePrequisites { prerequisitesPhrases } =
+    prerequisitesPhrases
         |> List.map (\item -> item.phrase)
 
 
