@@ -8,7 +8,7 @@ main.paper {
   }
 
   .publications__item__info__title {
-    @include base.f3;
+    @include utils.f3;
     overflow: inherit;
     text-overflow: inherit;
     white-space: inherit;
