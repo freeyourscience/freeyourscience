@@ -14,7 +14,7 @@ pathway =
         { location = [ "this_journal", "any_repository" ]
         , namedRepository = Nothing
         }
-    , prerequisites = Just [ "If Required by Funder" ]
+    , prerequisites = Just [ "If Required by Funder", "Manuscript must be from subjects: Math, Chemistry" ]
     , embargo = Just "12 months"
     , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
     , notes = Just [ "Pathway specific notes" ]
@@ -25,7 +25,7 @@ noCostOaPathway : NoCostOaPathway
 noCostOaPathway =
     { articleVersions = [ "submitted" ]
     , locationLabelsSorted = [ "Non-commercial repositories", "PubMed Central", "Author's homepage", "Academic social networks" ]
-    , prerequisites = Just [ "If Required by Funder" ]
+    , prerequisites = Just [ "If Required by Funder", "Manuscript must be from subjects: Math, Chemistry" ]
     , embargo = Just "12 months"
     , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
     , notes = Just [ "Pathway specific notes" ]
@@ -63,12 +63,14 @@ pathwayDetails =
                   , prerequisites =
                         Just
                             { prerequisites = [ "when_required_by_funder" ]
-                            , prerequisites_phrases =
+                            , prerequisitesPhrases =
                                 [ { value = "when_required_by_funder"
                                   , phrase = "If Required by Funder"
                                   , language = "en"
                                   }
                                 ]
+                            , prerequisiteFunders = Nothing
+                            , prerequisiteSubjects = Just [ "Math", "Chemistry" ]
                             }
                   , publicNotes = Just [ "Pathway specific notes" ]
                   }

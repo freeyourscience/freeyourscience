@@ -43,6 +43,15 @@ fullPaperJson =
                             ],
                         "units": "months"
                         },
+                    "prerequisites": {
+                        "prerequisites": ["required_by_funder"],
+                        "prerequisites_phrases": [{
+                                "phrase": "Required by funder",
+                                "language": "en",
+                                "value": "required_by_funder"
+                            }],
+                        "prerequisite_subjects": ["Math", "Chemistry"]
+                    },
                     "location": {
                         "location_phrases": [
                             {
@@ -158,7 +167,18 @@ fullPaperElm =
                                 }
                           , articleVersions = [ "submitted" ]
                           , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
-                          , prerequisites = Nothing
+                          , prerequisites =
+                                Just
+                                    { prerequisites = [ "required_by_funder" ]
+                                    , prerequisitesPhrases =
+                                        [ { value = "required_by_funder"
+                                          , phrase = "Required by funder"
+                                          , language = "en"
+                                          }
+                                        ]
+                                    , prerequisiteFunders = Nothing
+                                    , prerequisiteSubjects = Just [ "Math", "Chemistry" ]
+                                    }
                           , embargo = Just { amount = 12, units = "months" }
                           , publicNotes = Just [ "pathway notes" ]
                           }

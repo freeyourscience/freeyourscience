@@ -151,9 +151,20 @@ parsePolicyMetaData { policyUrl, urls, notes } =
 
 
 parsePrequisites : Prerequisites -> List String
-parsePrequisites { prerequisitesPhrases } =
-    prerequisitesPhrases
+parsePrequisites { prerequisitesPhrases, prerequisiteSubjects } =
+    -- TODO: add prerequisiteFunders.funderMetadata
+    (prerequisitesPhrases
         |> List.map (\item -> item.phrase)
+    )
+        ++ (prerequisiteSubjects
+                |> Maybe.map
+                    (\ps ->
+                        [ "Manuscript must be from subjects: "
+                            ++ String.join ", " ps
+                        ]
+                    )
+                |> Maybe.withDefault []
+           )
 
 
 humanizeLocations : Location -> List String
