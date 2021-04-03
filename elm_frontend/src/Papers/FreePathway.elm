@@ -430,7 +430,7 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
         [ locationLabelsSorted
             |> List.take 3
             |> ulWithHeading
-                [ text "Upload the "
+                [ text "You can upload the "
                 , strong [] [ text (articleVersion ++ " version") ]
                 , text " to:"
                 ]
@@ -440,8 +440,11 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
             |> addEmbargo embargo
             |> Maybe.map (ulWithHeading [ text "Conditions are:" ] text)
             |> Maybe.withDefault [ text "" ]
-        , [ a [ class "howto-link", href "/howto" ]
-                [ text "How to re-publish?"
+        , [ p [ style "font-weight" "bold" ]
+                [ text "→ Read our "
+                , a [ href "/howto" ]
+                    [ text "step-by-step re-publishing guide"
+                    ]
                 ]
           ]
         , [ small [ style "display" "block" ]
