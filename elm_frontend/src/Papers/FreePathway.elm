@@ -344,8 +344,8 @@ view ( id, paper ) =
 -- VIEW ELEMENTS
 
 
-renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String } ) -> Html Msg
-renderPathwayButtons pathwayIsVisible ( id, { title } ) =
+renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String, doi : String } ) -> Html Msg
+renderPathwayButtons pathwayIsVisible ( id, { title, doi } ) =
     let
         paperTitle =
             Maybe.withDefault "Unknown title" title
@@ -366,7 +366,7 @@ renderPathwayButtons pathwayIsVisible ( id, { title } ) =
     in
     div [ class "publications__item__buttons" ]
         [ button
-            [ onClick (Msg.ToggleVisible id)
+            [ onClick (Msg.TogglePathwayVisibility id doi)
             , class pathwayVisibleClass
             , class "pathway__button"
             , Html.Attributes.title (verb ++ " open access pathway for: " ++ paperTitle)
