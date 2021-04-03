@@ -63,3 +63,7 @@ class Author(BaseModel):
     profile_url: Optional[str] = None
     papers: Optional[List[FullPaper]] = None
     provider: Optional[str] = None
+
+
+class LogMessageShowPathway(BaseModel):
+    doi: str

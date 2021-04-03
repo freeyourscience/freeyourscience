@@ -87,3 +87,13 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     assert paper["oa_pathway"] == oa_pathway
     assert paper["doi"] == doi
     assert paper["issn"] == issn
+
+
+def test_log_endpoint(caplog, client: TestClient) -> None:
+    doi = "10.123/1313131.1111"
+
+    r = client.post("/api/logs/show-pathway", json={"doi": doi})
+    assert r.ok, r
+
+    assert "show_pathway_click" in caplog.text
+    assert doi in caplog.text
