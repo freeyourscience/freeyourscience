@@ -326,7 +326,7 @@ viewPublicationItemInfo paper =
     in
     div [ class "publications__item__info" ]
         [ div []
-            (renderPaperMetaData h3 paper.meta)
+            (renderPaperMetaData h3 True paper.meta)
         , div [ class pathwayVisibleClass, class "publications__item__info__pathway" ]
             (renderRecommendedPathway paper.oaPathwayURI paper.recommendedPathway)
         ]

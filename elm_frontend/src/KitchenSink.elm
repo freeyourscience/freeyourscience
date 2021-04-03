@@ -104,7 +104,7 @@ jsonPapers =
     , """{
         "doi": "10.1371/journal.pcbi.1006283",
         "title": "Unsupervised clustering of temporal patterns in high-dimensional neuronal ensembles using a novel dissimilarity measure",
-        "journal": "PLOS Computational Biology",
+        "journal": null,
         "authors": "Lukas Grossberger et al.",
         "year": 2018,
         "issn": "1553-734X",

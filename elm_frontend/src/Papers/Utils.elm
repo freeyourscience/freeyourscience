@@ -1,5 +1,6 @@
 module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 
+import Animation exposing (display)
 import Html exposing (Attribute, Html, a, div, img, text)
 import Html.Attributes exposing (class, href, src, target)
 
@@ -30,16 +31,27 @@ renderUrl { url, description } =
     a [ href url ] [ text description ]
 
 
-renderPaperMetaData : (List (Attribute msg) -> List (Html msg) -> Html msg) -> PaperMetadata -> List (Html msg)
-renderPaperMetaData titleElement { title, journal, authors, year, doi, url } =
+renderPaperMetaData : (List (Attribute msg) -> List (Html msg) -> Html msg) -> Bool -> PaperMetadata -> List (Html msg)
+renderPaperMetaData titleElement displayUnknownJournal { title, journal, authors, year, doi, url } =
+    let
+        journalString =
+            case ( journal, displayUnknownJournal ) of
+                ( Just j, _ ) ->
+                    j ++ ", "
+
+                ( Nothing, True ) ->
+                    "Unknown journal, "
+
+                ( Nothing, False ) ->
+                    ""
+    in
     [ titleElement [ class "publications__item__info__title" ]
         [ text (Maybe.withDefault "Unknown title" title)
         ]
     , div [ class "" ]
         [ text
             (String.concat
-                [ journal |> Maybe.withDefault "Unknown journal"
-                , ", "
+                [ journalString
                 , authors |> Maybe.withDefault "Unknown authors"
                 , " ("
                 , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
