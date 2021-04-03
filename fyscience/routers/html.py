@@ -1,8 +1,9 @@
 import re
 
 from fastapi import APIRouter, Depends, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from loguru import logger
 
 from fyscience.schemas import OAPathway, FullPaper
 from fyscience.routers.api import get_author_with_papers
@@ -100,3 +101,16 @@ def get_republishing_html(request: Request):
 @html_router.get("/team", response_class=HTMLResponse)
 def get_team_html(request: Request):
     return templates.TemplateResponse("team.html", {"request": request})
+
+
+@html_router.get("/redirect")
+def redirect(target: str, request: Request):
+    logger.info(
+        {
+            "event": "redirect_to_external_url",
+            "target": target,
+            "trace_context": request.headers.get("x-cloud-trace-context"),
+        }
+    )
+
+    return RedirectResponse(url=target)
