@@ -3,7 +3,6 @@ import re
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from loguru import logger
 
 from fyscience.schemas import OAPathway, FullPaper
 from fyscience.routers.api import get_author_with_papers
@@ -39,14 +38,6 @@ def _render_author_page(
 ) -> templates.TemplateResponse:
     author = get_author_with_papers(
         profile=author_query, request=request, settings=settings
-    )
-
-    logger.debug(
-        {
-            "query": author_query,
-            "provider": author.provider,
-            "n_papers": len(author.papers),
-        }
     )
 
     host = request.headers["host"]

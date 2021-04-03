@@ -78,6 +78,7 @@ def get_author_with_papers(
             "message": "author_found",
             "search_profile": profile,
             "provider": author.provider,
+            "n_papers": len(author.papers),
             "trace_context": request.headers.get("x-cloud-trace-context"),
         }
     )
