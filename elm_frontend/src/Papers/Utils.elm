@@ -1,7 +1,7 @@
 module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
 
-import Html exposing (Attribute, Html, a, div, text)
-import Html.Attributes exposing (class, href, target)
+import Html exposing (Attribute, Html, a, div, img, text)
+import Html.Attributes exposing (class, href, src, target)
 
 
 type alias DOI =
@@ -46,8 +46,11 @@ renderPaperMetaData titleElement { title, journal, authors, year, doi, url } =
                 , ")"
                 ]
             )
-        , a [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url), target "_blank" ]
-            [ text " ↗"
+        , a
+            [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url)
+            , target "_blank"
+            , Html.Attributes.title (Maybe.withDefault ("https://doi.org/" ++ doi) url)
             ]
+            [ text " 🔗" ]
         ]
     ]
