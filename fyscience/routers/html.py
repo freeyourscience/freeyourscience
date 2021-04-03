@@ -37,7 +37,9 @@ def _render_paper_page(
 def _render_author_page(
     author_query: str, settings: Settings, request: Request
 ) -> templates.TemplateResponse:
-    author = get_author_with_papers(author_query, settings)
+    author = get_author_with_papers(
+        profile=author_query, request=request, settings=settings
+    )
 
     logger.debug(
         {

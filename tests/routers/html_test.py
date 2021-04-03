@@ -47,7 +47,7 @@ def test_get_publications_for_author_html(
     )
 
     monkeypatch.setattr(
-        "fyscience.routers.api._construct_paper",
+        "fyscience.routers.api.get_paper",
         lambda *a, **kw: FullPaper(
             issn="1618-5641",
             doi="10.1007/s00580-005-0536-0",
