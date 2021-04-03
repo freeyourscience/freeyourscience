@@ -78,3 +78,16 @@ header > nav {
     color: settings.$color-text;
   }
 }
+
+.beta-banner {
+  display: block;
+  top:0px;
+  left:0px;
+  width:auto;
+  padding:0.75rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  margin-top:0.5rem;
+  text-align: center;
+  background-color: settings.$color-background;
+}
