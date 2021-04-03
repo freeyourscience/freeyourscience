@@ -305,11 +305,24 @@ viewList papers =
             [ text "Paywalled with free open access pathway"
             ]
         , p []
-            [ text
-                ("We found no open access version for the following publications. "
-                    ++ "However, the publishers appear to allow no-cost re-publication as open access."
-                )
-            ]
+            (if List.length papers > 0 then
+                [ text
+                    ("We found no open access version for the following publications. "
+                        ++ "However, the publishers appear to allow no-cost re-publication as open access."
+                    )
+                ]
+
+             else
+                [ text
+                    ("We found no paywalled publications with free open access re-publication pathways. "
+                        ++ "Either you are already doing a wonderful job of keeping all your publications open access, "
+                        ++ "or we are doing a bad job of finding all your publications."
+                    )
+                , br [] []
+                , text "Let us know via "
+                , a [ href "mailto:team@freeyourscience.org" ] [ text "team@freeyourscience.org" ]
+                ]
+            )
         , div [] (List.map view papers)
         ]
 
