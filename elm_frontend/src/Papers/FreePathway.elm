@@ -16,7 +16,7 @@ import Html.Events exposing (onClick)
 import HtmlUtils exposing (renderList, ulWithHeading)
 import Msg exposing (Msg)
 import Papers.Backend exposing (Embargo, Location, PermittedOA, Policy, Prerequisites)
-import Papers.Utils exposing (NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
+import Papers.Utils exposing (NamedUrl, PaperMetadata, articleVersionString, renderPaperMetaData, renderUrl)
 import String.Extra exposing (humanize)
 
 
@@ -407,12 +407,6 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
                 _ ->
                     Nothing
 
-        articleVersion =
-            articleVersions
-                |> List.filter (\v -> v == "published")
-                |> List.head
-                |> Maybe.withDefault (String.join " or " articleVersions)
-
         publisherNotes =
             case ( notes, prerequisites ) of
                 ( Nothing, Nothing ) ->
@@ -444,7 +438,7 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
             |> List.take 3
             |> ulWithHeading
                 [ text "You can upload the "
-                , strong [] [ text (articleVersion ++ " version") ]
+                , strong [] [ text (articleVersionString articleVersions ++ " version") ]
                 , text " to:"
                 ]
                 text

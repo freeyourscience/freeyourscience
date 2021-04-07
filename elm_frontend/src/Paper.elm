@@ -2,9 +2,9 @@ port module Paper exposing (..)
 
 import Browser
 import Debug
-import Html exposing (Html, a, div, h1, main_, p, text)
-import Html.Attributes exposing (class, href, target)
-import HtmlUtils exposing (viewSearchBar)
+import Html exposing (Html, a, article, dd, div, dl, dt, em, h1, h2, h3, li, main_, p, small, text, ul)
+import Html.Attributes exposing (class, href, id, target)
+import HtmlUtils exposing (ulWithHeading, viewSearchBar)
 import Http
 import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
@@ -12,7 +12,7 @@ import Papers.Backend as Backend
 import Papers.FreePathway as FreePathway
 import Papers.OpenAccess as OpenAccess
 import Papers.OtherPathway as OtherPathway
-import Papers.Utils exposing (DOI)
+import Papers.Utils exposing (DOI, articleVersionString, renderPaperMetaData)
 
 
 type SomePaper
@@ -65,6 +65,178 @@ fetchPaper serverURL doi =
 -- VIEW
 
 
+viewRightVersion : List String -> List (Html Msg)
+viewRightVersion articleVersions =
+    [ h3 [ id "version" ]
+        [ text
+            ("1. Find the "
+                ++ articleVersionString articleVersions
+                ++ " version of your manuscript"
+            )
+        ]
+    , if List.member "published" articleVersions then
+        p []
+            [ text """For this publication you are allowed to re-publish
+            the published version as open access for free.
+            This version of the maniscript is the one published by e.g. a journal.
+            It is usually a PDF file that has the journals logo
+            and copyright notice on it and is typeset to the style
+            of the journal."""
+            ]
+
+      else if List.member "accepted" articleVersions then
+        p []
+            [ text """For this publication you are allowed to re-publish
+            the accepted version as open access for free.
+            The accepted version is the final version of the manuscript
+            sent by the author(s) to the publisher.
+            This is the result of the peer review process and includes changes and
+            corrections by the author(s), but not the copy-editing and typesetting
+            done by the publisher.
+            Content should be the same as the published version, but appearance
+            might differ strongly."""
+            ]
+
+      else if List.member "submitted" articleVersions then
+        p []
+            [ text """For this publication you are allowed to re-publish the
+            submitted version as open access for free.
+            The submitted version is what was initially submitted for peer review.
+            Content might differ strongly from the accepted version."""
+            ]
+
+      else
+        p [] [ text "Unknown Version, please contact team@freeyourscience.org with the DOI." ]
+    , p []
+        [ text "The University of Cambridge Office of Scholarly Communication has a blog post with more in depth "
+        , a [ href "https://unlockingresearch-blog.lib.cam.ac.uk/?p=1872" ]
+            [ text "explanations of the different versions" ]
+        , text ". "
+        ]
+    , small []
+        [ text """We always display the pathway that allows the
+        most mature version of the manuscript to be re-published.
+        If you no longer have the version specified by the pathway
+        you might also be allowed to re-publish an earlier one.
+        Check the pathway details in the Sherpa Romeo policy database
+        for what other versions are allowed. You will find a """
+        , em []
+            -- TODO: Link to policy
+            [ text "Visit this policy" ]
+        , text "link in the pathway result that takes you there. "
+        ]
+    ]
+
+
+viewCheckConditions : List String -> List (Html Msg)
+viewCheckConditions conditions =
+    [ h3 [ id "conditions" ]
+        [ text "2. Check the conditions" ]
+    , p []
+        [ text """Before you re-publish you need to ensure that the following
+        conditions are met. If there are none, you are good to go."""
+        ]
+    , ul []
+        (List.map
+            (\c -> li [] [ text c ])
+            conditions
+        )
+    ]
+
+
+viewWhereTo : List String -> List (Html Msg)
+viewWhereTo locationLabelsSorted =
+    [ h3 [ id "where" ]
+        [ text "3. Choose where to upload" ]
+    , p []
+        [ text """The pathway may allow you to upload your work in a variety of places.
+        Our recommendation for choosing is:""" ]
+    , ul []
+        [ li []
+            [ text "prefer public repositories over websites or social networks" ]
+        , li []
+            [ text "use places "
+            , a [ href "https://unpaywall.org/sources" ]
+                [ text "indexed by Unpaywall" ]
+            ]
+        , li []
+            [ text "find suitable repositories with "
+            , a [ href "https://v2.sherpa.ac.uk/opendoar/index.html" ]
+                [ text "OpenDOAR" ]
+            ]
+        ]
+    , p []
+        [ text """A repository is very much like a digital library.
+        Technically, it is any place where you can store digital assets
+        that is usually indexed by search engines.
+        This will ensure your work is easily findable and available to
+        the widest possible audience.""" ]
+    ]
+        ++ (locationLabelsSorted
+                |> List.take 3
+                |> ulWithHeading
+                    [ text "Available locations for this publication:"
+                    ]
+                    text
+           )
+
+
+viewRepublishTodayForFree : FreePathway.Paper -> Html Msg
+viewRepublishTodayForFree paper =
+    let
+        ( _, pathway ) =
+            paper.recommendedPathway
+    in
+    article []
+        (renderPaperMetaData
+            div
+            True
+            paper.meta
+            ++ viewRightVersion pathway.articleVersions
+            ++ (Maybe.map viewCheckConditions pathway.conditions
+                    |> Maybe.withDefault []
+               )
+            ++ viewWhereTo pathway.locationLabelsSorted
+            ++ [ -- CO-AUTHORS
+                 h3 [ id "coauthors" ]
+                    [ text "4. Check with your co-authors" ]
+               , p []
+                    [ text """We'd suggest you only re-publish with the
+                    consent of your co-authors.
+                    That being said, copyright and co-authorship can be a
+                    complex topic and we are in no position to provide legal
+                    advice.""" ]
+
+               -- UPLOAD
+               , h3 [ id "upload" ]
+                    [ text "5. Upload to selected repository" ]
+               , p []
+                    [ text """This step will be specific to your choosen repository.
+                    If you have trouble with this step, your institution's librarians
+                    are likely able to help you.""" ]
+
+               -- LINK BACK
+               , h3 [ id "linkback" ]
+                    [ text "6. Link back to the initial publication" ]
+               , p []
+                    [ text """Most publisher's policies require that the re-published
+                    version links back to the initial, paywalled publication.
+                    If this is the case, make sure to follow their guidelines.
+                    This also helps your readers cite the appropriate publication.""" ]
+               , p []
+                    [ text """This might mean adding a note like "Published in Dragon
+                    Paywall Journal 10.200/123.123" when uploading to the repository.""" ]
+               , p []
+                    [ text "The exact method might be specified by the repository (e.g. "
+                    , a [ href "https://arxiv.org/help/jref" ]
+                        [ text "arXiv specific guide" ]
+                    , text """). The publisher policy might also require the note to
+                    follow a certain pattern."""
+                    ]
+               ]
+        )
+
+
 view : Model -> Html Msg
 view model =
     let
@@ -77,8 +249,7 @@ view model =
         Just (FP paper) ->
             main_ [ class "paper", class "freepathway" ]
                 [ h1 [] [ text "Re-publish open access today for free" ]
-                , { paper | pathwayVisible = True }
-                    |> FreePathway.viewPublicationItemInfo
+                , paper |> viewRepublishTodayForFree
                 ]
 
         Just (OP paper) ->

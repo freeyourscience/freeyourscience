@@ -1,4 +1,4 @@
-module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, renderPaperMetaData, renderUrl)
+module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, articleVersionString, renderPaperMetaData, renderUrl)
 
 import Animation exposing (display)
 import Html exposing (Attribute, Html, a, div, img, text)
@@ -24,6 +24,14 @@ type alias NamedUrl =
     { description : String
     , url : String
     }
+
+
+articleVersionString : List String -> String
+articleVersionString articleVersions =
+    articleVersions
+        |> List.filter (\v -> v == "published")
+        |> List.head
+        |> Maybe.withDefault (String.join " or " articleVersions)
 
 
 renderUrl : NamedUrl -> Html msg
