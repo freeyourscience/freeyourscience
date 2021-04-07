@@ -16,7 +16,7 @@ import Html.Events exposing (onClick)
 import HtmlUtils exposing (renderList, ulWithHeading)
 import Msg exposing (Msg)
 import Papers.Backend exposing (Embargo, Location, PermittedOA, Policy, Prerequisites)
-import Papers.Utils exposing (NamedUrl, PaperMetadata, articleVersionString, renderPaperMetaData, renderUrl)
+import Papers.Utils exposing (NamedUrl, PaperMetadata, articleVersionString, publisherNotes, renderPaperMetaData, renderUrl)
 import String.Extra exposing (humanize)
 
 
@@ -406,32 +406,6 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
 
                 _ ->
                     Nothing
-
-        publisherNotes =
-            case ( notes, prerequisites ) of
-                ( Nothing, Nothing ) ->
-                    [ text "" ]
-
-                ( Just nts, Nothing ) ->
-                    nts |> ulWithHeading [ text "The publisher notes:" ] text
-
-                ( Nothing, Just pqs ) ->
-                    pqs |> ulWithHeading [ text "The publisher notes the following prerequisites:" ] text
-
-                ( Just nts, Just pqs ) ->
-                    let
-                        notesList =
-                            nts |> List.map text |> List.map (\l -> li [] [ l ])
-
-                        prerequisitesList =
-                            [ li [] [ text "Prerequisites to consider:" ]
-                            , pqs |> List.map text |> renderList
-                            ]
-                    in
-                    [ p [ class "mb-0" ]
-                        [ text "The publisher notes:" ]
-                    , ul [] (notesList ++ prerequisitesList)
-                    ]
     in
     List.concat
         [ locationLabelsSorted
@@ -462,7 +436,7 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
                             , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Visit this policy." ]
                             ]
                       ]
-                    , publisherNotes
+                    , publisherNotes notes prerequisites
                     , policy.additionalUrls
                         |> Maybe.map
                             (ulWithHeading

@@ -12,7 +12,7 @@ import Papers.Backend as Backend
 import Papers.FreePathway as FreePathway
 import Papers.OpenAccess as OpenAccess
 import Papers.OtherPathway as OtherPathway
-import Papers.Utils exposing (DOI, articleVersionString, renderPaperMetaData)
+import Papers.Utils exposing (DOI, articleVersionString, publisherNotes, renderPaperMetaData)
 
 
 type SomePaper
@@ -128,8 +128,8 @@ viewRightVersion articleVersions =
     ]
 
 
-viewCheckConditions : List String -> List (Html Msg)
-viewCheckConditions conditions =
+viewCheckConditions : Maybe (List String) -> Maybe (List String) -> Maybe (List String) -> List (Html Msg)
+viewCheckConditions conditions notes prerequisites =
     [ h3 [ id "conditions" ]
         [ text "2. Check the conditions" ]
     , p []
@@ -139,9 +139,10 @@ viewCheckConditions conditions =
     , ul []
         (List.map
             (\c -> li [] [ text c ])
-            conditions
+            (Maybe.withDefault [] conditions)
         )
     ]
+        ++ publisherNotes notes prerequisites
 
 
 viewWhereTo : List String -> List (Html Msg)
@@ -187,15 +188,14 @@ viewRepublishTodayForFree paper =
         ( _, pathway ) =
             paper.recommendedPathway
     in
+    -- TODO: Add embargo
     article []
         (renderPaperMetaData
             div
             True
             paper.meta
             ++ viewRightVersion pathway.articleVersions
-            ++ (Maybe.map viewCheckConditions pathway.conditions
-                    |> Maybe.withDefault []
-               )
+            ++ viewCheckConditions pathway.conditions pathway.notes pathway.prerequisites
             ++ viewWhereTo pathway.locationLabelsSorted
             ++ [ -- CO-AUTHORS
                  h3 [ id "coauthors" ]

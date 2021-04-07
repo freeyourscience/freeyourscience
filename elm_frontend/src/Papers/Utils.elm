@@ -1,8 +1,9 @@
-module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, articleVersionString, renderPaperMetaData, renderUrl)
+module Papers.Utils exposing (DOI, NamedUrl, PaperMetadata, articleVersionString, publisherNotes, renderPaperMetaData, renderUrl)
 
 import Animation exposing (display)
-import Html exposing (Attribute, Html, a, div, img, text)
+import Html exposing (Attribute, Html, a, div, img, li, p, text, ul)
 import Html.Attributes exposing (class, href, src, target)
+import HtmlUtils exposing (renderList, ulWithHeading)
 
 
 type alias DOI =
@@ -32,6 +33,34 @@ articleVersionString articleVersions =
         |> List.filter (\v -> v == "published")
         |> List.head
         |> Maybe.withDefault (String.join " or " articleVersions)
+
+
+publisherNotes : Maybe (List String) -> Maybe (List String) -> List (Html msg)
+publisherNotes notes prerequisites =
+    case ( notes, prerequisites ) of
+        ( Nothing, Nothing ) ->
+            [ text "" ]
+
+        ( Just nts, Nothing ) ->
+            nts |> ulWithHeading [ text "The publisher notes:" ] text
+
+        ( Nothing, Just pqs ) ->
+            pqs |> ulWithHeading [ text "The publisher notes the following prerequisites:" ] text
+
+        ( Just nts, Just pqs ) ->
+            let
+                notesList =
+                    nts |> List.map text |> List.map (\l -> li [] [ l ])
+
+                prerequisitesList =
+                    [ li [] [ text "Prerequisites to consider:" ]
+                    , pqs |> List.map text |> renderList
+                    ]
+            in
+            [ p [ class "mb-0" ]
+                [ text "The publisher notes:" ]
+            , ul [] (notesList ++ prerequisitesList)
+            ]
 
 
 renderUrl : NamedUrl -> Html msg
