@@ -2,8 +2,8 @@ port module Paper exposing (..)
 
 import Browser
 import Debug
-import Html exposing (Html, div, h1, main_, p, text)
-import Html.Attributes exposing (class)
+import Html exposing (Html, a, div, h1, main_, p, text)
+import Html.Attributes exposing (class, href, target)
 import HtmlUtils exposing (viewSearchBar)
 import Http
 import HttpBuilder exposing (withHeader)
@@ -76,22 +76,27 @@ view model =
     case model.paper of
         Just (FP paper) ->
             main_ [ class "paper", class "freepathway" ]
-                [ h1 [] [ text "Re-publish open access today" ]
+                [ h1 [] [ text "Re-publish open access today for free" ]
                 , { paper | pathwayVisible = True }
                     |> FreePathway.viewPublicationItemInfo
                 ]
 
         Just (OP paper) ->
             main_ [ class "paper", class "otherpathway" ]
-                [ h1 [] [ text "Paywalled with non-free policy" ]
-                , searchBar
+                [ h1 [] [ text "Result" ]
                 , text ("OP" ++ Maybe.withDefault "" paper.meta.title)
+                , p [ class "pathway-status" ]
+                    [ text
+                        ("This publications seems to be paywalled but the publisher "
+                            ++ "policy does not allow free open access re-publication."
+                        )
+                    ]
+                , searchBar
                 ]
 
         Just (OA paper) ->
             main_ [ class "paper", class "openaccess" ]
-                [ h1 [] [ text "Already open access" ]
-                , searchBar
+                [ h1 [] [ text "Result" ]
                 , div [ class "publications__item__info" ]
                     (Papers.Utils.renderPaperMetaData div
                         False
@@ -104,6 +109,12 @@ view model =
                         , url = Just paper.oaLocationURL
                         }
                     )
+                , p [ class "pathway-status" ]
+                    [ text "This publication is already "
+                    , a [ href paper.oaLocationURL, target "_blank" ] [ text "open access" ]
+                    , text " 🎉"
+                    ]
+                , searchBar
                 ]
 
         Nothing ->
