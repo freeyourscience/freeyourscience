@@ -3,7 +3,7 @@ port module Paper exposing (..)
 import Browser
 import Debug
 import Html exposing (Html, a, article, dd, div, dl, dt, em, h1, h2, h3, li, main_, p, small, text, ul)
-import Html.Attributes exposing (class, href, id, target)
+import Html.Attributes exposing (class, href, id, style, target)
 import HtmlUtils exposing (ulWithHeading, viewSearchBar)
 import Http
 import HttpBuilder exposing (withHeader)
@@ -143,6 +143,36 @@ viewCheckConditions conditions notes prerequisites =
         )
     ]
         ++ publisherNotes notes prerequisites
+
+
+
+-- TODO: Make sure all of the following information is represented somewhere
+-- ++ [ small [ style "display" "block" ]
+--         (List.concat
+--             [ [ p []
+--                     [ text "The above pathway is part of an open access policy deposited by the publisher in the Sherpa Romeo Policy Database."
+--                     , br [] []
+--                     , a [ href paper.oaPathwayURI, class "link", class "link-secondary" ] [ text "Visit this policy." ]
+--                     ]
+--               ]
+--             , publisherNotes notes prerequisites
+--             , policy.additionalUrls
+--                 |> Maybe.map
+--                     (ulWithHeading
+--                         [ text "The publisher has provided the following links to further information:" ]
+--                         renderUrl
+--                     )
+--                 |> Maybe.withDefault [ text "" ]
+--             , [ p []
+--                     [ policy.notes
+--                         |> Maybe.map (String.append "Regarding the policy they note: ")
+--                         |> Maybe.withDefault ""
+--                         |> text
+--                     ]
+--               ]
+--             ]
+--         )
+--    ]
 
 
 viewWhereTo : List String -> List (Html Msg)

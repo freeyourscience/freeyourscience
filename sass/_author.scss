@@ -24,11 +24,12 @@ main.author {
 }
 
 .publications__item__info {
-  max-width:100%;
+  max-width: 100%;
 }
 
 .publications__item__buttons {
-  max-width:100%;
+  max-width: 100%;
+  text-align: center;
 }
 
 .pathway__button {
@@ -65,10 +66,10 @@ main.author {
 a.howto-link {
   color: settings.$color-green;
   font-weight: bold;
-  margin-bottom:1.5rem;
-  display:block;
+  margin-bottom: 1.5rem;
+  display: block;
 
-  &:hover{
+  &:hover {
     color: settings.$color-green;
   }
 }

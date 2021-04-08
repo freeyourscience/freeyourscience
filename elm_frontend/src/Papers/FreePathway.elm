@@ -329,19 +329,11 @@ viewList papers =
 
 viewPublicationItemInfo : Paper -> Html Msg
 viewPublicationItemInfo paper =
-    let
-        pathwayVisibleClass =
-            if paper.pathwayVisible then
-                ""
-
-            else
-                "hidden"
-    in
     div [ class "publications__item__info" ]
         [ div []
             (renderPaperMetaData h3 True paper.meta)
-        , div [ class pathwayVisibleClass, class "publications__item__info__pathway" ]
-            (renderRecommendedPathway paper.oaPathwayURI paper.recommendedPathway)
+        , div [ class "publications__item__info__pathway" ]
+            (renderRecommendedPathway paper.recommendedPathway)
         ]
 
 
@@ -349,7 +341,7 @@ view : ( Int, Paper ) -> Html Msg
 view ( id, paper ) =
     div [ class "publications__item" ]
         [ viewPublicationItemInfo paper
-        , renderPathwayButtons paper.pathwayVisible ( id, paper.meta )
+        , renderPathwayButtons ( id, paper.meta )
         ]
 
 
@@ -357,40 +349,26 @@ view ( id, paper ) =
 -- VIEW ELEMENTS
 
 
-renderPathwayButtons : Bool -> ( Int, { a | title : Maybe String, doi : String } ) -> Html Msg
-renderPathwayButtons pathwayIsVisible ( id, { title, doi } ) =
+renderPathwayButtons : ( Int, { a | title : Maybe String, doi : String } ) -> Html Msg
+renderPathwayButtons ( id, { title, doi } ) =
     let
         paperTitle =
             Maybe.withDefault "Unknown title" title
-
-        verb =
-            if pathwayIsVisible then
-                "Hide"
-
-            else
-                "Show"
-
-        pathwayVisibleClass =
-            if pathwayIsVisible then
-                "pathway__button--hide"
-
-            else
-                "pathway__button--show"
     in
     div [ class "publications__item__buttons" ]
-        [ button
-            [ onClick (Msg.TogglePathwayVisibility id doi)
-            , class pathwayVisibleClass
-            , class "pathway__button"
-            , Html.Attributes.title (verb ++ " open access pathway for: " ++ paperTitle)
-            ]
-            [ text (verb ++ " Pathway")
+        [ a [ href ("/search?query=" ++ doi) ]
+            [ button
+                [ class "pathway__button--show"
+                , class "pathway__button"
+                , Html.Attributes.title ("Re-publication details for: " ++ paperTitle)
+                ]
+                [ text "Details" ]
             ]
         ]
 
 
-renderRecommendedPathway : String -> ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
-renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, articleVersions, prerequisites, conditions, embargo, notes } ) =
+renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
+renderRecommendedPathway ( policy, { locationLabelsSorted, articleVersions, prerequisites, conditions, embargo, notes } ) =
     let
         addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
         addEmbargo emb pqs =
@@ -407,51 +385,13 @@ renderRecommendedPathway journalPolicyUrl ( policy, { locationLabelsSorted, arti
                 _ ->
                     Nothing
     in
-    List.concat
-        [ locationLabelsSorted
-            |> List.take 3
-            |> ulWithHeading
-                [ text "You can upload the "
-                , strong [] [ text (articleVersionString articleVersions ++ " version") ]
-                , text " to:"
-                ]
-                text
-        , [ p [] [ text " You do not have to pay a fee to the publisher." ] ]
-        , conditions
-            |> addEmbargo embargo
-            |> Maybe.map (ulWithHeading [ text "Conditions are:" ] text)
-            |> Maybe.withDefault [ text "" ]
-        , [ p [ style "font-weight" "bold" ]
-                [ text "→ Read our "
-                , a [ href "/howto" ]
-                    [ text "step-by-step re-publishing guide"
-                    ]
-                ]
-          ]
-        , [ small [ style "display" "block" ]
-                (List.concat
-                    [ [ p []
-                            [ text "The above pathway is part of an open access policy deposited by the publisher in the Sherpa Romeo Policy Database."
-                            , br [] []
-                            , a [ href journalPolicyUrl, class "link", class "link-secondary" ] [ text "Visit this policy." ]
-                            ]
-                      ]
-                    , publisherNotes notes prerequisites
-                    , policy.additionalUrls
-                        |> Maybe.map
-                            (ulWithHeading
-                                [ text "The publisher has provided the following links to further information:" ]
-                                renderUrl
-                            )
-                        |> Maybe.withDefault [ text "" ]
-                    , [ p []
-                            [ policy.notes
-                                |> Maybe.map (String.append "Regarding the policy they note: ")
-                                |> Maybe.withDefault ""
-                                |> text
-                            ]
-                      ]
-                    ]
-                )
-          ]
+    p []
+        [ text "You can re-publish the "
+        , strong [] [ text (articleVersionString articleVersions ++ " version") ]
+        , text " today for free."
         ]
+        :: (conditions
+                |> addEmbargo embargo
+                |> Maybe.map (ulWithHeading [ text "Conditions are:" ] text)
+                |> Maybe.withDefault [ text "" ]
+           )
