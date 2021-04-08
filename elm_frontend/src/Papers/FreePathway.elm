@@ -356,6 +356,7 @@ renderPathwayButtons ( id, { title, doi } ) =
             Maybe.withDefault "Unknown title" title
     in
     div [ class "publications__item__buttons" ]
+        -- TODO: Link absolute to URL and not relative
         [ a [ href ("/search?query=" ++ doi) ]
             [ button
                 [ class "pathway__button--show"
