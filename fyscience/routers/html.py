@@ -1,6 +1,6 @@
 import re
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
@@ -30,7 +30,9 @@ def _render_paper_page(
     )
 
     return templates.TemplateResponse(
-        "paper.html", {"request": request, "doi": doi, "serverURL": serverURL}
+        "paper.html",
+        {"request": request, "doi": doi, "serverURL": serverURL},
+        headers={"cache-control": "max-age=3600,public"},
     )
 
 
@@ -55,6 +57,7 @@ def _render_author_page(
             "search_string": author_query,
             "dois": [p.doi for p in author.papers],
         },
+        headers={"cache-control": "max-age=3600,public"},
     )
 
 
@@ -63,9 +66,11 @@ def _is_doi_query(string: str) -> bool:
 
 
 @html_router.get("/", response_class=HTMLResponse)
-def get_landing_page(request: Request):
+def get_landing_page(request: Request, response: Response):
     return templates.TemplateResponse(
-        "landing_page.html", {"request": request, "n_nocost_papers": "46.796.300"}
+        "landing_page.html",
+        {"request": request, "n_nocost_papers": "46.796.300"},
+        headers={"cache-control": "max-age=3600,public"},
     )
 
 
