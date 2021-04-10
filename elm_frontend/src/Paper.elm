@@ -2,7 +2,7 @@ port module Paper exposing (..)
 
 import Browser
 import Debug
-import Html exposing (Html, a, article, div, h1, h3, main_, p, small, text)
+import Html exposing (Html, a, article, div, h1, h3, main_, p, small, strong, text)
 import Html.Attributes exposing (class, href, id, target)
 import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchBar)
 import Http
@@ -63,6 +63,20 @@ fetchPaper serverURL doi =
 
 
 -- VIEW
+
+
+viewYourPublication : Html Msg
+viewYourPublication =
+    div [ class "your-publication" ]
+        [ div []
+            [ strong [] [ text "Your publication?" ]
+            , text "Find the guide on how to re-publish this specific publication below!"
+            ]
+        , div []
+            [ strong [] [ text "Not your publication?" ]
+            , text "Send the authors this page to let them know what they can do!"
+            ]
+        ]
 
 
 viewRightVersion : List String -> String -> List (Html Msg)
@@ -200,6 +214,7 @@ viewRepublishTodayForFree paper =
         (renderPaperMetaDataWithDoi
             div
             paper.meta
+            ++ [ viewYourPublication ]
             ++ viewRightVersion pathway.articleVersions policy.profileUrl
             ++ viewCheckConditions paper.recommendedPathway
             ++ viewWhereTo pathway.locationLabelsSorted

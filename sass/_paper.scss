@@ -25,3 +25,29 @@ main.paper {
     margin-bottom: 4rem;
   }
 }
+
+.your-publication {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 2rem;
+  row-gap: 2rem;
+  margin-top: 3rem;
+  margin-left: -50%;
+  margin-right: -50%;
+  padding-left: 50%;
+  padding-right: 50%;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  background: settings.$color-background;
+
+  @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  strong {
+    @include utils.f3;
+    display: block;
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
+}
