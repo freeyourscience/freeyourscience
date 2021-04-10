@@ -6,10 +6,14 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Helvetica, sans-serif;
   color: settings.$color-text;
   padding: 0 1rem;
+
+  @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
+    overflow-x: hidden;
+  }
 }
 
 main {
@@ -76,7 +80,6 @@ small > p,
 small li {
   @include utils.f6;
   margin-top: 0;
-
 }
 
 a:link,
@@ -89,7 +92,6 @@ a:visited {
     color: settings.$color-blue;
   }
 }
-
 
 a.secondary:link,
 a.secondary:visited {
