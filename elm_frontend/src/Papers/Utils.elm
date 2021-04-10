@@ -112,6 +112,10 @@ renderPaperMetaDataWithDoi titleElement { title, journal, authors, year, doi, ur
     ]
 
 
+
+-- TODO turn into div of spans, the content of spans contructed outside of renderer
+
+
 renderPaperMetaData : (List (Attribute msg) -> List (Html msg) -> Html msg) -> Bool -> PaperMetadata -> List (Html msg)
 renderPaperMetaData titleElement displayUnknownJournal { title, journal, authors, year, doi, url } =
     let
