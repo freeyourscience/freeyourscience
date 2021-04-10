@@ -65,16 +65,28 @@ fetchPaper serverURL doi =
 -- VIEW
 
 
-viewYourPublication : Html Msg
-viewYourPublication =
+viewYourPublication : DOI -> Html Msg
+viewYourPublication doi =
     div [ class "your-publication" ]
         [ div []
             [ strong [] [ text "Your publication?" ]
-            , text "Find the guide on how to re-publish this specific publication below!"
+            , p []
+                [ text "Re-publish with one click via "
+                , a
+                    [ href ("https://openaccessbutton.org/deposit?doi=" ++ doi)
+                    , target "_blank"
+                    ]
+                    [ text "openaccessbutton.org" ]
+                ]
+            , p []
+                [ text "Alternatively, find the guide on how to re-publish this specific publication yourself below!"
+                ]
             ]
         , div []
             [ strong [] [ text "Not your publication?" ]
-            , text "Send the authors this page to let them know what they can do!"
+            , p []
+                [ text "Send the authors this page to let them know what they can do!"
+                ]
             ]
         ]
 
@@ -214,7 +226,7 @@ viewRepublishTodayForFree paper =
         (renderPaperMetaDataWithDoi
             div
             paper.meta
-            ++ [ viewYourPublication ]
+            ++ [ viewYourPublication paper.meta.doi ]
             ++ viewRightVersion pathway.articleVersions policy.profileUrl
             ++ viewCheckConditions paper.recommendedPathway
             ++ viewWhereTo pathway.locationLabelsSorted

@@ -37,7 +37,7 @@ main.paper {
   padding-left: 50%;
   padding-right: 50%;
   padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
   background: settings.$color-background;
 
   @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
@@ -48,6 +48,10 @@ main.paper {
     @include utils.f3;
     display: block;
     max-width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  p {
     margin-bottom: 1rem;
   }
 }
