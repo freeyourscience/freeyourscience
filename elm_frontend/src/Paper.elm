@@ -172,8 +172,8 @@ viewWhereTo locationLabelsSorted =
         ++ [ p []
                 [ text """Our recommendation for choosing is already reflected in the
                 order of the options above: Prefer prefer public repositories over
-                websites or social networks and use locations that are indexed so your
-                publications are easy to find.""" ]
+                personal websites or social networks and use locations that are indexed
+                so your publications are easy to find.""" ]
            , p []
                 [ text """A repository is very much like a digital library.
                 Technically, it is any place where you can store digital assets that is
