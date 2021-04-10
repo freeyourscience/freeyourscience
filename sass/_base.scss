@@ -90,6 +90,18 @@ a:visited {
   }
 }
 
+
+a.secondary:link,
+a.secondary:visited {
+  color: settings.$color-text-secondary;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    color: settings.$color-blue;
+  }
+}
+
 dl,
 ul,
 ol {

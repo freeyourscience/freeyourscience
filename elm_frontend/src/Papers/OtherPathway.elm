@@ -16,7 +16,7 @@ view paper =
     div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
         [ div
             [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
-            (renderPaperMetaData div True paper.meta)
+            (renderPaperMetaData div True False paper.meta)
         ]
 
 

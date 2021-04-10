@@ -68,8 +68,8 @@ renderUrl { url, description } =
     a [ href url ] [ text description ]
 
 
-renderPaperMetaData : (List (Attribute msg) -> List (Html msg) -> Html msg) -> Bool -> PaperMetadata -> List (Html msg)
-renderPaperMetaData titleElement displayUnknownJournal { title, journal, authors, year, doi, url } =
+renderPaperMetaData : (List (Attribute msg) -> List (Html msg) -> Html msg) -> Bool -> Bool -> PaperMetadata -> List (Html msg)
+renderPaperMetaData titleElement displayUnknownJournal displayDoi { title, journal, authors, year, doi, url } =
     let
         journalString =
             case ( journal, displayUnknownJournal ) of
@@ -86,7 +86,7 @@ renderPaperMetaData titleElement displayUnknownJournal { title, journal, authors
         [ text (Maybe.withDefault "Unknown title" title)
         ]
     , div [ class "" ]
-        [ text
+        ([ text
             (String.concat
                 [ journalString
                 , authors |> Maybe.withDefault "Unknown authors"
@@ -95,11 +95,27 @@ renderPaperMetaData titleElement displayUnknownJournal { title, journal, authors
                 , ")"
                 ]
             )
-        , a
-            [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url)
-            , target "_blank"
-            , Html.Attributes.title (Maybe.withDefault ("https://doi.org/" ++ doi) url)
-            ]
-            [ text " 🔗" ]
-        ]
+         ]
+            ++ (if displayDoi then
+                    [ text ", "
+                    , a
+                        [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url)
+                        , class "secondary"
+                        , target "_blank"
+                        , Html.Attributes.title (Maybe.withDefault ("https://doi.org/" ++ doi) url)
+                        ]
+                        [ text (doi ++ " 🔗") ]
+                    ]
+
+                else
+                    [ a
+                        [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url)
+                        , target "_blank"
+                        , Html.Attributes.title (Maybe.withDefault ("https://doi.org/" ++ doi) url)
+                        ]
+                        [ text " 🔗"
+                        ]
+                    ]
+               )
+        )
     ]

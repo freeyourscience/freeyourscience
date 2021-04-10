@@ -223,6 +223,7 @@ viewRepublishTodayForFree paper =
         (renderPaperMetaData
             div
             True
+            True
             paper.meta
             ++ viewRightVersion pathway.articleVersions
             ++ viewCheckConditions pathway.conditions pathway.notes pathway.prerequisites
@@ -301,6 +302,7 @@ view model =
                 , div [ class "publications__item__info" ]
                     (Papers.Utils.renderPaperMetaData div
                         False
+                        True
                         { title = paper.title
                         , journal = paper.journal
                         , authors = paper.authors

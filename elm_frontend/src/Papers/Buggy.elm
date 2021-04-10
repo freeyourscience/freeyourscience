@@ -17,7 +17,7 @@ renderPaperMetaDataWithIssues metaData =
         issueStyle =
             [ style "margin-top" "0.5rem" ]
     in
-    renderPaperMetaData div True metaData
+    renderPaperMetaData div True False metaData
         ++ [ case ( metaData.issn, metaData.journal ) of
                 ( Nothing, Nothing ) ->
                     p issueStyle
