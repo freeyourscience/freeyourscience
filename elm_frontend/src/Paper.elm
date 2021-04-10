@@ -161,39 +161,26 @@ viewCheckConditions ( policy, pathway ) =
 
 viewWhereTo : List String -> List (Html Msg)
 viewWhereTo locationLabelsSorted =
-    [ h3 [ id "where" ]
+    h3 [ id "where" ]
         [ text "3. Choose where to upload" ]
-    , p []
-        [ text """The pathway may allow you to upload your work in a variety of places.
-        Our recommendation for choosing is:""" ]
-    , ul []
-        [ li []
-            [ text "prefer public repositories over websites or social networks" ]
-        , li []
-            [ text "use places "
-            , a [ href "https://unpaywall.org/sources" ]
-                [ text "indexed by Unpaywall" ]
-            ]
-        , li []
-            [ text "find suitable repositories with "
-            , a [ href "https://v2.sherpa.ac.uk/opendoar/index.html" ]
-                [ text "OpenDOAR" ]
-            ]
-        ]
-    , p []
-        [ text """A repository is very much like a digital library.
-        Technically, it is any place where you can store digital assets
-        that is usually indexed by search engines.
-        This will ensure your work is easily findable and available to
-        the widest possible audience.""" ]
-    ]
-        ++ (locationLabelsSorted
+        :: (locationLabelsSorted
                 |> List.take 3
                 |> ulWithHeading
-                    [ text "Available locations for this publication:"
-                    ]
+                    [ text "The following locations are available for this publication:" ]
                     text
            )
+        ++ [ p []
+                [ text """Our recommendation for choosing is already reflected in the
+                order of the options above: Prefer prefer public repositories over
+                websites or social networks and use locations that are indexed so your
+                publications are easy to find.""" ]
+           , p []
+                [ text """A repository is very much like a digital library.
+                Technically, it is any place where you can store digital assets that is
+                usually indexed by search engines.
+                This will ensure your work is easily findable and available to the
+                widest possible audience.""" ]
+           ]
 
 
 viewRepublishTodayForFree : FreePathway.Paper -> Html Msg
