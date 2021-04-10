@@ -65,8 +65,8 @@ fetchPaper serverURL doi =
 -- VIEW
 
 
-viewRightVersion : List String -> List (Html Msg)
-viewRightVersion articleVersions =
+viewRightVersion : List String -> String -> List (Html Msg)
+viewRightVersion articleVersions policyProfileUrl =
     [ h3 [ id "version" ]
         [ text
             ("1. Find the "
@@ -118,12 +118,11 @@ viewRightVersion articleVersions =
         most mature version of the manuscript to be re-published.
         If you no longer have the version specified by the pathway
         you might also be allowed to re-publish an earlier one.
-        Check the pathway details in the Sherpa Romeo policy database
-        for what other versions are allowed. You will find a """
-        , em []
-            -- TODO: Link to policy
-            [ text "Visit this policy" ]
-        , text "link in the pathway result that takes you there. "
+        Check the """
+
+        -- TODO: Check if this is the right link.
+        , a [ href policyProfileUrl, target "_blank" ] [ text "pathway details" ]
+        , text " in the Sherpa Romeo policy database for what other versions are allowed."
         ]
     ]
 
@@ -200,7 +199,7 @@ viewWhereTo locationLabelsSorted =
 viewRepublishTodayForFree : FreePathway.Paper -> Html Msg
 viewRepublishTodayForFree paper =
     let
-        ( _, pathway ) =
+        ( policy, pathway ) =
             paper.recommendedPathway
     in
     -- TODO: Add embargo
@@ -208,7 +207,7 @@ viewRepublishTodayForFree paper =
         (renderPaperMetaDataWithDoi
             div
             paper.meta
-            ++ viewRightVersion pathway.articleVersions
+            ++ viewRightVersion pathway.articleVersions policy.profileUrl
             ++ viewCheckConditions paper.recommendedPathway
             ++ viewWhereTo pathway.locationLabelsSorted
             ++ [ -- CO-AUTHORS
