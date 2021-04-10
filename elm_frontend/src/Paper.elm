@@ -12,7 +12,7 @@ import Papers.Backend as Backend
 import Papers.FreePathway as FreePathway
 import Papers.OpenAccess as OpenAccess
 import Papers.OtherPathway as OtherPathway
-import Papers.Utils exposing (DOI, articleVersionString, publisherNotes, renderPaperMetaDataWithDoi)
+import Papers.Utils exposing (DOI, articleVersionString, publisherNotes, renderPaperMetaDataWithDoi, renderUrl)
 
 
 type SomePaper
@@ -128,8 +128,8 @@ viewRightVersion articleVersions =
     ]
 
 
-viewCheckConditions : Maybe (List String) -> Maybe (List String) -> Maybe (List String) -> List (Html Msg)
-viewCheckConditions conditions notes prerequisites =
+viewCheckConditions : ( FreePathway.PolicyMetaData, FreePathway.NoCostOaPathway ) -> List (Html Msg)
+viewCheckConditions ( policy, pathway ) =
     [ h3 [ id "conditions" ]
         [ text "2. Check the conditions" ]
     , p []
@@ -139,40 +139,25 @@ viewCheckConditions conditions notes prerequisites =
     , ul []
         (List.map
             (\c -> li [] [ text c ])
-            (Maybe.withDefault [] conditions)
+            (Maybe.withDefault [] pathway.conditions)
         )
     ]
-        ++ publisherNotes notes prerequisites
-
-
-
--- TODO: Make sure all of the following information is represented somewhere
--- ++ [ small [ style "display" "block" ]
---         (List.concat
---             [ [ p []
---                     [ text "The above pathway is part of an open access policy deposited by the publisher in the Sherpa Romeo Policy Database."
---                     , br [] []
---                     , a [ href paper.oaPathwayURI, class "link", class "link-secondary" ] [ text "Visit this policy." ]
---                     ]
---               ]
---             , publisherNotes notes prerequisites
---             , policy.additionalUrls
---                 |> Maybe.map
---                     (ulWithHeading
---                         [ text "The publisher has provided the following links to further information:" ]
---                         renderUrl
---                     )
---                 |> Maybe.withDefault [ text "" ]
---             , [ p []
---                     [ policy.notes
---                         |> Maybe.map (String.append "Regarding the policy they note: ")
---                         |> Maybe.withDefault ""
---                         |> text
---                     ]
---               ]
---             ]
---         )
---    ]
+        ++ publisherNotes pathway.notes pathway.prerequisites
+        ++ (policy.additionalUrls
+                |> Maybe.map
+                    (ulWithHeading
+                        [ text "The publisher has provided the following links to further information:" ]
+                        renderUrl
+                    )
+                |> Maybe.withDefault [ text "" ]
+           )
+        ++ [ p []
+                [ policy.notes
+                    |> Maybe.map (String.append "Regarding the policy they note: ")
+                    |> Maybe.withDefault ""
+                    |> text
+                ]
+           ]
 
 
 viewWhereTo : List String -> List (Html Msg)
@@ -224,7 +209,7 @@ viewRepublishTodayForFree paper =
             div
             paper.meta
             ++ viewRightVersion pathway.articleVersions
-            ++ viewCheckConditions pathway.conditions pathway.notes pathway.prerequisites
+            ++ viewCheckConditions paper.recommendedPathway
             ++ viewWhereTo pathway.locationLabelsSorted
             ++ [ -- CO-AUTHORS
                  h3 [ id "coauthors" ]
