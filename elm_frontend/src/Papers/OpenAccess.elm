@@ -22,7 +22,6 @@ view paper =
         [ div [ class "publications__item__info" ]
             (renderPaperMetaData div
                 False
-                False
                 { title = paper.title
                 , journal = paper.journal
                 , authors = paper.authors

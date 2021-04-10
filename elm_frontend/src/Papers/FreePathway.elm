@@ -331,7 +331,7 @@ viewPublicationItemInfo : Paper -> Html Msg
 viewPublicationItemInfo paper =
     div [ class "publications__item__info" ]
         [ div []
-            (renderPaperMetaData h3 True False paper.meta)
+            (renderPaperMetaData h3 True paper.meta)
         , div [ class "publications__item__info__pathway" ]
             (renderRecommendedPathway paper.recommendedPathway)
         ]

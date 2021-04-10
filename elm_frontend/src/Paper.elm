@@ -12,7 +12,7 @@ import Papers.Backend as Backend
 import Papers.FreePathway as FreePathway
 import Papers.OpenAccess as OpenAccess
 import Papers.OtherPathway as OtherPathway
-import Papers.Utils exposing (DOI, articleVersionString, publisherNotes, renderPaperMetaData)
+import Papers.Utils exposing (DOI, articleVersionString, publisherNotes, renderPaperMetaDataWithDoi)
 
 
 type SomePaper
@@ -220,10 +220,8 @@ viewRepublishTodayForFree paper =
     in
     -- TODO: Add embargo
     article []
-        (renderPaperMetaData
+        (renderPaperMetaDataWithDoi
             div
-            True
-            True
             paper.meta
             ++ viewRightVersion pathway.articleVersions
             ++ viewCheckConditions pathway.conditions pathway.notes pathway.prerequisites
@@ -300,9 +298,7 @@ view model =
             main_ [ class "paper", class "openaccess" ]
                 [ h1 [] [ text "Result" ]
                 , div [ class "publications__item__info" ]
-                    (Papers.Utils.renderPaperMetaData div
-                        False
-                        True
+                    (renderPaperMetaDataWithDoi div
                         { title = paper.title
                         , journal = paper.journal
                         , authors = paper.authors
