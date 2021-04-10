@@ -1,7 +1,7 @@
 import json
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends, Request, Response
 from loguru import logger
 
 from fyscience.schemas import OAPathway, FullPaper, Author, LogMessageShowPathway
@@ -87,8 +87,14 @@ def get_author_with_papers(
 
 
 @api_router.get("/api/papers", response_model=FullPaper)
-def get_paper(doi: str, request: Request, settings: Settings = Depends(get_settings)):
+def get_paper(
+    doi: str,
+    request: Request,
+    response: Response,
+    settings: Settings = Depends(get_settings),
+):
     """Get paper with OpenAccess status and pathway for a given DOI."""
+    response.headers["cache-control"] = "max-age=3600,public"
     paper = unpaywall_get_paper(doi=doi, email=settings.unpaywall_email)
     if paper is None:
         paper = FullPaper(doi=doi)
