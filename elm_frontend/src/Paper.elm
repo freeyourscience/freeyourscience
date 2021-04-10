@@ -2,9 +2,9 @@ port module Paper exposing (..)
 
 import Browser
 import Debug
-import Html exposing (Html, a, article, dd, div, dl, dt, em, h1, h2, h3, li, main_, p, small, text, ul)
-import Html.Attributes exposing (class, href, id, style, target)
-import HtmlUtils exposing (ulWithHeading, viewSearchBar)
+import Html exposing (Html, a, article, div, h1, h3, main_, p, small, text)
+import Html.Attributes exposing (class, href, id, target)
+import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchBar)
 import Http
 import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
@@ -129,18 +129,18 @@ viewRightVersion articleVersions policyProfileUrl =
 
 viewCheckConditions : ( FreePathway.PolicyMetaData, FreePathway.NoCostOaPathway ) -> List (Html Msg)
 viewCheckConditions ( policy, pathway ) =
-    [ h3 [ id "conditions" ]
+    h3 [ id "conditions" ]
         [ text "2. Check the conditions" ]
-    , p []
-        [ text """Before you re-publish you need to ensure that the following
-        conditions are met. If there are none, you are good to go."""
-        ]
-    , ul []
-        (List.map
-            (\c -> li [] [ text c ])
-            (Maybe.withDefault [] pathway.conditions)
-        )
-    ]
+        :: (pathway.conditions
+                |> addEmbargo pathway.embargo
+                |> Maybe.map
+                    (ulWithHeading
+                        [ text "Before you re-publish you need to ensure that the following conditions are met:"
+                        ]
+                        text
+                    )
+                |> Maybe.withDefault [ text "The publisher listed no explicit conditions." ]
+           )
         ++ publisherNotes pathway.notes pathway.prerequisites
         ++ (policy.additionalUrls
                 |> Maybe.map
@@ -189,7 +189,6 @@ viewRepublishTodayForFree paper =
         ( policy, pathway ) =
             paper.recommendedPathway
     in
-    -- TODO: Add embargo
     article []
         (renderPaperMetaDataWithDoi
             div
