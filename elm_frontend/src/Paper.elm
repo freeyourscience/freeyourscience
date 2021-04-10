@@ -67,46 +67,53 @@ fetchPaper serverURL doi =
 
 viewRightVersion : List String -> String -> List (Html Msg)
 viewRightVersion articleVersions policyProfileUrl =
+    let
+        version =
+            articleVersionString articleVersions
+    in
     [ h3 [ id "version" ]
         [ text
             ("1. Find the "
-                ++ articleVersionString articleVersions
+                ++ version
                 ++ " version of your manuscript"
             )
         ]
-    , if List.member "published" articleVersions then
+    , p []
+        [ text
+            ("For this publication you are allowed to re-publish the "
+                ++ version
+                ++ " version as open access for free."
+            )
+        ]
+    , if String.contains "published" version then
         p []
-            [ text """For this publication you are allowed to re-publish
-            the published version as open access for free.
-            This version of the maniscript is the one published by e.g. a journal.
-            It is usually a PDF file that has the journals logo
-            and copyright notice on it and is typeset to the style
-            of the journal."""
-            ]
+            [ text """ The published version of the manuscript is for example the one
+            published by a journal.
+            It is usually a PDF file that has the journals logo and copyright notice on
+            it and is typeset to the style of the journal.""" ]
 
-      else if List.member "accepted" articleVersions then
+      else
+        text ""
+    , if String.contains "accepted" version then
         p []
-            [ text """For this publication you are allowed to re-publish
-            the accepted version as open access for free.
-            The accepted version is the final version of the manuscript
-            sent by the author(s) to the publisher.
+            [ text """The accepted version is the final version of the manuscript sent
+            by the author(s) to the publisher.
             This is the result of the peer review process and includes changes and
             corrections by the author(s), but not the copy-editing and typesetting
             done by the publisher.
-            Content should be the same as the published version, but appearance
-            might differ strongly."""
-            ]
+            Content should be the same as the published version, but appearance might
+            differ strongly.""" ]
 
-      else if List.member "submitted" articleVersions then
+      else
+        text ""
+    , if String.contains "submitted" version then
         p []
-            [ text """For this publication you are allowed to re-publish the
-            submitted version as open access for free.
-            The submitted version is what was initially submitted for peer review.
-            Content might differ strongly from the accepted version."""
+            [ text """The submitted version is what was initially submitted for peer
+            review. Content might differ strongly from the accepted version."""
             ]
 
       else
-        p [] [ text "Unknown Version, please contact team@freeyourscience.org with the DOI." ]
+        text ""
     , p []
         [ text "The University of Cambridge Office of Scholarly Communication has a blog post with more in depth "
         , a [ href "https://unlockingresearch-blog.lib.cam.ac.uk/?p=1872" ]
