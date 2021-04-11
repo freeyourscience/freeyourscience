@@ -9,7 +9,7 @@ module Papers.Utils exposing
     , renderUrl
     )
 
-import Html exposing (Attribute, Html, a, div, li, p, text, ul)
+import Html exposing (Attribute, Html, a, div, li, p, span, text, ul)
 import Html.Attributes exposing (class, href, target)
 import HtmlUtils exposing (renderList, ulWithHeading)
 
@@ -100,14 +100,14 @@ renderPaperMetaDataWithDoi titleElement { title, journal, authors, year, doi, ur
                 , ")"
                 ]
             )
-        , text ", "
+        , text (", " ++ doi ++ " ")
         , a
             [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url)
-            , class "secondary"
             , target "_blank"
             , Html.Attributes.title (Maybe.withDefault ("https://doi.org/" ++ doi) url)
             ]
-            [ text (doi ++ " 🔗") ]
+            [ span [ class "material-icons" ] [ text "launch" ]
+            ]
         ]
     ]
 
@@ -140,7 +140,7 @@ renderPaperMetaData titleElement displayUnknownJournal { title, journal, authors
                 , authors |> Maybe.withDefault "Unknown authors"
                 , " ("
                 , year |> Maybe.map String.fromInt |> Maybe.withDefault ""
-                , ")"
+                , ") "
                 ]
             )
         , a
@@ -148,7 +148,7 @@ renderPaperMetaData titleElement displayUnknownJournal { title, journal, authors
             , target "_blank"
             , Html.Attributes.title (Maybe.withDefault ("https://doi.org/" ++ doi) url)
             ]
-            [ text " 🔗"
+            [ span [ class "material-icons" ] [ text "launch" ]
             ]
         ]
     ]
