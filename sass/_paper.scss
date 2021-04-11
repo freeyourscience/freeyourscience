@@ -24,6 +24,10 @@ main.paper {
     margin-top: 3rem;
     margin-bottom: 4rem;
   }
+
+  p + ul {
+    margin-top: -1rem;
+  }
 }
 
 .your-publication {
