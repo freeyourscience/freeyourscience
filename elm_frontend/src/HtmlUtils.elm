@@ -1,4 +1,4 @@
-module HtmlUtils exposing (renderList, ulWithHeading, viewSearchBar)
+module HtmlUtils exposing (addEmbargo, renderList, ulWithHeading, viewSearchBar)
 
 import Html exposing (Html, button, div, form, input, li, p, small, text, ul)
 import Html.Attributes exposing (action, attribute, class, id, method, name, placeholder, type_, value)
@@ -40,3 +40,19 @@ viewSearchBar searchString smallNote progressStyle =
         , small [ class "search__small" ]
             [ text smallNote ]
         ]
+
+
+addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
+addEmbargo embargo targetList =
+    case ( embargo, targetList ) of
+        ( Just e, Just l ) ->
+            Just (List.append [ e ++ " have passed since publication" ] l)
+
+        ( Just e, Nothing ) ->
+            Just [ e ++ " have passed since publication" ]
+
+        ( Nothing, Just l ) ->
+            Just l
+
+        _ ->
+            Nothing

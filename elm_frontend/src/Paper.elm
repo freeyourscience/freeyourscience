@@ -2,9 +2,9 @@ port module Paper exposing (..)
 
 import Browser
 import Debug
-import Html exposing (Html, a, article, dd, div, dl, dt, em, h1, h2, h3, li, main_, p, small, text, ul)
-import Html.Attributes exposing (class, href, id, style, target)
-import HtmlUtils exposing (ulWithHeading, viewSearchBar)
+import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, strong, text)
+import Html.Attributes exposing (class, href, id, target)
+import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchBar)
 import Http
 import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
@@ -12,7 +12,7 @@ import Papers.Backend as Backend
 import Papers.FreePathway as FreePathway
 import Papers.OpenAccess as OpenAccess
 import Papers.OtherPathway as OtherPathway
-import Papers.Utils exposing (DOI, articleVersionString, publisherNotes, renderPaperMetaDataWithDoi)
+import Papers.Utils exposing (DOI, articleVersionString, publisherNotes, renderPaperMetaDataWithDoi, renderUrl)
 
 
 type SomePaper
@@ -65,48 +65,96 @@ fetchPaper serverURL doi =
 -- VIEW
 
 
-viewRightVersion : List String -> List (Html Msg)
-viewRightVersion articleVersions =
+viewYourPublication : DOI -> Html Msg
+viewYourPublication doi =
+    let
+        oaButtonLink =
+            a
+                [ href ("https://openaccessbutton.org/deposit?doi=" ++ doi)
+                , target "_blank"
+                ]
+    in
+    div [ class "your-publication" ]
+        [ div []
+            [ span [ class "your-publication--title" ]
+                [ text "Your publication?"
+                ]
+            , oaButtonLink [ span [ class "material-icons" ] [ text "send" ] ]
+            , div [ class "your-publication--content" ]
+                [ p []
+                    [ text "Re-publish with one click via "
+                    , oaButtonLink [ text "openaccessbutton.org" ]
+                    ]
+                , p []
+                    [ text "Alternatively, learn from the guide on how to re-publish this specific publication yourself below!"
+                    ]
+                ]
+            ]
+        , div []
+            [ span [ class "your-publication--title" ]
+                [ text "Not your publication?"
+                ]
+
+            -- TODO: Add link with Web Share API
+            , a [ href "#" ] [ span [ class "material-icons" ] [ text "share" ] ]
+            , div [ class "your-publication--content" ]
+                [ p []
+                    [ text "Share this page with the authors to let them know what they can do!"
+                    ]
+                ]
+            ]
+        ]
+
+
+viewRightVersion : List String -> String -> List (Html Msg)
+viewRightVersion articleVersions policyProfileUrl =
+    let
+        version =
+            articleVersionString articleVersions
+    in
     [ h3 [ id "version" ]
         [ text
             ("1. Find the "
-                ++ articleVersionString articleVersions
+                ++ version
                 ++ " version of your manuscript"
             )
         ]
-    , if List.member "published" articleVersions then
+    , p []
+        [ text
+            ("For this publication you are allowed to re-publish the "
+                ++ version
+                ++ " version as open access for free."
+            )
+        ]
+    , if String.contains "published" version then
         p []
-            [ text """For this publication you are allowed to re-publish
-            the published version as open access for free.
-            This version of the maniscript is the one published by e.g. a journal.
-            It is usually a PDF file that has the journals logo
-            and copyright notice on it and is typeset to the style
-            of the journal."""
-            ]
+            [ text """ The published version of the manuscript is for example the one
+            published by a journal.
+            It is usually a PDF file that has the journals logo and copyright notice on
+            it and is typeset to the style of the journal.""" ]
 
-      else if List.member "accepted" articleVersions then
+      else
+        text ""
+    , if String.contains "accepted" version then
         p []
-            [ text """For this publication you are allowed to re-publish
-            the accepted version as open access for free.
-            The accepted version is the final version of the manuscript
-            sent by the author(s) to the publisher.
+            [ text """The accepted version is the final version of the manuscript sent
+            by the author(s) to the publisher.
             This is the result of the peer review process and includes changes and
             corrections by the author(s), but not the copy-editing and typesetting
             done by the publisher.
-            Content should be the same as the published version, but appearance
-            might differ strongly."""
-            ]
+            Content should be the same as the published version, but appearance might
+            differ strongly.""" ]
 
-      else if List.member "submitted" articleVersions then
+      else
+        text ""
+    , if String.contains "submitted" version then
         p []
-            [ text """For this publication you are allowed to re-publish the
-            submitted version as open access for free.
-            The submitted version is what was initially submitted for peer review.
-            Content might differ strongly from the accepted version."""
+            [ text """The submitted version is what was initially submitted for peer
+            review. Content might differ strongly from the accepted version."""
             ]
 
       else
-        p [] [ text "Unknown Version, please contact team@freeyourscience.org with the DOI." ]
+        text ""
     , p []
         [ text "The University of Cambridge Office of Scholarly Communication has a blog post with more in depth "
         , a [ href "https://unlockingresearch-blog.lib.cam.ac.uk/?p=1872" ]
@@ -118,113 +166,84 @@ viewRightVersion articleVersions =
         most mature version of the manuscript to be re-published.
         If you no longer have the version specified by the pathway
         you might also be allowed to re-publish an earlier one.
-        Check the pathway details in the Sherpa Romeo policy database
-        for what other versions are allowed. You will find a """
-        , em []
-            -- TODO: Link to policy
-            [ text "Visit this policy" ]
-        , text "link in the pathway result that takes you there. "
+        Check the """
+
+        -- TODO: Check if this is the right link.
+        , a [ href policyProfileUrl, target "_blank" ] [ text "pathway details" ]
+        , text " in the Sherpa Romeo policy database for what other versions are allowed."
         ]
     ]
 
 
-viewCheckConditions : Maybe (List String) -> Maybe (List String) -> Maybe (List String) -> List (Html Msg)
-viewCheckConditions conditions notes prerequisites =
-    [ h3 [ id "conditions" ]
+viewCheckConditions : ( FreePathway.PolicyMetaData, FreePathway.NoCostOaPathway ) -> List (Html Msg)
+viewCheckConditions ( policy, pathway ) =
+    h3 [ id "conditions" ]
         [ text "2. Check the conditions" ]
-    , p []
-        [ text """Before you re-publish you need to ensure that the following
-        conditions are met. If there are none, you are good to go."""
-        ]
-    , ul []
-        (List.map
-            (\c -> li [] [ text c ])
-            (Maybe.withDefault [] conditions)
-        )
-    ]
-        ++ publisherNotes notes prerequisites
-
-
-
--- TODO: Make sure all of the following information is represented somewhere
--- ++ [ small [ style "display" "block" ]
---         (List.concat
---             [ [ p []
---                     [ text "The above pathway is part of an open access policy deposited by the publisher in the Sherpa Romeo Policy Database."
---                     , br [] []
---                     , a [ href paper.oaPathwayURI, class "link", class "link-secondary" ] [ text "Visit this policy." ]
---                     ]
---               ]
---             , publisherNotes notes prerequisites
---             , policy.additionalUrls
---                 |> Maybe.map
---                     (ulWithHeading
---                         [ text "The publisher has provided the following links to further information:" ]
---                         renderUrl
---                     )
---                 |> Maybe.withDefault [ text "" ]
---             , [ p []
---                     [ policy.notes
---                         |> Maybe.map (String.append "Regarding the policy they note: ")
---                         |> Maybe.withDefault ""
---                         |> text
---                     ]
---               ]
---             ]
---         )
---    ]
+        :: (pathway.conditions
+                |> addEmbargo pathway.embargo
+                |> Maybe.map
+                    (ulWithHeading
+                        [ text "Before you re-publish you need to ensure that the following conditions are met:"
+                        ]
+                        text
+                    )
+                |> Maybe.withDefault [ text "The publisher listed no explicit conditions." ]
+           )
+        ++ publisherNotes pathway.notes pathway.prerequisites
+        ++ (policy.additionalUrls
+                |> Maybe.map
+                    (ulWithHeading
+                        [ text "The publisher has provided the following links to further information:" ]
+                        renderUrl
+                    )
+                |> Maybe.withDefault [ text "" ]
+           )
+        ++ [ p []
+                [ policy.notes
+                    |> Maybe.map (String.append "Regarding the policy they note: ")
+                    |> Maybe.withDefault ""
+                    |> text
+                ]
+           ]
 
 
 viewWhereTo : List String -> List (Html Msg)
 viewWhereTo locationLabelsSorted =
-    [ h3 [ id "where" ]
+    h3 [ id "where" ]
         [ text "3. Choose where to upload" ]
-    , p []
-        [ text """The pathway may allow you to upload your work in a variety of places.
-        Our recommendation for choosing is:""" ]
-    , ul []
-        [ li []
-            [ text "prefer public repositories over websites or social networks" ]
-        , li []
-            [ text "use places "
-            , a [ href "https://unpaywall.org/sources" ]
-                [ text "indexed by Unpaywall" ]
-            ]
-        , li []
-            [ text "find suitable repositories with "
-            , a [ href "https://v2.sherpa.ac.uk/opendoar/index.html" ]
-                [ text "OpenDOAR" ]
-            ]
-        ]
-    , p []
-        [ text """A repository is very much like a digital library.
-        Technically, it is any place where you can store digital assets
-        that is usually indexed by search engines.
-        This will ensure your work is easily findable and available to
-        the widest possible audience.""" ]
-    ]
-        ++ (locationLabelsSorted
+        :: (locationLabelsSorted
                 |> List.take 3
                 |> ulWithHeading
-                    [ text "Available locations for this publication:"
-                    ]
+                    [ text "The following locations are available for this publication:" ]
                     text
            )
+        ++ [ p []
+                [ text """Our recommendation for choosing is already reflected in the
+                order of the options above: Prefer prefer public repositories over
+                personal websites or social networks and use locations that are indexed
+                so your publications are easy to find.""" ]
+           , p []
+                [ text """A repository is very much like a digital library.
+                Technically, it is any place where you can store digital assets that is
+                usually indexed by search engines.
+                This will ensure your work is easily findable and available to the
+                widest possible audience.""" ]
+           ]
 
 
 viewRepublishTodayForFree : FreePathway.Paper -> Html Msg
 viewRepublishTodayForFree paper =
     let
-        ( _, pathway ) =
+        ( policy, pathway ) =
             paper.recommendedPathway
     in
-    -- TODO: Add embargo
     article []
         (renderPaperMetaDataWithDoi
             div
             paper.meta
-            ++ viewRightVersion pathway.articleVersions
-            ++ viewCheckConditions pathway.conditions pathway.notes pathway.prerequisites
+            ++ viewYourPublication paper.meta.doi
+            :: viewRightVersion pathway.articleVersions policy.profileUrl
+            ++ viewCheckConditions paper.recommendedPathway
             ++ viewWhereTo pathway.locationLabelsSorted
             ++ [ -- CO-AUTHORS
                  h3 [ id "coauthors" ]

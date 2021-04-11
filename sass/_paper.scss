@@ -24,4 +24,63 @@ main.paper {
     margin-top: 3rem;
     margin-bottom: 4rem;
   }
+
+  p + ul {
+    margin-top: -1rem;
+  }
+}
+
+.your-publication {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 2rem;
+  row-gap: 1rem;
+  margin-top: 3rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  background: settings.$color-background;
+
+  @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    margin-left: -75%;
+    margin-right: -75%;
+    padding-left: 75%;
+    padding-right: 75%;
+  }
+
+  .your-publication--title {
+    @include utils.f3;
+    display: block;
+    font-weight: bold;
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  > div {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'title title'
+      'icon text';
+    .your-publication--title {
+      grid-area: title;
+      min-height: 0;
+    }
+    .your-publication--content {
+      grid-area: text;
+    }
+    .material-icons {
+      grid-area: icon;
+      font-size: 1.5rem;
+    }
+  }
 }

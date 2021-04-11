@@ -10,13 +10,12 @@ module Papers.FreePathway exposing
     , viewPublicationItemInfo
     )
 
-import Html exposing (Html, a, br, button, div, h2, h3, li, p, section, small, strong, text, ul)
-import Html.Attributes exposing (class, href, style)
-import Html.Events exposing (onClick)
-import HtmlUtils exposing (renderList, ulWithHeading)
+import Html exposing (Html, a, br, button, div, h2, h3, p, section, strong, text)
+import Html.Attributes exposing (class, href)
+import HtmlUtils exposing (addEmbargo, ulWithHeading)
 import Msg exposing (Msg)
 import Papers.Backend exposing (Embargo, Location, PermittedOA, Policy, Prerequisites)
-import Papers.Utils exposing (NamedUrl, PaperMetadata, articleVersionString, publisherNotes, renderPaperMetaData, renderUrl)
+import Papers.Utils exposing (NamedUrl, PaperMetadata, articleVersionString, renderPaperMetaData)
 import String.Extra exposing (humanize)
 
 
@@ -370,22 +369,6 @@ renderPathwayButtons ( id, { title, doi } ) =
 
 renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
 renderRecommendedPathway ( policy, { locationLabelsSorted, articleVersions, prerequisites, conditions, embargo, notes } ) =
-    let
-        addEmbargo : Maybe String -> Maybe (List String) -> Maybe (List String)
-        addEmbargo emb pqs =
-            case ( emb, pqs ) of
-                ( Just e, Just p ) ->
-                    Just (List.append [ e ++ " have passed since publication" ] p)
-
-                ( Just e, Nothing ) ->
-                    Just [ e ++ " have passed since publication" ]
-
-                ( Nothing, Just p ) ->
-                    Just p
-
-                _ ->
-                    Nothing
-    in
     p []
         [ text "You can re-publish the "
         , strong [] [ text (articleVersionString articleVersions ++ " version") ]
