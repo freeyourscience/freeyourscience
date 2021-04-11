@@ -79,7 +79,7 @@ viewYourPublication doi =
                     [ text "openaccessbutton.org" ]
                 ]
             , p []
-                [ text "Alternatively, find the guide on how to re-publish this specific publication yourself below!"
+                [ text "Alternatively, learn from the guide on how to re-publish this specific publication yourself below!"
                 ]
             ]
         , div []
