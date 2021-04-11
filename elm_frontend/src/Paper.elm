@@ -2,7 +2,7 @@ port module Paper exposing (..)
 
 import Browser
 import Debug
-import Html exposing (Html, a, article, div, h1, h3, main_, p, small, strong, text)
+import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, strong, text)
 import Html.Attributes exposing (class, href, id, target)
 import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchBar)
 import Http
@@ -67,25 +67,40 @@ fetchPaper serverURL doi =
 
 viewYourPublication : DOI -> Html Msg
 viewYourPublication doi =
+    let
+        oaButtonLink =
+            a
+                [ href ("https://openaccessbutton.org/deposit?doi=" ++ doi)
+                , target "_blank"
+                ]
+    in
     div [ class "your-publication" ]
         [ div []
-            [ strong [] [ text "Your publication?" ]
-            , p []
-                [ text "Re-publish with one click via "
-                , a
-                    [ href ("https://openaccessbutton.org/deposit?doi=" ++ doi)
-                    , target "_blank"
-                    ]
-                    [ text "openaccessbutton.org" ]
+            [ span [ class "your-publication--title" ]
+                [ text "Your publication?"
                 ]
-            , p []
-                [ text "Alternatively, learn from the guide on how to re-publish this specific publication yourself below!"
+            , oaButtonLink [ span [ class "material-icons" ] [ text "send" ] ]
+            , div [ class "your-publication--content" ]
+                [ p []
+                    [ text "Re-publish with one click via "
+                    , oaButtonLink [ text "openaccessbutton.org" ]
+                    ]
+                , p []
+                    [ text "Alternatively, learn from the guide on how to re-publish this specific publication yourself below!"
+                    ]
                 ]
             ]
         , div []
-            [ strong [] [ text "Not your publication?" ]
-            , p []
-                [ text "Share this page with the authors to let them know what they can do!"
+            [ span [ class "your-publication--title" ]
+                [ text "Not your publication?"
+                ]
+
+            -- TODO: Add link with Web Share API
+            , a [ href "#" ] [ span [ class "material-icons" ] [ text "share" ] ]
+            , div [ class "your-publication--content" ]
+                [ p []
+                    [ text "Share this page with the authors to let them know what they can do!"
+                    ]
                 ]
             ]
         ]
