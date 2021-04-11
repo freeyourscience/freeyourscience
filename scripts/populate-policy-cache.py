@@ -1,8 +1,11 @@
+import json
 import os
 import requests
 
 from dotenv import load_dotenv
 from expression.core import pipe
+
+from fyscience.cache import json_filesystem_cache
 
 load_dotenv()
 
@@ -39,6 +42,10 @@ def get_policy(issn):
     )
 
 
-issn = "0000-0205"
-
-print(get_policy(issn))
+with json_filesystem_cache("../data/policy-cache.json") as cache:
+    with open("../data/issn-list.txt", "r") as issn_list:
+        for i, issn in enumerate(issn_list):
+            issn = issn.strip("\n")
+            policy = cache.get(issn, None)
+            if not policy:
+                cache[issn] = get_policy(issn)
