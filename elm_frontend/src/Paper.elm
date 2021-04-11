@@ -85,7 +85,7 @@ viewYourPublication doi =
         , div []
             [ strong [] [ text "Not your publication?" ]
             , p []
-                [ text "Send the authors this page to let them know what they can do!"
+                [ text "Share this page with the authors to let them know what they can do!"
                 ]
             ]
         ]
@@ -226,8 +226,8 @@ viewRepublishTodayForFree paper =
         (renderPaperMetaDataWithDoi
             div
             paper.meta
-            ++ [ viewYourPublication paper.meta.doi ]
-            ++ viewRightVersion pathway.articleVersions policy.profileUrl
+            ++ viewYourPublication paper.meta.doi
+            :: viewRightVersion pathway.articleVersions policy.profileUrl
             ++ viewCheckConditions paper.recommendedPathway
             ++ viewWhereTo pathway.locationLabelsSorted
             ++ [ -- CO-AUTHORS
