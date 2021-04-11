@@ -234,7 +234,7 @@ viewWhereTo locationLabelsSorted =
 viewRepublishTodayForFree : FreePathway.Paper -> Html Msg
 viewRepublishTodayForFree paper =
     let
-        ( policy, pathway ) =
+        ( _, pathway ) =
             paper.recommendedPathway
     in
     article []
@@ -242,7 +242,7 @@ viewRepublishTodayForFree paper =
             div
             paper.meta
             ++ viewYourPublication paper.meta.doi
-            :: viewRightVersion pathway.articleVersions policy.profileUrl
+            :: viewRightVersion pathway.articleVersions paper.oaPathwayURI
             ++ viewCheckConditions paper.recommendedPathway
             ++ viewWhereTo pathway.locationLabelsSorted
             ++ [ -- CO-AUTHORS
