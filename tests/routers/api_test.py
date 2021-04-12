@@ -90,10 +90,11 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
 
 
 def test_log_endpoint(caplog, client: TestClient) -> None:
-    doi = "10.123/1313131.1111"
+    event = "something_grand"
+    message = "Details about how grand."
 
-    r = client.post("/api/logs/show-pathway", json={"doi": doi})
+    r = client.post("/api/logs", json={"event": event, "message": message})
     assert r.ok, r
 
-    assert "show_pathway_click" in caplog.text
-    assert doi in caplog.text
+    assert event in caplog.text
+    assert message in caplog.text
