@@ -27,7 +27,6 @@ type alias Paper =
     { meta : PaperMetadata
     , oaPathwayURI : String
     , recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
-    , pathwayVisible : Bool -- TODO: might be better served as a union type e.g. List (Visibility FreePathwayPaper)
     }
 
 

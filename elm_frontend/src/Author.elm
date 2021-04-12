@@ -155,14 +155,6 @@ update msg model =
                         ]
                         model.style
             }
-
-        togglePathwayVisibility : Array FreePathway.Paper -> Int -> Array FreePathway.Paper
-        togglePathwayVisibility papers id =
-            papers
-                |> Array.get id
-                |> Maybe.map (\p -> { p | pathwayVisible = not p.pathwayVisible })
-                |> Maybe.map (\p -> Array.set id p papers)
-                |> Maybe.withDefault papers
     in
     case msg of
         Msg.GotPaper (Ok backendPaper) ->
@@ -185,11 +177,6 @@ update msg model =
             ( { model
                 | style = Animation.update animMsg model.style
               }
-            , Cmd.none
-            )
-
-        Msg.TogglePathwayVisibility paperId doi ->
-            ( { model | freePathwayPapers = togglePathwayVisibility model.freePathwayPapers paperId }
             , Cmd.none
             )
 
@@ -228,7 +215,7 @@ classifyPaper backendPaper model =
     in
     case ( isOpenAccess, pathwayUri, recommendedPathway ) of
         ( Just False, Just pwUri, Just pathway ) ->
-            FreePathway.Paper meta pwUri pathway False
+            FreePathway.Paper meta pwUri pathway
                 |> (\p -> { model | freePathwayPapers = Array.push p model.freePathwayPapers })
 
         ( Just False, Just pwUri, Nothing ) ->

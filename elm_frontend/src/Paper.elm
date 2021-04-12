@@ -2,7 +2,7 @@ port module Paper exposing (..)
 
 import Browser
 import Debug
-import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, strong, text)
+import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, text)
 import Html.Attributes exposing (class, href, id, target)
 import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchBar)
 import Http
@@ -409,7 +409,7 @@ classifyPaper backendPaper model =
     in
     case ( isOpenAccess, pathwayUri, recommendedPathway ) of
         ( Just False, Just pwUri, Just pathway ) ->
-            FreePathway.Paper meta pwUri pathway False
+            FreePathway.Paper meta pwUri pathway
                 |> (\p -> { model | paper = Just (FP p) })
 
         ( Just False, Just pwUri, Nothing ) ->
