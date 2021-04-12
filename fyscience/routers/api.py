@@ -3,7 +3,7 @@ import json
 from fastapi import APIRouter, HTTPException, Depends, Request, Response
 from loguru import logger
 
-from fyscience.schemas import OAPathway, FullPaper, Author, LogMessageShowPathway
+from fyscience.schemas import OAPathway, FullPaper, Author, LogEntry
 from fyscience.unpaywall import get_paper as unpaywall_get_paper
 from fyscience.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
 from fyscience.oa_status import validate_oa_status_from_s2
@@ -146,12 +146,12 @@ def get_request_headers(request: Request):
     return {"headers": request.headers, "url_scheme": request.url.scheme}
 
 
-@api_router.post("/api/logs/show-pathway", include_in_schema=False)
-def create_show_pathway_log_entry(message: LogMessageShowPathway, request: Request):
+@api_router.post("/api/logs", include_in_schema=False)
+def create_show_pathway_log_entry(log_entry: LogEntry, request: Request):
     logger.info(
         {
-            "event": "show_pathway_click",
-            "doi": message.doi,
+            "event": log_entry.event,
+            "message": log_entry.message,
             "trace_context": request.headers.get("x-cloud-trace-context"),
         }
     )

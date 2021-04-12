@@ -65,5 +65,6 @@ class Author(BaseModel):
     provider: Optional[str] = None
 
 
-class LogMessageShowPathway(BaseModel):
-    doi: str
+class LogEntry(BaseModel):
+    event: str
+    message: str

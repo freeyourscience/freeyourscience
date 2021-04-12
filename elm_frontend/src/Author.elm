@@ -8,8 +8,7 @@ import Html exposing (Html, a, div, footer, h1, h2, main_, p, small, text)
 import Html.Attributes exposing (class, href, target)
 import HtmlUtils exposing (viewSearchBar)
 import Http
-import HttpBuilder exposing (withBody, withExpect, withHeader)
-import Json.Encode
+import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
 import Papers.Backend as Backend
 import Papers.Buggy as Buggy
@@ -17,6 +16,7 @@ import Papers.FreePathway as FreePathway
 import Papers.OpenAccess as OpenAccess
 import Papers.OtherPathway as OtherPathway
 import Papers.Utils exposing (DOI, PaperMetadata)
+import ServerSideLogging
 
 
 type alias Model =
@@ -67,15 +67,6 @@ fetchPaper serverURL doi =
     HttpBuilder.get (serverURL ++ "/api/papers?doi=" ++ doi)
         |> withHeader "Content-Type" "application/json"
         |> HttpBuilder.withExpect (Http.expectJson Msg.GotPaper Backend.paperDecoder)
-        |> HttpBuilder.request
-
-
-reportShowPathwayClick : String -> String -> Cmd Msg
-reportShowPathwayClick serverURL paperDOI =
-    HttpBuilder.post (serverURL ++ "/api/logs/show-pathway")
-        |> withHeader "Content-Type" "application/json"
-        |> withBody (Http.jsonBody (Json.Encode.object [ ( "doi", Json.Encode.string paperDOI ) ]))
-        |> withExpect (Http.expectWhatever Msg.HttpNoOp)
         |> HttpBuilder.request
 
 
@@ -187,7 +178,7 @@ update msg model =
                     Debug.log "Error in GotPaper" error
             in
             ( { model | numFailedDOIRequests = model.numFailedDOIRequests + 1 }
-            , Cmd.none
+            , ServerSideLogging.reportHttpError model.serverURL error
             )
 
         Msg.Animate animMsg ->
@@ -198,23 +189,14 @@ update msg model =
             )
 
         Msg.TogglePathwayVisibility paperId doi ->
-            let
-                show =
-                    Array.get paperId model.freePathwayPapers |> Maybe.map (\p -> not p.pathwayVisible)
-            in
             ( { model | freePathwayPapers = togglePathwayVisibility model.freePathwayPapers paperId }
-            , case show of
-                Just True ->
-                    reportShowPathwayClick model.serverURL doi
-
-                _ ->
-                    Cmd.none
+            , Cmd.none
             )
 
         Msg.HttpNoOp (Err error) ->
             let
                 _ =
-                    Debug.log "Error in GotPaper" error
+                    Debug.log "Error for no-op" error
             in
             ( model, Cmd.none )
 

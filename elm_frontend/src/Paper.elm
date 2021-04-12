@@ -13,6 +13,7 @@ import Papers.FreePathway as FreePathway
 import Papers.OpenAccess as OpenAccess
 import Papers.OtherPathway as OtherPathway
 import Papers.Utils exposing (DOI, articleVersionString, publisherNotes, renderPaperMetaDataWithDoi, renderUrl)
+import ServerSideLogging
 
 
 type SomePaper
@@ -376,7 +377,9 @@ update msg model =
                 _ =
                     Debug.log "Error in GotPaper" error
             in
-            ( model, Cmd.none )
+            ( model
+            , ServerSideLogging.reportHttpError model.serverURL error
+            )
 
         _ ->
             ( model, Cmd.none )
