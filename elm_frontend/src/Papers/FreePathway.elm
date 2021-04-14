@@ -152,6 +152,7 @@ parsePrequisites : Prerequisites -> List String
 parsePrequisites { prerequisitesPhrases, prerequisiteSubjects } =
     -- TODO: add prerequisiteFunders.funderMetadata
     (prerequisitesPhrases
+        |> Maybe.withDefault []
         |> List.map (\item -> item.phrase)
     )
         ++ (prerequisiteSubjects

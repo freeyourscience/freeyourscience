@@ -44,8 +44,8 @@ type alias PermittedOA =
 
 
 type alias Prerequisites =
-    { prerequisites : List String
-    , prerequisitesPhrases : List Phrase
+    { prerequisites : Maybe (List String)
+    , prerequisitesPhrases : Maybe (List Phrase)
     , prerequisiteFunders : Maybe (List Funder)
     , prerequisiteSubjects : Maybe (List String)
     }
@@ -101,8 +101,8 @@ locationDecoder =
 prerequisitesDecoder : Decoder Prerequisites
 prerequisitesDecoder =
     D.succeed Prerequisites
-        |> required "prerequisites" (D.list D.string)
-        |> required "prerequisites_phrases" (D.list phraseDecoder)
+        |> optional "prerequisites" (D.maybe (D.list D.string)) Nothing
+        |> optional "prerequisites_phrases" (D.maybe (D.list phraseDecoder)) Nothing
         |> optional "prerequisite_funders" (D.maybe (D.list funderDecoder)) Nothing
         |> optional "prerequisite_subjects" (D.maybe (D.list D.string)) Nothing
 
