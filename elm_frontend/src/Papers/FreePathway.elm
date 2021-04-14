@@ -132,7 +132,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
             _ ->
                 Just articleVersions
     , locationSorted = { location | location = location.location |> List.sortBy scoreAllowedLocation |> List.reverse }
-    , prerequisites = prerequisites |> Maybe.map parsePrequisites
+    , prerequisites = prerequisites |> Maybe.map parsePrequisites |> Maybe.andThen identity
     , conditions = conditions
     , additionalOaFee = additionalOaFee
     , embargo = embargo |> Maybe.map embargoToString
@@ -148,22 +148,32 @@ parsePolicyMetaData { policyUrl, urls, notes } =
     }
 
 
-parsePrequisites : Prerequisites -> List String
+parsePrequisites : Prerequisites -> Maybe (List String)
 parsePrequisites { prerequisitesPhrases, prerequisiteSubjects } =
-    -- TODO: add prerequisiteFunders.funderMetadata
-    (prerequisitesPhrases
-        |> Maybe.withDefault []
-        |> List.map (\item -> item.phrase)
-    )
-        ++ (prerequisiteSubjects
+    -- TODO: add support for prerequisiteFunders
+    --       since this consists of name and URL,
+    --       this might be difficult to just integrate here
+    let
+        phrases =
+            prerequisitesPhrases
+                |> Maybe.map (List.map (\item -> item.phrase))
+
+        subjects =
+            prerequisiteSubjects
                 |> Maybe.map
                     (\ps ->
                         [ "Manuscript must be from subjects: "
                             ++ String.join ", " ps
                         ]
                     )
-                |> Maybe.withDefault []
-           )
+    in
+    case ( phrases, subjects ) of
+        ( Nothing, Nothing ) ->
+            Nothing
+
+        _ ->
+            Just
+                (Maybe.withDefault [] phrases ++ Maybe.withDefault [] subjects)
 
 
 humanizeLocations : Location -> List String
