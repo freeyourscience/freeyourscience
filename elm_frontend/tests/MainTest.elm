@@ -62,13 +62,14 @@ pathwayDetails =
                   , embargo = Just { amount = 12, units = "months" }
                   , prerequisites =
                         Just
-                            { prerequisites = [ "when_required_by_funder" ]
+                            { prerequisites = Just [ "when_required_by_funder" ]
                             , prerequisitesPhrases =
-                                [ { value = "when_required_by_funder"
-                                  , phrase = "If Required by Funder"
-                                  , language = "en"
-                                  }
-                                ]
+                                Just
+                                    [ { value = "when_required_by_funder"
+                                      , phrase = "If Required by Funder"
+                                      , language = "en"
+                                      }
+                                    ]
                             , prerequisiteFunders = Nothing
                             , prerequisiteSubjects = Just [ "Math", "Chemistry" ]
                             }

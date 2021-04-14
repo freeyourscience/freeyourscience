@@ -169,13 +169,14 @@ fullPaperElm =
                           , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
                           , prerequisites =
                                 Just
-                                    { prerequisites = [ "required_by_funder" ]
+                                    { prerequisites = Just [ "required_by_funder" ]
                                     , prerequisitesPhrases =
-                                        [ { value = "required_by_funder"
-                                          , phrase = "Required by funder"
-                                          , language = "en"
-                                          }
-                                        ]
+                                        Just
+                                            [ { value = "required_by_funder"
+                                              , phrase = "Required by funder"
+                                              , language = "en"
+                                              }
+                                            ]
                                     , prerequisiteFunders = Nothing
                                     , prerequisiteSubjects = Just [ "Math", "Chemistry" ]
                                     }
