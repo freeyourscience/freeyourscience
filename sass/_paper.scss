@@ -68,18 +68,15 @@ main.paper {
     display: grid;
     grid-template-columns: 2rem minmax(0, 1fr);
     grid-template-rows: auto 1fr;
-    grid-template-areas:
-      'title title'
-      'icon text';
     .your-publication--title {
-      grid-area: title;
+      grid-column: 1/-1;
       min-height: 0;
     }
-    .your-publication--content {
-      grid-area: text;
+    .your-publication--details {
+      grid-column: 2;
     }
     .material-icons {
-      grid-area: icon;
+      grid-column: 1;
       font-size: 1.5rem;
     }
   }

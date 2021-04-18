@@ -71,7 +71,7 @@ viewYourPublication doi =
     let
         oaButtonLink =
             a
-                [ href ("https://openaccessbutton.org/deposit?doi=" ++ doi)
+                [ href ("https://shareyourpaper.org/" ++ doi)
                 , target "_blank"
                 ]
     in
@@ -80,27 +80,25 @@ viewYourPublication doi =
             [ span [ class "your-publication--title" ]
                 [ text "Your publication?"
                 ]
-            , oaButtonLink [ span [ class "material-icons" ] [ text "send" ] ]
-            , div [ class "your-publication--content" ]
-                [ p []
-                    [ text "Re-publish with one click via "
-                    , oaButtonLink [ text "openaccessbutton.org" ]
-                    ]
-                , p []
-                    [ text "Alternatively, learn from the guide on how to re-publish this specific publication yourself below!"
-                    ]
+            , span [ class "material-icons" ] [ text "send" ]
+            , p [ class "your-publication--details" ]
+                [ text "Let "
+                , oaButtonLink [ text "shareyourpaper.org" ]
+                , text " re-publish for you."
+                ]
+            , span [ class "material-icons" ] [ text "school" ]
+            , p [ class "your-publication--details" ]
+                [ text "Alternatively, learn to re-publish yourself. The guide below is specific to this publication."
                 ]
             ]
         , div []
             [ span [ class "your-publication--title" ]
                 [ text "Not your publication?"
                 ]
-
-            -- TODO: Add link with Web Share API
-            , a [ href "#" ] [ span [ class "material-icons" ] [ text "share" ] ]
+            , span [ class "material-icons" ] [ text "campaign" ]
             , div [ class "your-publication--content" ]
                 [ p []
-                    [ text "Share this page with the authors to let them know what they can do!"
+                    [ text "Let the authors know what they can do. Share this page with them."
                     ]
                 ]
             ]
