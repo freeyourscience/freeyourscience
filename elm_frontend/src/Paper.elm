@@ -66,8 +66,8 @@ fetchPaper serverURL doi =
 -- VIEW
 
 
-viewYourPublication : DOI -> Html Msg
-viewYourPublication doi =
+viewWhosPublication : DOI -> Html Msg
+viewWhosPublication doi =
     let
         oaButtonLink =
             a
@@ -75,28 +75,28 @@ viewYourPublication doi =
                 , target "_blank"
                 ]
     in
-    div [ class "your-publication" ]
-        [ div []
-            [ span [ class "your-publication--title" ]
+    div [ class "whos-publication" ]
+        [ div [ class "whos-publication__item" ]
+            [ span [ class "whos-publication--title" ]
                 [ text "Your publication?"
                 ]
             , span [ class "material-icons" ] [ text "send" ]
-            , p [ class "your-publication--details" ]
+            , p [ class "whos-publication--details" ]
                 [ text "Let "
                 , oaButtonLink [ text "shareyourpaper.org" ]
                 , text " re-publish for you."
                 ]
             , span [ class "material-icons" ] [ text "school" ]
-            , p [ class "your-publication--details" ]
+            , p [ class "whos-publication--details" ]
                 [ text "Alternatively, learn to re-publish yourself. The guide below is specific to this publication."
                 ]
             ]
-        , div []
-            [ span [ class "your-publication--title" ]
+        , div [ class "whos-publication__item" ]
+            [ span [ class "whos-publication--title" ]
                 [ text "Not your publication?"
                 ]
             , span [ class "material-icons" ] [ text "campaign" ]
-            , div [ class "your-publication--content" ]
+            , div [ class "whos-publication--content" ]
                 [ p []
                     [ text "Let the authors know what they can do. Share this page with them."
                     ]
@@ -240,7 +240,7 @@ viewRepublishTodayForFree paper =
         (renderPaperMetaDataWithDoi
             div
             paper.meta
-            ++ viewYourPublication paper.meta.doi
+            ++ viewWhosPublication paper.meta.doi
             :: viewRightVersion pathway.articleVersions paper.oaPathwayURI
             ++ viewCheckConditions paper.recommendedPathway
             ++ viewWhereTo pathway.locationLabelsSorted

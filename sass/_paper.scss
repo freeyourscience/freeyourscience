@@ -30,7 +30,7 @@ main.paper {
   }
 }
 
-.your-publication {
+.whos-publication {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   column-gap: 2rem;
@@ -51,33 +51,33 @@ main.paper {
     padding-left: 75%;
     padding-right: 75%;
   }
+}
 
-  .your-publication--title {
-    @include utils.f3;
-    display: block;
-    font-weight: bold;
-    max-width: 100%;
-    margin-bottom: 1rem;
-  }
+.whos-publication--title {
+  @include utils.f3;
+  display: block;
+  font-weight: bold;
+  max-width: 100%;
+  margin-bottom: 1rem;
+}
 
-  p {
-    margin-bottom: 1rem;
-  }
+.whos-publication__item {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+}
 
-  > div {
-    display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    .your-publication--title {
-      grid-column: 1/-1;
-      min-height: 0;
-    }
-    .your-publication--details {
-      grid-column: 2;
-    }
-    .material-icons {
-      grid-column: 1;
-      font-size: 1.5rem;
-    }
-  }
+.whos-publication--title {
+  grid-column: 1/-1;
+  min-height: 0;
+}
+
+.whos-publication--details {
+  grid-column: 2;
+  margin-bottom: 1rem;
+}
+
+.material-icons {
+  grid-column: 1;
+  font-size: 1.5rem;
 }
