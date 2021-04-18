@@ -72,9 +72,15 @@ recommendPathway policies =
         |> List.sortBy Tuple.first
         |> List.reverse
         |> List.map Tuple.second
+        |> List.filter pathwayLocationDoesNotIncludeThisJournal
         |> List.map noCostOaPathway
         |> List.filterMap identity
         |> List.head
+
+
+pathwayLocationDoesNotIncludeThisJournal : ( PolicyMetaData, Pathway ) -> Bool
+pathwayLocationDoesNotIncludeThisJournal ( metadata, pathway ) =
+    not (List.member "this_journal" pathway.locationSorted.location)
 
 
 noCostOaPathway : ( PolicyMetaData, Pathway ) -> Maybe ( PolicyMetaData, NoCostOaPathway )
