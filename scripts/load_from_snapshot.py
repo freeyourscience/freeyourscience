@@ -1,7 +1,7 @@
 import gzip
 import json
 
-UNPAYWALL_SNAPSHOT_PATH = "/mnt/data/fyscience/unpaywall.jsonl.gz"
+UNPAYWALL_SNAPSHOT_PATH = "/home/hff/Downloads/unpaywall.jsonl.gz"
 
 
 def extract_fields(json_loader):
@@ -11,6 +11,7 @@ def extract_fields(json_loader):
                 "doi": record["doi"],
                 "is_oa": record["is_oa"],
                 "journal_issn_l": record.get("journal_issn_l", "not-available"),
+                "journal_name": record.get("journal_name", "not-available"),
             }
         )
 
@@ -26,7 +27,5 @@ if __name__ == "__main__":
     doi_issn = extract_fields(load_unpaywall_snapshot(UNPAYWALL_SNAPSHOT_PATH))
     with open("tests/assets/unpaywall_subset.jsonl", "w") as fh:
         for i, record in enumerate(doi_issn):
-            if i == 1000:
-                break
             fh.write(json.dumps(record))
             fh.write("\n")
