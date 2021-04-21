@@ -8,7 +8,7 @@ header {
   justify-content: space-between;
   margin: 2rem auto 5rem;
   @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
-    margin: 5rem auto 8rem;
+    margin: 3rem auto 8rem;
   }
 }
 
@@ -80,14 +80,9 @@ header > nav {
 }
 
 .beta-banner {
+  @include utils.f6;
   display: block;
-  top:0px;
-  left:0px;
-  width:auto;
-  padding:0.75rem;
-  margin-left: -1rem;
-  margin-right: -1rem;
-  margin-top:0.5rem;
+  margin-top: 2rem;
   text-align: center;
-  background-color: settings.$color-background;
+  color: settings.$color-text-secondary;
 }
