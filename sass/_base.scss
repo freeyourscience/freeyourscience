@@ -17,7 +17,7 @@ body {
 }
 
 main {
-  max-width: utils.px-to-rem(700px);
+  max-width: utils.px-to-rem(settings.$main-column-width);
   margin: 0 auto 10rem;
 }
 
@@ -140,6 +140,16 @@ dd {
 .material-icons {
   vertical-align: middle;
   font-size: 1.2rem;
+}
+
+.site-footer {
+  color: settings.$color-text-secondary;
+  text-align: left;
+  margin: 0 auto;
+  max-width: utils.px-to-rem(settings.$main-column-width);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1.5rem;
 }
 
 .site-footer__smallprint {
