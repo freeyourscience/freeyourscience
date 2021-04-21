@@ -110,7 +110,7 @@ def get_team_html(request: Request):
 
 @html_router.get("/privacy", response_class=HTMLResponse)
 def get_privacy_html(request: Request):
-    return templates.TemplateResponse("privacy.html", {"request": request})
+    return templates.TemplateResponse("privacy_notice.html", {"request": request})
 
 
 @html_router.get("/redirect")
