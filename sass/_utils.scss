@@ -43,3 +43,7 @@
 @mixin f6 {
   @include font-sizing(14px, 20px);
 }
+
+@mixin f7 {
+  @include font-sizing(12px, 20px);
+}
