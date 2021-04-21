@@ -92,13 +92,17 @@
     _paq.push(["disableCookies"]);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
-    (function() {
+    function matomo() {
         var u="//matomo.rknt.de/";
         _paq.push(['setTrackerUrl', u+'matomo.php']);
         _paq.push(['setSiteId', '1']);
         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
         g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
+    };
+    console.log(location.hostname)
+    if (location.hostname === "freeyourscience.org") {
+        matomo()
+    }
     </script>
     <noscript><p><img src="//matomo.rknt.de/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
     <!-- End Matomo Code -->
