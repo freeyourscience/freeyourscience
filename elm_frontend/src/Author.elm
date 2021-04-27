@@ -27,6 +27,7 @@ type alias Model =
     , buggyPapers : List Buggy.Paper
     , numFailedDOIRequests : Int
     , authorName : String
+    , searchQuery : String
     , authorProfileURL : String
     , serverURL : String
     , style : Animation.State
@@ -42,6 +43,7 @@ type alias Flags =
     , serverURL : String
     , authorName : String
     , authorProfileURL : String
+    , searchQuery : String
     }
 
 
@@ -55,6 +57,7 @@ init flags =
       , numFailedDOIRequests = 0
       , authorName = flags.authorName
       , authorProfileURL = flags.authorProfileURL
+      , searchQuery = flags.searchQuery
       , serverURL = flags.serverURL
       , style = Animation.style [ Animation.width (percent 0), Animation.opacity 1 ]
       }

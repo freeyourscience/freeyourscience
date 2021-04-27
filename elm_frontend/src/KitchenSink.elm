@@ -31,6 +31,7 @@ initialModel =
     , numFailedDOIRequests = 0
     , authorName = "Dummy Author"
     , authorProfileURL = "https://freeyourscience.org"
+    , searchQuery = "Dummy Author"
     , serverURL = ""
     , style = Animation.style []
     }
