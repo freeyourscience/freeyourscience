@@ -105,7 +105,7 @@ view model =
         [ main_ [ class "author" ]
             [ h1 [] [ text "Results" ]
             , viewSearchForm model.authorName
-                "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI"
+                (text "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI")
                 (Animation.render model.style)
             , FreePathway.viewList paywalledNoCostPathwayPapers
             , h2 [] [ text "Other search results" ]

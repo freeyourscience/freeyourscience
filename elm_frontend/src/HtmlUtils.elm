@@ -26,8 +26,8 @@ renderList list =
         )
 
 
-viewSearchForm : String -> String -> List (Html.Attribute msg) -> Html msg
-viewSearchForm searchString smallNote progressStyle =
+viewSearchForm : String -> Html msg -> List (Html.Attribute msg) -> Html msg
+viewSearchForm searchString searchNote progressStyle =
     form [ action "/search", class "search", id "search-form", method "GET" ]
         [ input [ class "search__input", name "query", placeholder "Author name, ORCID or DOI", attribute "required" "", type_ "text", value searchString ]
             []
@@ -37,8 +37,7 @@ viewSearchForm searchString smallNote progressStyle =
             [ div (progressStyle ++ [ class "search__progressbar__progress" ])
                 []
             ]
-        , small [ class "search__small" ]
-            [ text smallNote ]
+        , small [ class "search__small" ] [ searchNote ]
         ]
 
 

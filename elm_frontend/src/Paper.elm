@@ -289,7 +289,7 @@ view model =
     let
         searchBar =
             viewSearchForm model.doi
-                "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI"
+                (text "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI")
                 []
     in
     case model.paper of
