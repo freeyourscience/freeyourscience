@@ -6,7 +6,7 @@ import Browser
 import Debug
 import Html exposing (Html, a, div, footer, h1, h2, main_, p, small, text)
 import Html.Attributes exposing (class, href, target)
-import HtmlUtils exposing (viewSearchBar)
+import HtmlUtils exposing (viewSearchForm)
 import Http
 import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
@@ -104,7 +104,7 @@ view model =
     div []
         [ main_ [ class "author" ]
             [ h1 [] [ text "Results" ]
-            , viewSearchBar model.authorName
+            , viewSearchForm model.authorName
                 "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI"
                 (Animation.render model.style)
             , FreePathway.viewList paywalledNoCostPathwayPapers

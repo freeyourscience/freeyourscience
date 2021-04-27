@@ -4,7 +4,7 @@ import Browser
 import Debug
 import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, text)
 import Html.Attributes exposing (class, href, id, target)
-import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchBar)
+import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchForm)
 import Http
 import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
@@ -288,7 +288,7 @@ view : Model -> Html Msg
 view model =
     let
         searchBar =
-            viewSearchBar model.doi
+            viewSearchForm model.doi
                 "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI"
                 []
     in

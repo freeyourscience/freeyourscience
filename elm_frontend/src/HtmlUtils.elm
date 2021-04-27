@@ -1,4 +1,4 @@
-module HtmlUtils exposing (addEmbargo, renderList, ulWithHeading, viewSearchBar)
+module HtmlUtils exposing (addEmbargo, renderList, ulWithHeading, viewSearchForm)
 
 import Html exposing (Html, button, div, form, input, li, p, small, text, ul)
 import Html.Attributes exposing (action, attribute, class, id, method, name, placeholder, type_, value)
@@ -26,8 +26,8 @@ renderList list =
         )
 
 
-viewSearchBar : String -> String -> List (Html.Attribute msg) -> Html msg
-viewSearchBar searchString smallNote progressStyle =
+viewSearchForm : String -> String -> List (Html.Attribute msg) -> Html msg
+viewSearchForm searchString smallNote progressStyle =
     form [ action "/search", class "search", id "search-form", method "GET" ]
         [ input [ class "search__input", name "query", placeholder "Author name, ORCID or DOI", attribute "required" "", type_ "text", value searchString ]
             []
