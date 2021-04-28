@@ -23,13 +23,11 @@ main =
 initialModel : Model
 initialModel =
     { initialDOIs = []
-    , freePathwayPapers =
-        Array.fromList []
+    , freePathwayPapers = Array.fromList []
     , otherPathwayPapers = []
     , openAccessPapers = []
     , buggyPapers = []
     , numFailedDOIRequests = 0
-    , authorName = "Dummy Author"
     , authorProfileURL = "https://freeyourscience.org"
     , searchQuery = "Dummy Author"
     , serverURL = ""

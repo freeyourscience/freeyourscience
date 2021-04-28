@@ -26,7 +26,6 @@ type alias Model =
     , openAccessPapers : List OpenAccess.Paper
     , buggyPapers : List Buggy.Paper
     , numFailedDOIRequests : Int
-    , authorName : String
     , searchQuery : String
     , authorProfileURL : String
     , serverURL : String
@@ -41,7 +40,6 @@ type alias Model =
 type alias Flags =
     { dois : List String
     , serverURL : String
-    , authorName : String
     , authorProfileURL : String
     , searchQuery : String
     }
@@ -55,7 +53,6 @@ init flags =
       , openAccessPapers = []
       , buggyPapers = []
       , numFailedDOIRequests = 0
-      , authorName = flags.authorName
       , authorProfileURL = flags.authorProfileURL
       , searchQuery = flags.searchQuery
       , serverURL = flags.serverURL
@@ -104,7 +101,7 @@ view model =
     div []
         [ main_ [ class "author" ]
             [ h1 [] [ text "Results" ]
-            , viewSearchForm model.authorName
+            , viewSearchForm model.searchQuery
                 (viewSearchNoteWithLinks model.searchQuery)
                 (Animation.render model.style)
             , FreePathway.viewList paywalledNoCostPathwayPapers
