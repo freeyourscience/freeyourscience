@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Free Your Science | {{ author.name }}
+Free Your Science | {{ search_string }}
 {% endblock %}
 
 {% block header %}
@@ -16,7 +16,6 @@ Free Your Science | {{ author.name }}
         node: document.getElementById('publicationsForAuthor'),
         flags: {
             "dois": {{ dois | safe }},
-    "authorName": "{{ author.name }}",
         "authorProfileURL": "{{ author.profile_url }}",
         "searchQuery": "{{ search_string }}",
             "serverURL": "{{ serverURL }}"
