@@ -6,7 +6,7 @@ import Browser
 import Debug
 import Html exposing (Html, a, div, footer, h1, h2, main_, p, small, text)
 import Html.Attributes exposing (class, href, target)
-import HtmlUtils exposing (viewSearchForm)
+import HtmlUtils exposing (viewSearchForm, viewSearchNoteWithLinks)
 import Http
 import HttpBuilder exposing (withHeader)
 import Msg exposing (Msg)
@@ -105,7 +105,7 @@ view model =
         [ main_ [ class "author" ]
             [ h1 [] [ text "Results" ]
             , viewSearchForm model.authorName
-                (text "If you can't find your publications using your name try your ORCID, Semantic Scholar ID or an individual DOI")
+                (viewSearchNoteWithLinks model.searchQuery)
                 (Animation.render model.style)
             , FreePathway.viewList paywalledNoCostPathwayPapers
             , h2 [] [ text "Other search results" ]

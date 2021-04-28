@@ -1,7 +1,7 @@
-module HtmlUtils exposing (addEmbargo, renderList, ulWithHeading, viewSearchForm)
+module HtmlUtils exposing (addEmbargo, renderList, ulWithHeading, viewSearchForm, viewSearchNoteWithLinks)
 
-import Html exposing (Html, button, div, form, input, li, p, small, text, ul)
-import Html.Attributes exposing (action, attribute, class, id, method, name, placeholder, type_, value)
+import Html exposing (Html, a, button, div, form, input, li, p, small, span, text, ul)
+import Html.Attributes exposing (action, attribute, class, href, id, method, name, placeholder, target, type_, value)
 
 
 ulWithHeading : List (Html msg) -> (a -> Html msg) -> List a -> List (Html msg)
@@ -38,6 +38,19 @@ viewSearchForm searchString searchNote progressStyle =
                 []
             ]
         , small [ class "search__small" ] [ searchNote ]
+        ]
+
+
+viewSearchNoteWithLinks : String -> Html msg
+viewSearchNoteWithLinks searchQuery =
+    span []
+        [ text "If you can't find your publications using your name try your "
+        , a [ href ("https://orcid.org/orcid-search/search?searchQuery=" ++ searchQuery), target "_blank" ]
+            [ text "ORCID" ]
+        , text ", "
+        , a [ href ("https://www.semanticscholar.org/search?q=" ++ searchQuery ++ "&sort=relevance"), target "_blank" ]
+            [ text "Semantic Scholar ID" ]
+        , text " or an individual DOI"
         ]
 
 
