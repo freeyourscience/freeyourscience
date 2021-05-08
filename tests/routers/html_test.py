@@ -1,14 +1,15 @@
 import pytest
 from fastapi.testclient import TestClient
+from starlette.datastructures import URL
 
 from fyscience.schemas import OAPathway, FullPaper, Author
-from fyscience.routers.html import _is_doi_query
+from fyscience.routers.html import _is_doi_query, _get_response_headers
 
 
 @pytest.mark.parametrize(
     "endpoint", ["/", "/team", "/howto", "/technology", "/republishing"]
 )
-def test_get_landing_page(endpoint, client: TestClient) -> None:
+def test_endpoint_responds_ok(endpoint, client: TestClient) -> None:
     r = client.get(endpoint)
     assert r.ok
 
@@ -129,3 +130,13 @@ def test_is_doi_query(
     query: str, is_doi: bool, client: TestClient, monkeypatch
 ) -> None:
     assert _is_doi_query(query) == is_doi
+
+
+def test_get_response_headers():
+    dev_url = URL("https://dev.freeyourscience.org/index.html")
+    dev_headers = _get_response_headers(dev_url)
+    assert "X-Robots-Tag" in dev_headers
+
+    prod_url = URL("https://freeyourscience.org/index.html")
+    prod_headers = _get_response_headers(prod_url)
+    assert "X-Robots-Tag" not in prod_headers

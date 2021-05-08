@@ -1,16 +1,23 @@
 import re
 
 from fastapi import APIRouter, Depends, Request, Response
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from loguru import logger
 
 from fyscience.schemas import OAPathway, FullPaper
 from fyscience.routers.api import get_author_with_papers
 from fyscience.routers.deps import get_settings, Settings, TEMPLATE_PATH
+from starlette.datastructures import URL
 
 html_router = APIRouter()
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
+
+
+def _get_response_headers(request_url: URL):
+    headers = {"cache-control": "max-age=3600,public"}
+    if request_url.hostname == "dev.freeyourscience.org":
+        headers["X-Robots-Tag"] = "noindex,nofollow,nosnippet"
+    return headers
 
 
 def _is_paywalled_and_nocost(paper: FullPaper) -> bool:
@@ -32,7 +39,7 @@ def _render_paper_page(
     return templates.TemplateResponse(
         "paper.html",
         {"request": request, "doi": doi, "serverURL": serverURL},
-        headers={"cache-control": "max-age=3600,public"},
+        headers=_get_response_headers(request.url),
     )
 
 
@@ -57,7 +64,16 @@ def _render_author_page(
             "search_string": author_query,
             "dois": [p.doi for p in author.papers],
         },
-        headers={"cache-control": "max-age=3600,public"},
+        headers=_get_response_headers(request.url),
+    )
+
+
+def _simple_template_response(
+    template_name: str, request: Request
+) -> templates.TemplateResponse:
+    """Convenience wrapper for template response initialization."""
+    return templates.TemplateResponse(
+        template_name, {"request": request}, headers=_get_response_headers(request.url)
     )
 
 
@@ -67,11 +83,7 @@ def _is_doi_query(string: str) -> bool:
 
 @html_router.get("/", response_class=HTMLResponse)
 def get_landing_page(request: Request, response: Response):
-    return templates.TemplateResponse(
-        "landing_page.html",
-        {"request": request, "n_nocost_papers": "46.796.300"},
-        headers={"cache-control": "max-age=3600,public"},
-    )
+    return _simple_template_response("landing_page.html", request)
 
 
 @html_router.get("/search", response_class=HTMLResponse)
@@ -90,37 +102,24 @@ def get_search_result_html(
 
 @html_router.get("/technology", response_class=HTMLResponse)
 def get_technology_html(request: Request):
-    return templates.TemplateResponse("technology.html", {"request": request})
+    return _simple_template_response("technology.html", request)
 
 
 @html_router.get("/howto", response_class=HTMLResponse)
 def get_howto_html(request: Request):
-    return templates.TemplateResponse("howto.html", {"request": request})
+    return _simple_template_response("howto.html", request)
 
 
 @html_router.get("/republishing", response_class=HTMLResponse)
 def get_republishing_html(request: Request):
-    return templates.TemplateResponse("republishing.html", {"request": request})
+    return _simple_template_response("republishing.html", request)
 
 
 @html_router.get("/team", response_class=HTMLResponse)
 def get_team_html(request: Request):
-    return templates.TemplateResponse("team.html", {"request": request})
+    return _simple_template_response("team.html", request)
 
 
 @html_router.get("/privacy", response_class=HTMLResponse)
 def get_privacy_html(request: Request):
-    return templates.TemplateResponse("privacy_notice.html", {"request": request})
-
-
-@html_router.get("/redirect")
-def redirect(target: str, request: Request):
-    logger.info(
-        {
-            "event": "redirect_to_external_url",
-            "target": target,
-            "trace_context": request.headers.get("x-cloud-trace-context"),
-        }
-    )
-
-    return RedirectResponse(url=target)
+    return _simple_template_response("privacy_notice.html", request)
