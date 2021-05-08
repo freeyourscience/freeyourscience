@@ -1,9 +1,14 @@
 import requests
+import urllib.parse
 
 from fyscience.schemas import Author, FullPaper
 
-# TODO: Include the appropriate request headers and potentially API key for prod
-#       https://github.com/CrossRef/rest-api-doc
+
+_CROSSREF_API_USER_AGENT = (
+    "FreeYourScience/1.0 "
+    "(https://freeyourscience.org/; "
+    "mailto:team@freeyourscience.org)"
+)
 
 
 def _parse_paper(paper: dict) -> FullPaper:
@@ -19,16 +24,20 @@ def _parse_paper(paper: dict) -> FullPaper:
 
 
 def get_author_with_papers(name: str):
-    url_name = name.replace(" ", "+")
-    r = requests.get(f"https://api.crossref.org/works?query.author={url_name}")
+    query = urllib.parse.urlencode({"query.author": name})
+    r = requests.get(
+        f"https://api.crossref.org/works?{query}",
+        headers={"User-Agent": _CROSSREF_API_USER_AGENT},
+    )
     if not r.ok:
         return None
 
     result = r.json()
     papers = [_parse_paper(p) for p in result["message"]["items"] if "DOI" in p]
+
+    query = urllib.parse.urlencode({"q": name})
+    profile_url = f"https://search.crossref.org/?{query}"
+
     return Author(
-        name=name,
-        papers=papers,
-        provider="crossref",
-        profile_url=f"https://search.crossref.org/?q={url_name}",
+        name=name, papers=papers, provider="crossref", profile_url=profile_url
     )
