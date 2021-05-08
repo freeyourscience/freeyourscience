@@ -68,13 +68,6 @@ fetchPaper serverURL doi =
 
 viewWhosPublication : DOI -> Html Msg
 viewWhosPublication doi =
-    let
-        oaButtonLink =
-            a
-                [ href ("https://shareyourpaper.org/" ++ doi)
-                , target "_blank"
-                ]
-    in
     div [ class "whos-publication" ]
         [ div [ class "whos-publication__item" ]
             [ span [ class "whos-publication--title" ]
@@ -83,8 +76,12 @@ viewWhosPublication doi =
             , span [ class "material-icons" ] [ text "send" ]
             , p [ class "whos-publication--details" ]
                 [ text "Let "
-                , oaButtonLink [ text "shareyourpaper.org" ]
-                , text " re-publish for you."
+                , a
+                    [ href ("https://shareyourpaper.org/" ++ doi)
+                    , target "_blank"
+                    ]
+                    [ text "shareyourpaper.org" ]
+                , text " re-publish this for you."
                 ]
             , span [ class "material-icons" ] [ text "school" ]
             , p [ class "whos-publication--details" ]
@@ -158,7 +155,7 @@ viewRightVersion articleVersions policyProfileUrl =
         [ text "The University of Cambridge Office of Scholarly Communication has a blog post with more in depth "
         , a [ href "https://unlockingresearch-blog.lib.cam.ac.uk/?p=1872" ]
             [ text "explanations of the different versions" ]
-        , text ". "
+        , text " (accepted, submitted, published). "
         ]
     , small []
         [ text """We always display the pathway that allows the
@@ -166,7 +163,7 @@ viewRightVersion articleVersions policyProfileUrl =
         If you no longer have the version specified by the pathway
         you might also be allowed to re-publish an earlier one.
         Check the """
-        , a [ href policyProfileUrl, target "_blank" ] [ text "pathway details" ]
+        , a [ href policyProfileUrl, target "_blank" ] [ text "pathway details for this publication" ]
         , text " in the Sherpa Romeo policy database for what other versions are allowed."
         ]
     ]
@@ -211,7 +208,7 @@ viewWhereTo locationLabelsSorted =
         :: (locationLabelsSorted
                 |> List.take 3
                 |> ulWithHeading
-                    [ text "The following locations are available for this publication:" ]
+                    [ text "The following locations are permitted for this publication:" ]
                     text
            )
         ++ [ p []
@@ -256,7 +253,7 @@ viewRepublishTodayForFree paper =
                , h3 [ id "upload" ]
                     [ text "5. Upload to selected repository" ]
                , p []
-                    [ text """This step will be specific to your choosen repository.
+                    [ text """This step will be specific to your chosen repository.
                     If you have trouble with this step, your institution's librarians
                     are likely able to help you.""" ]
 
@@ -276,7 +273,7 @@ viewRepublishTodayForFree paper =
                     , a [ href "https://arxiv.org/help/jref" ]
                         [ text "arXiv specific guide" ]
                     , text """). The publisher policy might also require the note to
-                    follow a certain pattern."""
+                    follow a certain pattern; see point "2. Check the conditions" above."""
                     ]
                ]
         )
