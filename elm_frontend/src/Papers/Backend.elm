@@ -27,7 +27,7 @@ type alias Paper =
 type alias Policy =
     { urls : Maybe (List NamedUrl)
     , permittedOA : Maybe (List PermittedOA)
-    , policyUrl : String -- TODO: this should come from oaPathwayURI
+    , policyUrl : String -- TODO: replace with use of oaPathwayURI?
     , notes : Maybe String
     }
 

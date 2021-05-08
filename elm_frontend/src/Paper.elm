@@ -166,8 +166,6 @@ viewRightVersion articleVersions policyProfileUrl =
         If you no longer have the version specified by the pathway
         you might also be allowed to re-publish an earlier one.
         Check the """
-
-        -- TODO: Check if this is the right link.
         , a [ href policyProfileUrl, target "_blank" ] [ text "pathway details" ]
         , text " in the Sherpa Romeo policy database for what other versions are allowed."
         ]

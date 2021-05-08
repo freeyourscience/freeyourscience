@@ -48,6 +48,7 @@ def get_author_with_papers(
             # TODO: Semantic scholar only seems to have the DOI of the preprint and not
             #       the finally published paper's DOI
             #       (see e.g. semantic scholar ID 51453144)
+            #       Double check that these cases show up as OA and remove todo.
             author = semantic_scholar.get_author_with_papers(
                 author_id, settings.s2_api_key
             )
