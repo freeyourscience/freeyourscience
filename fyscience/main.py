@@ -36,9 +36,7 @@ app.add_middleware(
 
 @app.exception_handler(HTTPException)
 async def human_friendly_error_pages(request: Request, exc: HTTPException):
-    accept = request.headers["accept"]
-
-    if "text/html" in accept:
+    if "text/html" in request.headers.get("accept", ""):
         response = templates.TemplateResponse(
             "error.html",
             {"request": request, "detail": exc.detail},
