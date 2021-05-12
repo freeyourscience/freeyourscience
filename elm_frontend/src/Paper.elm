@@ -2,7 +2,7 @@ port module Paper exposing (..)
 
 import Browser
 import Debug
-import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, text)
+import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, strong, text)
 import Html.Attributes exposing (class, href, id, target)
 import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchForm)
 import Http
@@ -116,11 +116,9 @@ viewRightVersion articleVersions policyProfileUrl =
             )
         ]
     , p []
-        [ text
-            ("For this publication you are allowed to re-publish the "
-                ++ version
-                ++ " version as open access for free."
-            )
+        [ text "For this publication you are allowed to re-publish the "
+        , strong [] [ text version ]
+        , text " version as open access for free."
         ]
     , if String.contains "published" version then
         p []
