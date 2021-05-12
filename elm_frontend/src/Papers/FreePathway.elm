@@ -322,8 +322,8 @@ viewList papers =
         , p []
             (if List.length papers > 0 then
                 [ text
-                    ("We found no open access version for the following publications. "
-                        ++ "However, the publishers appear to allow no-cost re-publication as open access."
+                    ("For the following publications, the publisher appears to allow no-cost open access re-publishing. "
+                        ++ "Did we miss an already existing open access version? Let us know."
                     )
                 ]
 
