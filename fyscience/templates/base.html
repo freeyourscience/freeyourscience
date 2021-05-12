@@ -41,7 +41,7 @@
     </div>
     <header>
         <a href="/" class="header--title">Free Your Science</a>
-        <nav class="nav-submenu">
+        <nav class="nav-submenu--open">
             <a href="#" class="nav-submenu__title" aria-haspopup="true" aria-expanded="false">About</a>
             <ul class="nav-submenu__list">
                 <li><a href="/republishing" class="nav-submenu__item">Re-publishing</a></li>
@@ -65,7 +65,8 @@
     </footer>
 
     <script>
-        var menuItems = document.querySelectorAll('.nav-submenu');
+        var menuItems = document.querySelectorAll('.nav-submenu--open');
+        menuItems[0].className = "nav-submenu"
         Array.prototype.forEach.call(menuItems, function (el, i) {
             el.querySelector('a').addEventListener("click", function (event) {
                 if (this.parentNode.className == "nav-submenu") {
