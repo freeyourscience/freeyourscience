@@ -2,6 +2,7 @@ from typing import List, Optional
 
 import requests
 from pydantic import BaseModel
+from loguru import logger
 
 from fyscience.schemas import FullPaper, Author
 
@@ -64,7 +65,15 @@ def _get_paper(paper_id: str, api_key: str = None) -> Optional[Paper]:
     r = _get_request(f"paper/{paper_id}", api_key)
 
     if not r.ok:
-        # TODO: Log and/or handle differently.
+        logger.error(
+            {
+                "event": "s2_get_paper",
+                "message": "response_not_ok",
+                "paper": paper_id,
+                "status_code": r.status_code,
+                "response": r.content.decode() if r.content else "",
+            }
+        )
         return None
 
     return Paper(**r.json())
@@ -89,7 +98,15 @@ def _get_author(author_id: str, api_key: str = None) -> Optional[S2Author]:
     r = _get_request(f"author/{author_id}", api_key)
 
     if not r.ok:
-        # TODO: Log and/or handle differently.
+        logger.error(
+            {
+                "event": "s2_get_author",
+                "message": "response_not_ok",
+                "author": author_id,
+                "status_code": r.status_code,
+                "response": r.content.decode() if r.content else "",
+            }
+        )
         return None
 
     return S2Author(**r.json())

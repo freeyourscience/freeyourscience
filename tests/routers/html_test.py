@@ -24,7 +24,7 @@ def test_hit_human_error_page(client: TestClient) -> None:
     r = client.get("/foobar", headers=({"Accept": "text/html"}))
     print(r)
     assert r.status_code == 404
-    assert b"Go back" in r.content
+    assert b"Not Found" in r.content
 
 
 @pytest.mark.parametrize(

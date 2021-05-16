@@ -3,6 +3,7 @@ from typing import Optional
 
 import requests
 import xml.etree.ElementTree as ET
+from loguru import logger
 
 from fyscience.schemas import FullPaper, Author
 
@@ -20,7 +21,15 @@ WORKS = "{http://www.orcid.org/ns/activities}works"
 def get_author_with_papers(orcid: str) -> Optional[Author]:
     r = requests.get(f"https://pub.orcid.org/{orcid}")
     if not r.ok:
-        # TODO: Log and/or handle differently
+        logger.error(
+            {
+                "event": "orcid_get_author_with_papers",
+                "message": "response_not_ok",
+                "orcid": orcid,
+                "status_code": r.status_code,
+                "response": r.content.decode() if r.content else "",
+            }
+        )
         return None
 
     xml = r.content.decode()

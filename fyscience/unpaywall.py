@@ -3,6 +3,7 @@ from typing import Optional, List
 
 import requests
 from pydantic import BaseModel
+from loguru import logger
 
 from fyscience.schemas import FullPaper
 
@@ -53,6 +54,15 @@ def _get_paper(doi: str, email: Optional[str] = None) -> Optional[Paper]:
 
     response = requests.get(f"https://api.unpaywall.org/v2/{doi}?email={email}")
     if not response.ok:
+        logger.error(
+            {
+                "event": "unpaywall_get_paper",
+                "message": "response_not_ok",
+                "doi": doi,
+                "status_code": response.status_code,
+                "response": response.content.decode() if response.content else "",
+            }
+        )
         return None
 
     data = response.json()

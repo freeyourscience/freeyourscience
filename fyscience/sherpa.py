@@ -3,6 +3,7 @@ import json
 from typing import Optional, Tuple, List
 
 import requests
+from loguru import logger
 
 from fyscience.schemas import OAPathway
 
@@ -57,6 +58,15 @@ def get_pathway(
         + f'filter=[["issn","equals","{issn}"]]'
     )
     if not response.ok:
+        logger.error(
+            {
+                "event": "sherpa_get_pathway",
+                "message": "response_not_ok",
+                "issn": issn,
+                "status_code": response.status_code,
+                "response": response.content.decode() if response.content else "",
+            }
+        )
         return OAPathway.not_found, None, None
 
     publications = response.json()

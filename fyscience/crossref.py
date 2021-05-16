@@ -1,5 +1,6 @@
 import requests
 import urllib.parse
+from loguru import logger
 
 from fyscience.schemas import Author, FullPaper
 
@@ -30,6 +31,15 @@ def get_author_with_papers(name: str):
         headers={"User-Agent": _CROSSREF_API_USER_AGENT},
     )
     if not r.ok:
+        logger.error(
+            {
+                "event": "crossref_get_author_with_papers",
+                "message": "response_not_ok",
+                "author": name,
+                "status_code": r.status_code,
+                "response": r.content.decode() if r.content else "",
+            }
+        )
         return None
 
     result = r.json()
