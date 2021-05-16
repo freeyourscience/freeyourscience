@@ -34,6 +34,23 @@ app.add_middleware(
 )
 
 
+@app.exception_handler(Exception)
+async def human_friendly_exception_pages(request: Request, exc: Exception):
+    if "text/html" in request.headers.get("accept", ""):
+        response = templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "detail": "Ooops",
+                "message": "Something unexpected went wrong on our side. If reloading the page doesn't help, please let us know.",
+            },
+        )
+        response.status_code = 500
+        return response
+
+    return await http_exception_handler(request, exc)
+
+
 @app.exception_handler(HTTPException)
 async def human_friendly_error_pages(request: Request, exc: HTTPException):
     if "text/html" in request.headers.get("accept", ""):

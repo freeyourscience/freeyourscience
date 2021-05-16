@@ -2,6 +2,8 @@
 {% block content %}
 <main>
     <h1>{{ detail }}</h1>
-    <p><a href="/">Go back.</a></p>
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
 </main>
 {% endblock %}
