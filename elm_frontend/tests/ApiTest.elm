@@ -50,7 +50,97 @@ fullPaperJson =
                                 "language": "en",
                                 "value": "required_by_funder"
                             }],
-                        "prerequisite_subjects": ["Math", "Chemistry"]
+                        "prerequisite_subjects": ["Math", "Chemistry"],
+                        "prerequisite_funders": [
+                            { "funder_metadata": {
+                                "country_phrases": [
+                                    {
+                                    "value": "gb",
+                                    "language": "en",
+                                    "phrase": "United Kingdom"
+                                    }
+                                ],
+                                "identifiers": [
+                                    {
+                                    "identifier": "http://dx.doi.org/10.13039/100004440",
+                                    "type_phrases": [
+                                        {
+                                        "phrase": "FundRef DOI",
+                                        "value": "fundref",
+                                        "language": "en"
+                                        }
+                                    ],
+                                    "type": "fundref"
+                                    },
+                                    {
+                                    "type": "ror",
+                                    "identifier": "https://ror.org/029chgv08",
+                                    "type_phrases": [
+                                        {
+                                        "value": "ror",
+                                        "language": "en",
+                                        "phrase": "ROR ID"
+                                        }
+                                    ]
+                                    }
+                                ],
+                                "id": 695,
+                                "url": [
+                                    {
+                                    "url": "http://www.wellcome.ac.uk/",
+                                    "language_phrases": [
+                                        {
+                                        "phrase": "English",
+                                        "value": "en",
+                                        "language": "en"
+                                        }
+                                    ],
+                                    "language": "en"
+                                    }
+                                ],
+                                "country": "gb",
+                                "name": [
+                                    {
+                                    "name": "Wellcome Trust",
+                                    "preferred_phrases": [
+                                        {
+                                        "value": "name",
+                                        "language": "en",
+                                        "phrase": "Name"
+                                        }
+                                    ],
+                                    "preferred": "name",
+                                    "language": "en",
+                                    "language_phrases": [
+                                        {
+                                        "value": "en",
+                                        "language": "en",
+                                        "phrase": "English"
+                                        }
+                                    ]
+                                    }
+                                ],
+                                "groups": [
+                                    {
+                                    "type": "funder_group",
+                                    "id": 1059,
+                                    "uri": "https://v2.sherpa.ac.uk/id/funder_group/1059",
+                                    "name": "Europe PMC Funders' Group"
+                                    },
+                                    {
+                                    "id": 1063,
+                                    "uri": "https://v2.sherpa.ac.uk/id/funder_group/1063",
+                                    "name": "Plan S Funders",
+                                    "type": "funder_group"
+                                    }
+                                ]
+                                },
+                                "system_metadata": {
+                                "id": 695,
+                                "uri": "https://v2.sherpa.ac.uk/id/funder/695"
+                                }
+                            }
+                        ]
                     },
                     "location": {
                         "location_phrases": [
