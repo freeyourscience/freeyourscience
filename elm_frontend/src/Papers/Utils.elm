@@ -9,6 +9,7 @@ module Papers.Utils exposing
     , renderUrl
     )
 
+import Date exposing (Date)
 import Html exposing (Attribute, Html, a, div, li, p, span, text, ul)
 import Html.Attributes exposing (class, href, target)
 import HtmlUtils exposing (renderList, ulWithHeading)
@@ -24,6 +25,7 @@ type alias PaperMetadata =
     , journal : Maybe String
     , authors : Maybe String
     , year : Maybe Int
+    , publishedDate : Maybe Date
     , issn : Maybe String
     , url : Maybe String
     }

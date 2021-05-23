@@ -50,6 +50,7 @@ class FullPaper(BaseModel):
     journal: Optional[str] = None
     authors: Optional[str] = None
     year: Optional[int] = None
+    published_date: Optional[str] = None
     issn: Optional[str] = None
     is_open_access: Optional[bool] = None
     oa_location_url: Optional[str] = None

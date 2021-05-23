@@ -108,4 +108,5 @@ def get_paper(doi: str, email: Optional[str] = None) -> Optional[FullPaper]:
         journal=paper.journal_name,
         authors=_extract_authors(paper.z_authors) if paper.z_authors else None,
         oa_location_url=oa_location_url,
+        published_date=paper.published_date,
     )

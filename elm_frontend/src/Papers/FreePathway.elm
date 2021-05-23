@@ -3,13 +3,16 @@ module Papers.FreePathway exposing
     , Paper
     , Pathway
     , PolicyMetaData
+    , embargoToString
     , recommendPathway
+    , remainingEmbargo
     , renderRecommendedPathway
     , scorePathway
     , viewList
     , viewPublicationItemInfo
     )
 
+import Date exposing (Date, Unit(..), diff)
 import Html exposing (Html, a, br, button, div, h2, h3, p, section, strong, text)
 import Html.Attributes exposing (class, href)
 import HtmlUtils exposing (addEmbargo, ulWithHeading)
@@ -17,6 +20,7 @@ import Msg exposing (Msg)
 import Papers.Backend exposing (Embargo, Location, PermittedOA, Policy, Prerequisites)
 import Papers.Utils exposing (NamedUrl, PaperMetadata, articleVersionString, renderPaperMetaData)
 import String.Extra exposing (humanize)
+import Time exposing (Month(..))
 
 
 
@@ -42,7 +46,7 @@ type alias NoCostOaPathway =
     , locationLabelsSorted : List String
     , prerequisites : Maybe (List String)
     , conditions : Maybe (List String)
-    , embargo : Maybe String
+    , embargo : Maybe Embargo
     , notes : Maybe (List String)
     }
 
@@ -53,7 +57,7 @@ type alias Pathway =
     , articleVersions : Maybe (List String)
     , conditions : Maybe (List String)
     , prerequisites : Maybe (List String)
-    , embargo : Maybe String
+    , embargo : Maybe Embargo
     , notes : Maybe (List String)
     }
 
@@ -123,13 +127,13 @@ extractPathways backendPolicy =
     )
 
 
+embargoToString : Embargo -> String
+embargoToString { amount, units } =
+    String.join " " [ String.fromInt amount, units ]
+
+
 parsePathway : PermittedOA -> Pathway
 parsePathway { articleVersions, location, prerequisites, conditions, additionalOaFee, embargo, publicNotes } =
-    let
-        embargoToString : Embargo -> String
-        embargoToString { amount, units } =
-            String.join " " [ String.fromInt amount, units ]
-    in
     { articleVersions =
         case articleVersions of
             [] ->
@@ -141,7 +145,7 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
     , prerequisites = prerequisites |> Maybe.map parsePrequisites |> Maybe.andThen identity
     , conditions = conditions
     , additionalOaFee = additionalOaFee
-    , embargo = embargo |> Maybe.map embargoToString
+    , embargo = embargo
     , notes = publicNotes
     }
 
@@ -313,8 +317,8 @@ scoreAllowedLocation location =
 -- VIEW
 
 
-viewList : List ( Int, Paper ) -> Html Msg
-viewList papers =
+viewList : Date -> List ( Int, Paper ) -> Html Msg
+viewList today papers =
     section []
         [ h2 []
             [ text "Paywalled with free open access pathway"
@@ -338,24 +342,24 @@ viewList papers =
                 , a [ href "mailto:team@freeyourscience.org" ] [ text "team@freeyourscience.org" ]
                 ]
             )
-        , div [] (List.map view papers)
+        , div [] (List.map (view today) papers)
         ]
 
 
-viewPublicationItemInfo : Paper -> Html Msg
-viewPublicationItemInfo paper =
+viewPublicationItemInfo : Date -> Paper -> Html Msg
+viewPublicationItemInfo today paper =
     div [ class "publications__item__info" ]
         [ div []
             (renderPaperMetaData h3 True paper.meta)
         , div [ class "publications__item__info__pathway" ]
-            (renderRecommendedPathway paper.recommendedPathway paper.meta.year)
+            (renderRecommendedPathway paper.recommendedPathway paper.meta.publishedDate today)
         ]
 
 
-view : ( Int, Paper ) -> Html Msg
-view ( id, paper ) =
+view : Date -> ( Int, Paper ) -> Html Msg
+view today ( id, paper ) =
     div [ class "publications__item" ]
-        [ viewPublicationItemInfo paper
+        [ viewPublicationItemInfo today paper
         , renderPathwayButtons ( id, paper.meta )
         ]
 
@@ -383,28 +387,69 @@ renderPathwayButtons ( id, { title, doi } ) =
         ]
 
 
-rePublicationTime : Maybe Int -> Maybe String -> String
-rePublicationTime publicationYear embargo =
-    case ( publicationYear, embargo ) of
-        ( Just y, Just e ) ->
-            "if " ++ e ++ " have passed since " ++ String.fromInt y
+embargoUnit : String -> Maybe Unit
+embargoUnit unit =
+    -- TODO: Move into backend paper parser
+    case unit of
+        "days" ->
+            Just Days
 
-        ( Nothing, Just e ) ->
-            "if " ++ e
+        "weeks" ->
+            Just Weeks
+
+        "months" ->
+            Just Months
+
+        "years" ->
+            Just Years
+
+        _ ->
+            Nothing
+
+
+embargoTimeDeltaString : Embargo -> Int -> Maybe String
+embargoTimeDeltaString e passed =
+    if passed >= e.amount then
+        Nothing
+
+    else
+        Just ("for free in " ++ String.fromInt (e.amount - passed) ++ " " ++ e.units)
+
+
+remainingEmbargo : Maybe Date -> Date -> Maybe Embargo -> Maybe String
+remainingEmbargo publishedDate today embargo =
+    case ( publishedDate, embargo ) of
+        ( Just pub, Just emb ) ->
+            emb.units
+                |> embargoUnit
+                |> Maybe.andThen
+                    (\unit ->
+                        diff unit pub today
+                            |> embargoTimeDeltaString emb
+                    )
+
+        ( Nothing, Just emb ) ->
+            Just (embargoToString emb ++ " after the original publication")
 
         ( _, Nothing ) ->
-            "today"
+            Nothing
 
 
-renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> Maybe Int -> List (Html Msg)
-renderRecommendedPathway ( policy, { locationLabelsSorted, articleVersions, prerequisites, conditions, embargo, notes } ) publicationYear =
+renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> Maybe Date -> Date -> List (Html Msg)
+renderRecommendedPathway ( policy, { articleVersions, conditions, embargo } ) publicationDate today =
     p []
         [ text "You can re-publish the "
         , strong [] [ text (articleVersionString articleVersions ++ " version") ]
-        , text (" for free " ++ rePublicationTime publicationYear embargo ++ ".")
+        , text " "
+        , text
+            (embargo
+                |> remainingEmbargo publicationDate today
+                |> Maybe.withDefault "today for free"
+            )
+        , text "."
         ]
         :: (conditions
-                |> addEmbargo embargo
+                |> addEmbargo (Maybe.map embargoToString embargo)
                 |> Maybe.map (ulWithHeading [ text "Conditions are:" ] text)
                 |> Maybe.withDefault [ text "" ]
            )

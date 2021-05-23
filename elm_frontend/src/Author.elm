@@ -3,6 +3,7 @@ module Author exposing (Model, main, subscriptions, update, view)
 import Animation exposing (percent)
 import Array exposing (Array)
 import Browser
+import Date exposing (Date, fromIsoString)
 import Debug
 import Html exposing (Html, a, div, footer, h1, h2, main_, p, small, text)
 import Html.Attributes exposing (class, href, target)
@@ -17,6 +18,8 @@ import Papers.OpenAccess as OpenAccess
 import Papers.OtherPathway as OtherPathway
 import Papers.Utils exposing (DOI, PaperMetadata)
 import ServerSideLogging
+import Task
+import Time exposing (Month(..))
 
 
 type alias Model =
@@ -30,6 +33,7 @@ type alias Model =
     , authorProfileURL : String
     , serverURL : String
     , style : Animation.State
+    , today : Date
     }
 
 
@@ -57,8 +61,12 @@ init flags =
       , searchQuery = flags.searchQuery
       , serverURL = flags.serverURL
       , style = Animation.style [ Animation.width (percent 0), Animation.opacity 1 ]
+      , today = Date.fromCalendarDate 1970 Jan 1
       }
-    , Cmd.batch (List.map (fetchPaper flags.serverURL) flags.dois)
+    , Cmd.batch
+        ((Date.today |> Task.perform Msg.ReceiveDate)
+            :: List.map (fetchPaper flags.serverURL) flags.dois
+        )
     )
 
 
@@ -104,7 +112,7 @@ view model =
             , viewSearchForm model.searchQuery
                 (viewSearchNoteWithLinks model.searchQuery)
                 (Animation.render model.style)
-            , FreePathway.viewList paywalledNoCostPathwayPapers
+            , FreePathway.viewList model.today paywalledNoCostPathwayPapers
             , h2 [] [ text "Other search results" ]
             , p [] [ text "For completeness, here are the other publications we found for your search." ]
             , div [ class "author__otherresults" ]
@@ -190,6 +198,9 @@ update msg model =
         Msg.HttpNoOp (Ok ()) ->
             ( model, Cmd.none )
 
+        Msg.ReceiveDate today ->
+            ( { model | today = today }, Cmd.none )
+
 
 classifyPaper : Backend.Paper -> Model -> Model
 classifyPaper backendPaper model =
@@ -206,6 +217,9 @@ classifyPaper backendPaper model =
             , journal = backendPaper.journal
             , authors = backendPaper.authors
             , year = backendPaper.year
+            , publishedDate =
+                backendPaper.publishedDate
+                    |> Maybe.andThen (\d -> d |> fromIsoString |> Result.toMaybe)
             , issn = backendPaper.issn
             , url = Nothing
             }

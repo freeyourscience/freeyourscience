@@ -4,10 +4,12 @@ import Animation
 import Array
 import Author exposing (Model, subscriptions, update, view)
 import Browser
+import Date
 import Http
 import Json.Decode as D
 import Msg exposing (Msg(..))
 import Papers.Backend as Backend exposing (paperDecoder)
+import Time exposing (Month(..))
 
 
 main : Program () Model Msg
@@ -32,6 +34,7 @@ initialModel =
     , searchQuery = "Dummy Author"
     , serverURL = ""
     , style = Animation.style []
+    , today = Date.fromCalendarDate 1970 Jan 1
     }
 
 

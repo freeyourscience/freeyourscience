@@ -15,6 +15,7 @@ fullPaperJson =
     "journal": "Stahlbau",
     "authors": "Sigrid Brell-Cokcan et al.",
     "year": 2017,
+    "published_date": null,
     "issn": "0038-9145",
     "is_open_access": false,
     "oa_pathway": "nocost",
@@ -218,6 +219,7 @@ oaPathwayNull =
     "journal": "Stahlbau",
     "authors": "Sigrid Brell-Cokcan et al.",
     "year": 2017,
+    "published_date": null,
     "issn": "0038-9145",
     "is_open_access": false,
     "oa_pathway": "nocost",
@@ -235,6 +237,7 @@ fullPaperElm =
     , journal = Just "Stahlbau"
     , authors = Just "Sigrid Brell-Cokcan et al."
     , year = Just 2017
+    , publishedDate = Nothing
     , issn = Just "0038-9145"
     , isOpenAccess = Just False
     , oaPathway = Just "nocost"

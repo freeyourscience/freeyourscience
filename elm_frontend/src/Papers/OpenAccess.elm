@@ -26,6 +26,7 @@ view paper =
                 , journal = paper.journal
                 , authors = paper.authors
                 , year = paper.year
+                , publishedDate = Nothing
                 , doi = paper.doi
                 , issn = paper.issn
                 , url = Just paper.oaLocationURL

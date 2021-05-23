@@ -1,6 +1,7 @@
 port module Paper exposing (..)
 
 import Browser
+import Date exposing (fromIsoString)
 import Debug
 import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, strong, text)
 import Html.Attributes exposing (class, href, id, target)
@@ -172,7 +173,7 @@ viewCheckConditions ( policy, pathway ) =
     h3 [ id "conditions" ]
         [ text "2. Check the conditions" ]
         :: (pathway.conditions
-                |> addEmbargo pathway.embargo
+                |> addEmbargo (pathway.embargo |> Maybe.map FreePathway.embargoToString)
                 |> Maybe.map
                     (ulWithHeading
                         [ text "Before you re-publish you need to ensure that the following conditions are met:"
@@ -314,6 +315,7 @@ view model =
                         , journal = paper.journal
                         , authors = paper.authors
                         , year = paper.year
+                        , publishedDate = Nothing
                         , doi = paper.doi
                         , issn = paper.issn
                         , url = Just paper.oaLocationURL
@@ -391,6 +393,9 @@ classifyPaper backendPaper model =
             , journal = backendPaper.journal
             , authors = backendPaper.authors
             , year = backendPaper.year
+            , publishedDate =
+                backendPaper.publishedDate
+                    |> Maybe.andThen (\d -> d |> fromIsoString |> Result.toMaybe)
             , issn = backendPaper.issn
             , url = Nothing
             }

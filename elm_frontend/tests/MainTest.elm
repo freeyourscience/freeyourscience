@@ -15,7 +15,7 @@ pathway =
         , namedRepository = Nothing
         }
     , prerequisites = Just [ "If Required by Funder", "Manuscript must be from subjects: Math, Chemistry" ]
-    , embargo = Just "12 months"
+    , embargo = Just { units = "months", amount = 12 }
     , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
     , notes = Just [ "Pathway specific notes" ]
     }
@@ -26,7 +26,7 @@ noCostOaPathway =
     { articleVersions = [ "submitted" ]
     , locationLabelsSorted = [ "Non-commercial repositories", "PubMed Central", "Author's homepage", "Academic social networks" ]
     , prerequisites = Just [ "If Required by Funder", "Manuscript must be from subjects: Math, Chemistry" ]
-    , embargo = Just "12 months"
+    , embargo = Just { units = "months", amount = 12 }
     , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
     , notes = Just [ "Pathway specific notes" ]
     }

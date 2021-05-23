@@ -15,6 +15,7 @@ type alias Paper =
     , journal : Maybe String
     , authors : Maybe String
     , year : Maybe Int
+    , publishedDate : Maybe String
     , issn : Maybe String
     , isOpenAccess : Maybe Bool
     , oaPathway : Maybe String
@@ -164,6 +165,7 @@ paperDecoder =
         |> required "journal" (D.nullable D.string)
         |> required "authors" (D.nullable D.string)
         |> required "year" (D.nullable D.int)
+        |> required "published_date" (D.nullable D.string)
         |> required "issn" (D.nullable D.string)
         |> required "is_open_access" (D.nullable D.bool)
         |> required "oa_pathway" (D.nullable D.string)
