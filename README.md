@@ -15,10 +15,6 @@ Should there be evidence for this hypothesis by the above mentioned metrics, the
 to create a tool for authors and/or institutions to check which of their papers could be
 republished as OpenAccess without additional cost.
 
-## Architecture / Data Flow
-
-![img](./assets/data_flow.png)
-
 ## Setup & Test
 
 ### Elm
