@@ -34,7 +34,7 @@ suite =
                     embargo =
                         Just { units = "months", amount = 12 }
                 in
-                \_ -> Expect.equal (Just "for free in 1 months") (remainingEmbargo publishedDate today embargo)
+                \_ -> Expect.equal (Just "for free after 2021-01-02") (remainingEmbargo publishedDate today embargo)
             , test "no embargo" <|
                 let
                     publishedDate =
@@ -73,7 +73,7 @@ suite =
                     embargo =
                         Just { units = "days", amount = 365 }
                 in
-                \_ -> Expect.equal (Just "for free in 1 days") (remainingEmbargo publishedDate today embargo)
+                \_ -> Expect.equal (Just "for free after 2021-01-02") (remainingEmbargo publishedDate today embargo)
             , test "years embargo" <|
                 let
                     publishedDate =
@@ -85,6 +85,6 @@ suite =
                     embargo =
                         Just { units = "years", amount = 1 }
                 in
-                \_ -> Expect.equal (Just "for free in 1 years") (remainingEmbargo publishedDate today embargo)
+                \_ -> Expect.equal (Just "for free after 2021-01-03") (remainingEmbargo publishedDate today embargo)
             ]
         ]

@@ -407,13 +407,14 @@ embargoUnit unit =
             Nothing
 
 
-embargoTimeDeltaString : Embargo -> Int -> Maybe String
-embargoTimeDeltaString e passed =
-    if passed >= e.amount then
+embargoTimeDeltaString : Date -> Date -> Int -> Unit -> Maybe String
+embargoTimeDeltaString today published embargo unit =
+    if diff unit published today >= embargo then
         Nothing
 
     else
-        Just ("for free in " ++ String.fromInt (e.amount - passed) ++ " " ++ e.units)
+        Just
+            ("for free after " ++ (Date.add unit embargo published |> Date.toIsoString))
 
 
 remainingEmbargo : Maybe Date -> Date -> Maybe Embargo -> Maybe String
@@ -422,11 +423,7 @@ remainingEmbargo publishedDate today embargo =
         ( Just pub, Just emb ) ->
             emb.units
                 |> embargoUnit
-                |> Maybe.andThen
-                    (\unit ->
-                        diff unit pub today
-                            |> embargoTimeDeltaString emb
-                    )
+                |> Maybe.andThen (embargoTimeDeltaString today pub emb.amount)
 
         ( Nothing, Just emb ) ->
             Just (embargoToString emb ++ " after the original publication")
