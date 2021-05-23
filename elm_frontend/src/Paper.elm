@@ -1,7 +1,7 @@
 port module Paper exposing (..)
 
 import Browser
-import Date exposing (fromIsoString)
+import Date exposing (Date, fromIsoString)
 import Debug
 import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, strong, text)
 import Html.Attributes exposing (class, href, id, target)
@@ -15,6 +15,8 @@ import Papers.OpenAccess as OpenAccess
 import Papers.OtherPathway as OtherPathway
 import Papers.Utils exposing (DOI, articleVersionString, publisherNotes, renderPaperMetaDataWithDoi, renderUrl)
 import ServerSideLogging
+import Task
+import Time exposing (Month(..))
 
 
 type SomePaper
@@ -28,6 +30,7 @@ type alias Model =
     , serverURL : String
     , paper : Maybe SomePaper
     , error : Bool
+    , today : Date
     }
 
 
@@ -50,8 +53,12 @@ init flags =
       , serverURL = flags.serverURL
       , paper = Nothing
       , error = False
+      , today = Date.fromCalendarDate 1970 Jan 1
       }
-    , fetchPaper flags.serverURL flags.doi
+    , Cmd.batch
+        [ Date.today |> Task.perform Msg.ReceiveDate
+        , fetchPaper flags.serverURL flags.doi
+        ]
     )
 
 
@@ -288,8 +295,22 @@ view model =
     in
     case model.paper of
         Just (FP paper) ->
+            let
+                when =
+                    case
+                        FreePathway.remainingEmbargo
+                            model.today
+                            paper.meta.publishedDate
+                            (Tuple.second paper.recommendedPathway).embargo
+                    of
+                        Just _ ->
+                            "after an embargo"
+
+                        Nothing ->
+                            "today"
+            in
             main_ [ class "paper", class "freepathway" ]
-                [ h1 [] [ text "Re-publish open access today for free" ]
+                [ h1 [] [ text ("Re-publish open access " ++ when ++ " for free") ]
                 , paper |> viewRepublishTodayForFree
                 ]
 
@@ -373,6 +394,9 @@ update msg model =
             ( model
             , ServerSideLogging.reportHttpError model.serverURL error
             )
+
+        Msg.ReceiveDate today ->
+            ( { model | today = today }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )

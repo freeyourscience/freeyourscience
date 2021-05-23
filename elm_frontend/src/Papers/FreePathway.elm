@@ -3,6 +3,7 @@ module Papers.FreePathway exposing
     , Paper
     , Pathway
     , PolicyMetaData
+    , embargoTimeDeltaString
     , embargoToString
     , recommendPathway
     , remainingEmbargo
@@ -352,7 +353,7 @@ viewPublicationItemInfo today paper =
         [ div []
             (renderPaperMetaData h3 True paper.meta)
         , div [ class "publications__item__info__pathway" ]
-            (renderRecommendedPathway paper.recommendedPathway paper.meta.publishedDate today)
+            (renderRecommendedPathway today paper.meta.publishedDate paper.recommendedPathway)
         ]
 
 
@@ -407,23 +408,28 @@ embargoUnit unit =
             Nothing
 
 
-embargoTimeDeltaString : Date -> Date -> Int -> Unit -> Maybe String
-embargoTimeDeltaString today published embargo unit =
-    if diff unit published today >= embargo then
-        Nothing
+embargoTimeDeltaString : Date -> Date -> Embargo -> Maybe String
+embargoTimeDeltaString today published embargo =
+    embargo.units
+        |> embargoUnit
+        |> Maybe.andThen
+            (\unit ->
+                if diff unit published today >= embargo.amount then
+                    Nothing
 
-    else
-        Just
-            ("for free after " ++ (Date.add unit embargo published |> Date.toIsoString))
+                else
+                    Just
+                        ("for free after "
+                            ++ (Date.add unit embargo.amount published |> Date.toIsoString)
+                        )
+            )
 
 
-remainingEmbargo : Maybe Date -> Date -> Maybe Embargo -> Maybe String
-remainingEmbargo publishedDate today embargo =
+remainingEmbargo : Date -> Maybe Date -> Maybe Embargo -> Maybe String
+remainingEmbargo today publishedDate embargo =
     case ( publishedDate, embargo ) of
         ( Just pub, Just emb ) ->
-            emb.units
-                |> embargoUnit
-                |> Maybe.andThen (embargoTimeDeltaString today pub emb.amount)
+            embargoTimeDeltaString today pub emb
 
         ( Nothing, Just emb ) ->
             Just (embargoToString emb ++ " after the original publication")
@@ -432,15 +438,15 @@ remainingEmbargo publishedDate today embargo =
             Nothing
 
 
-renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> Maybe Date -> Date -> List (Html Msg)
-renderRecommendedPathway ( policy, { articleVersions, conditions, embargo } ) publicationDate today =
+renderRecommendedPathway : Date -> Maybe Date -> ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
+renderRecommendedPathway today publicationDate ( policy, { articleVersions, conditions, embargo } ) =
     p []
         [ text "You can re-publish the "
         , strong [] [ text (articleVersionString articleVersions ++ " version") ]
         , text " "
         , text
             (embargo
-                |> remainingEmbargo publicationDate today
+                |> remainingEmbargo today publicationDate
                 |> Maybe.withDefault "today for free"
             )
         , text "."

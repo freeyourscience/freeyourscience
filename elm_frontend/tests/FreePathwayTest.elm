@@ -1,8 +1,8 @@
 module FreePathwayTest exposing (..)
 
-import Date exposing (Date)
+import Date
 import Expect
-import Papers.FreePathway exposing (remainingEmbargo)
+import Papers.FreePathway exposing (embargoTimeDeltaString, remainingEmbargo)
 import Test exposing (Test, describe, test)
 import Time exposing (Month(..))
 
@@ -10,7 +10,24 @@ import Time exposing (Month(..))
 suite : Test
 suite =
     describe "free pathway tests"
-        [ describe "remainingEmbargo"
+        [ describe "embargoTimeDeltaString"
+            [ test "embargo passed" <|
+                let
+                    publishedDate =
+                        Date.fromCalendarDate 2018 Sep 4
+
+                    today =
+                        Date.fromCalendarDate 2021 May 24
+
+                    embargo =
+                        { units = "months", amount = 12 }
+                in
+                \_ ->
+                    Expect.equal
+                        Nothing
+                        (embargoTimeDeltaString today publishedDate embargo)
+            ]
+        , describe "remainingEmbargo"
             [ test "embargo passed" <|
                 let
                     publishedDate =
@@ -22,7 +39,10 @@ suite =
                     embargo =
                         Just { units = "months", amount = 11 }
                 in
-                \_ -> Expect.equal Nothing (remainingEmbargo publishedDate today embargo)
+                \_ ->
+                    Expect.equal
+                        Nothing
+                        (remainingEmbargo today publishedDate embargo)
             , test "embargo about to pass" <|
                 let
                     publishedDate =
@@ -34,7 +54,10 @@ suite =
                     embargo =
                         Just { units = "months", amount = 12 }
                 in
-                \_ -> Expect.equal (Just "for free after 2021-01-02") (remainingEmbargo publishedDate today embargo)
+                \_ ->
+                    Expect.equal
+                        (Just "for free after 2021-01-02")
+                        (remainingEmbargo today publishedDate embargo)
             , test "no embargo" <|
                 let
                     publishedDate =
@@ -46,7 +69,10 @@ suite =
                     embargo =
                         Nothing
                 in
-                \_ -> Expect.equal Nothing (remainingEmbargo publishedDate today embargo)
+                \_ ->
+                    Expect.equal
+                        Nothing
+                        (remainingEmbargo today publishedDate embargo)
             , test "no published date" <|
                 let
                     publishedDate =
@@ -61,7 +87,7 @@ suite =
                 \_ ->
                     Expect.equal
                         (Just "12 months after the original publication")
-                        (remainingEmbargo publishedDate today embargo)
+                        (remainingEmbargo today publishedDate embargo)
             , test "days embargo" <|
                 let
                     publishedDate =
@@ -73,7 +99,10 @@ suite =
                     embargo =
                         Just { units = "days", amount = 365 }
                 in
-                \_ -> Expect.equal (Just "for free after 2021-01-02") (remainingEmbargo publishedDate today embargo)
+                \_ ->
+                    Expect.equal
+                        (Just "for free after 2021-01-02")
+                        (remainingEmbargo today publishedDate embargo)
             , test "years embargo" <|
                 let
                     publishedDate =
@@ -85,6 +114,9 @@ suite =
                     embargo =
                         Just { units = "years", amount = 1 }
                 in
-                \_ -> Expect.equal (Just "for free after 2021-01-03") (remainingEmbargo publishedDate today embargo)
+                \_ ->
+                    Expect.equal
+                        (Just "for free after 2021-01-03")
+                        (remainingEmbargo today publishedDate embargo)
             ]
         ]
