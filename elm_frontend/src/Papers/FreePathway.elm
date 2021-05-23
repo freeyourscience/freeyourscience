@@ -348,7 +348,7 @@ viewPublicationItemInfo paper =
         [ div []
             (renderPaperMetaData h3 True paper.meta)
         , div [ class "publications__item__info__pathway" ]
-            (renderRecommendedPathway paper.recommendedPathway)
+            (renderRecommendedPathway paper.recommendedPathway paper.meta.year)
         ]
 
 
@@ -383,12 +383,25 @@ renderPathwayButtons ( id, { title, doi } ) =
         ]
 
 
-renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
-renderRecommendedPathway ( policy, { locationLabelsSorted, articleVersions, prerequisites, conditions, embargo, notes } ) =
+rePublicationTime : Maybe Int -> Maybe String -> String
+rePublicationTime publicationYear embargo =
+    case ( publicationYear, embargo ) of
+        ( Just y, Just e ) ->
+            "if " ++ e ++ " have passed since " ++ String.fromInt y
+
+        ( Nothing, Just e ) ->
+            "if " ++ e
+
+        ( _, Nothing ) ->
+            "today"
+
+
+renderRecommendedPathway : ( PolicyMetaData, NoCostOaPathway ) -> Maybe Int -> List (Html Msg)
+renderRecommendedPathway ( policy, { locationLabelsSorted, articleVersions, prerequisites, conditions, embargo, notes } ) publicationYear =
     p []
         [ text "You can re-publish the "
         , strong [] [ text (articleVersionString articleVersions ++ " version") ]
-        , text " today for free."
+        , text (" for free " ++ rePublicationTime publicationYear embargo ++ ".")
         ]
         :: (conditions
                 |> addEmbargo embargo
