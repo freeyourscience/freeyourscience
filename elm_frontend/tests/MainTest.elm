@@ -25,7 +25,7 @@ noCostOaPathway : NoCostOaPathway
 noCostOaPathway =
     { articleVersions = [ "submitted" ]
     , locationLabelsSorted = [ "Non-commercial repositories", "PubMed Central", "Author's homepage", "Academic social networks" ]
-    , prerequisites = Just [ "If Required by Funder", "Manuscript must be from subjects: Math, Chemistry" ]
+    , prerequisites = Just [ "If Required by Funder", "Manuscript must be from subjects: Math, Chemistry", "Work was funded by one of these funders: Wellcome Trust, DFG" ]
     , embargo = Just { units = "months", amount = 12 }
     , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
     , notes = Just [ "Pathway specific notes" ]
@@ -70,7 +70,19 @@ pathwayDetails =
                                       , language = "en"
                                       }
                                     ]
-                            , prerequisiteFunders = Nothing
+                            , prerequisiteFunders =
+                                Just
+                                    [ { funderMetadata =
+                                            { name = [ { name = "Wellcome Trust" } ]
+                                            , url = [ { url = "http://www.wellcome.ac.uk/" } ]
+                                            }
+                                      }
+                                    , { funderMetadata =
+                                            { name = [ { name = "DFG" } ]
+                                            , url = [ { url = "http://www.dfg.de/" } ]
+                                            }
+                                      }
+                                    ]
                             , prerequisiteSubjects = Just [ "Math", "Chemistry" ]
                             }
                   , publicNotes = Just [ "Pathway specific notes" ]

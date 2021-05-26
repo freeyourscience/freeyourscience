@@ -18,7 +18,7 @@ import Html exposing (Html, a, br, button, div, h2, h3, p, section, strong, text
 import Html.Attributes exposing (class, href)
 import HtmlUtils exposing (addEmbargo, ulWithHeading)
 import Msg exposing (Msg)
-import Papers.Backend exposing (Embargo, Location, PermittedOA, Policy, Prerequisites)
+import Papers.Backend exposing (Embargo, Funder, Location, PermittedOA, Policy, Prerequisites)
 import Papers.Utils exposing (NamedUrl, PaperMetadata, articleVersionString, renderPaperMetaData)
 import String.Extra exposing (humanize)
 import Time exposing (Month(..))
@@ -160,7 +160,7 @@ parsePolicyMetaData { policyUrl, urls, notes } =
 
 
 parsePrequisites : Prerequisites -> Maybe (List String)
-parsePrequisites { prerequisitesPhrases, prerequisiteSubjects } =
+parsePrequisites { prerequisitesPhrases, prerequisiteSubjects, prerequisiteFunders } =
     -- TODO: add support for prerequisiteFunders
     --       since this consists of name and URL,
     --       this might be difficult to just integrate here
@@ -177,14 +177,36 @@ parsePrequisites { prerequisitesPhrases, prerequisiteSubjects } =
                             ++ String.join ", " ps
                         ]
                     )
+
+        fundersPhrase =
+            prerequisiteFunders
+                |> Maybe.map (List.map funderName)
+                |> Maybe.map (List.filterMap identity)
+                |> Maybe.map
+                    (\funder ->
+                        [ "Work was funded by one of these funders: "
+                            ++ String.join ", " funder
+                        ]
+                    )
     in
-    case ( phrases, subjects ) of
-        ( Nothing, Nothing ) ->
+    case ( phrases, subjects, fundersPhrase ) of
+        ( Nothing, Nothing, Nothing ) ->
             Nothing
 
         _ ->
             Just
-                (Maybe.withDefault [] phrases ++ Maybe.withDefault [] subjects)
+                (Maybe.withDefault [] phrases
+                    ++ Maybe.withDefault [] subjects
+                    ++ Maybe.withDefault [] fundersPhrase
+                )
+
+
+funderName : Funder -> Maybe String
+funderName { funderMetadata } =
+    funderMetadata
+        |> (\meta -> meta.name)
+        |> List.head
+        |> Maybe.map (\name -> name.name)
 
 
 humanizeLocations : Location -> List String

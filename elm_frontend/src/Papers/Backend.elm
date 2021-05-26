@@ -1,4 +1,4 @@
-module Papers.Backend exposing (Embargo, Location, Paper, PermittedOA, Policy, Prerequisites, paperDecoder)
+module Papers.Backend exposing (Embargo, Funder, Location, Paper, PermittedOA, Policy, Prerequisites, paperDecoder)
 
 import Json.Decode as D exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
