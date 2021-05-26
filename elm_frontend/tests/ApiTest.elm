@@ -1,6 +1,7 @@
 module ApiTest exposing (..)
 
 import Expect
+import Html.Attributes exposing (name)
 import Json.Decode as D
 import Papers.Backend as Backend
 import Test exposing (Test, describe, test)
@@ -270,7 +271,14 @@ fullPaperElm =
                                               , language = "en"
                                               }
                                             ]
-                                    , prerequisiteFunders = Nothing
+                                    , prerequisiteFunders =
+                                        Just
+                                            [ { funderMetadata =
+                                                    { name = [ { name = "Wellcome Trust" } ]
+                                                    , url = [ { url = "http://www.wellcome.ac.uk/" } ]
+                                                    }
+                                              }
+                                            ]
                                     , prerequisiteSubjects = Just [ "Math", "Chemistry" ]
                                     }
                           , embargo = Just { amount = 12, units = "months" }

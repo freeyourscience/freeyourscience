@@ -64,9 +64,17 @@ type alias Funder =
 
 
 type alias FunderMetadata =
-    { name : String
-    , url : String
+    { name : List FunderMetaName
+    , url : List FunderMetaUrl
     }
+
+
+type alias FunderMetaName =
+    { name : String }
+
+
+type alias FunderMetaUrl =
+    { url : String }
 
 
 type alias Location =
@@ -125,7 +133,19 @@ funderDecoder =
 funderMetadataDecoder : Decoder FunderMetadata
 funderMetadataDecoder =
     D.succeed FunderMetadata
+        |> required "name" (D.list funderMetaNameDecoder)
+        |> required "url" (D.list funderMetaUrlDecoder)
+
+
+funderMetaNameDecoder : Decoder FunderMetaName
+funderMetaNameDecoder =
+    D.succeed FunderMetaName
         |> required "name" D.string
+
+
+funderMetaUrlDecoder : Decoder FunderMetaUrl
+funderMetaUrlDecoder =
+    D.succeed FunderMetaUrl
         |> required "url" D.string
 
 
