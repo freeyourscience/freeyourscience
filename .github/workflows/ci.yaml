@@ -44,7 +44,7 @@ jobs:
           retention-days: 1
 
   python-and-docker:
-    needs: [ elm ]
+    needs: [elm]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -109,7 +109,7 @@ jobs:
           docker push $IMAGE_NAME:latest
 
   deploy-dev:
-    needs: [ python-and-docker ]
+    needs: [python-and-docker]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -122,8 +122,7 @@ jobs:
 
       - name: Deploy
         run: |
-          gcloud components install beta
-          gcloud beta run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE_DEV }}" \
+          gcloud run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE_DEV }}" \
             --image "$IMAGE_NAME:${{ github.sha }}" \
             --region "${{ secrets.GCP_REGION }}" \
             --platform managed \
@@ -133,7 +132,7 @@ jobs:
             --revision-suffix ${{ github.sha }}
 
   deploy-prod:
-    needs: [ python-and-docker ]
+    needs: [python-and-docker]
     if: startsWith(github.ref, 'refs/tags/latest/')
     runs-on: ubuntu-latest
     steps:
@@ -146,8 +145,7 @@ jobs:
 
       - name: Deploy
         run: |
-          gcloud components install beta
-          gcloud beta run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE }}" \
+          gcloud run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE }}" \
             --image "$IMAGE_NAME:${{ github.sha }}" \
             --region "${{ secrets.GCP_REGION }}" \
             --platform managed \
