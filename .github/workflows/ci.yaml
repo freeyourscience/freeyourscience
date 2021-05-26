@@ -148,6 +148,7 @@ jobs:
           gcloud run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE }}" \
             --image "$IMAGE_NAME:${{ github.sha }}" \
             --region "${{ secrets.GCP_REGION }}" \
+            --min-instances 1
             --platform managed \
             --allow-unauthenticated \
             --set-env-vars "UNPAYWALL_EMAIL=${{ secrets.API_EMAIL }},SHERPA_API_KEY=${{ secrets.SHERPA_API_KEY }},S2_API_KEY=${{ secrets.S2_API_KEY }}" \
