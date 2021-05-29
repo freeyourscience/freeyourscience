@@ -23,7 +23,7 @@ import Time exposing (Month(..))
 
 
 type alias Model =
-    { initialDOIs : List DOI
+    { initialPaperIds : List DOI
     , freePathwayPapers : Array FreePathway.Paper
     , otherPathwayPapers : List OtherPathway.Paper
     , openAccessPapers : List OpenAccess.Paper
@@ -43,7 +43,7 @@ type alias Model =
 
 
 type alias Flags =
-    { dois : List String
+    { paperIds : List String
     , serverURL : String
     , authorProfileURL : String
     , authorProfileProvider : String
@@ -53,7 +53,7 @@ type alias Flags =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { initialDOIs = flags.dois
+    ( { initialPaperIds = flags.paperIds
       , freePathwayPapers = Array.empty
       , otherPathwayPapers = []
       , openAccessPapers = []
@@ -68,14 +68,14 @@ init flags =
       }
     , Cmd.batch
         ((Date.today |> Task.perform Msg.ReceiveDate)
-            :: List.map (fetchPaper flags.serverURL) flags.dois
+            :: List.map (fetchPaper flags.serverURL) flags.paperIds
         )
     )
 
 
 fetchPaper : String -> String -> Cmd Msg
-fetchPaper serverURL doi =
-    HttpBuilder.get (serverURL ++ "/api/papers?doi=" ++ doi)
+fetchPaper serverURL paperId =
+    HttpBuilder.get (serverURL ++ "/api/papers?paper_id=" ++ paperId)
         |> withHeader "Content-Type" "application/json"
         |> HttpBuilder.withExpect (Http.expectJson Msg.GotPaper Backend.paperDecoder)
         |> HttpBuilder.request
@@ -161,7 +161,7 @@ update msg model =
                             [ Animation.width (percent (percentDOIsFetched model))
                             , Animation.opacity
                                 (toFloat
-                                    (min 1 (List.length model.initialDOIs - numberFetchedPapers m))
+                                    (min 1 (List.length model.initialPaperIds - numberFetchedPapers m))
                                 )
                             ]
                         ]
@@ -277,7 +277,7 @@ percentDOIsFetched model =
         10
         (100
             * (model |> numberFetchedPapers |> toFloat)
-            / (model.initialDOIs |> List.length |> toFloat)
+            / (model.initialPaperIds |> List.length |> toFloat)
         )
 
 

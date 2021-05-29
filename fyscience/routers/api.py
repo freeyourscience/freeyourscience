@@ -93,7 +93,7 @@ def get_paper(
         paper = semantic_scholar.get_paper(paper_id)
 
         if paper is None:
-            logger.error(
+            logger.info(
                 {
                     "event": "get_paper",
                     "message": "no_paper_for_s2_paper_id",

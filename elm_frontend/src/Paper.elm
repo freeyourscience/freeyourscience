@@ -64,7 +64,7 @@ init flags =
 
 fetchPaper : String -> String -> Cmd Msg
 fetchPaper serverURL doi =
-    HttpBuilder.get (serverURL ++ "/api/papers?doi=" ++ doi)
+    HttpBuilder.get (serverURL ++ "/api/papers?paper_id=" ++ doi)
         |> withHeader "Content-Type" "application/json"
         |> HttpBuilder.withExpect (Http.expectJson Msg.GotPaper Backend.paperDecoder)
         |> HttpBuilder.request

@@ -24,7 +24,7 @@ main =
 
 initialModel : Model
 initialModel =
-    { initialDOIs = []
+    { initialPaperIds = []
     , freePathwayPapers = Array.fromList []
     , otherPathwayPapers = []
     , openAccessPapers = []
