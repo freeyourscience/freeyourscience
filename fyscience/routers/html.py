@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from fyscience.schemas import OAPathway, FullPaper
 from fyscience.routers.api import get_author_with_papers
 from fyscience.routers.deps import get_settings, Settings, TEMPLATE_PATH
 from starlette.datastructures import URL
@@ -18,14 +17,6 @@ def _get_response_headers(request_url: URL):
     if request_url.hostname == "dev.freeyourscience.org":
         headers["X-Robots-Tag"] = "noindex,nofollow,nosnippet"
     return headers
-
-
-def _is_paywalled_and_nocost(paper: FullPaper) -> bool:
-    return (
-        paper is not None
-        and paper.is_open_access is False
-        and paper.oa_pathway is OAPathway.nocost
-    )
 
 
 def _render_paper_page(
@@ -78,6 +69,11 @@ def _simple_template_response(
 
 
 def _is_doi_query(string: str) -> bool:
+    prefix = "https://doi.org/"
+    prefix_len = len(prefix)
+    if string.startswith(prefix):
+        string = string[prefix_len:]
+
     return re.match("\\b[0-9]{2}.[0-9]+/", string) is not None
 
 

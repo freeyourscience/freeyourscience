@@ -114,6 +114,7 @@ def test_search_missing_args(client: TestClient) -> None:
         ("10.1002/(sici)1521-254(199905/06)1:3<16::aid-jgm34>3.3.co;2-q", True),
         ("10.1103/physreva.65.04814", True),
         ("10.4321/s0004-061420090300002", True),
+        ("https://doi.org/10.4321/s0004-061420090300002", True),
     ],
 )
 def test_is_doi_query(
