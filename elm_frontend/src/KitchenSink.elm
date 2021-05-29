@@ -77,7 +77,8 @@ decodeJsonPaper paperJson =
 
 jsonPapers : List String
 jsonPapers =
-    [ """{
+    [ -- no policy for ISSN
+      """{
         "doi": "10.1007/978-3-319-45450-4_37",
         "title": "Actuator Design for Stabilizing Single Tendon Platforms",
         "journal": "Mechanisms and Machine Science",
@@ -91,6 +92,8 @@ jsonPapers =
         "oa_pathway_details": null,
         "oa_location_url": null
     }"""
+
+    -- no ISSN for publication
     , """{
         "doi": "10.1007/978-3-642-123-8",
         "title": "Geotechnik Hydrogeologie",
@@ -105,6 +108,8 @@ jsonPapers =
         "oa_pathway_uri": null,
         "oa_pathway_details": null
     }"""
+
+    -- OA publication, no journal
     , """{
         "doi": "10.1371/journal.pcbi.1006283",
         "title": "Unsupervised clustering of temporal patterns in high-dimensional neuronal ensembles using a novel dissimilarity measure",
@@ -119,6 +124,8 @@ jsonPapers =
         "oa_pathway_details": null,
         "oa_location_url": "https://oa-location.url"
     }"""
+
+    -- OA publication, with journal
     , """{
         "doi": "10.1371/journal.pcbi.1006283",
         "title": "Unsupervised clustering of temporal patterns in high-dimensional neuronal ensembles using a novel dissimilarity measure",
@@ -133,6 +140,8 @@ jsonPapers =
         "oa_pathway_details": null,
         "oa_location_url": "https://oa-location.url"
     }"""
+
+    -- free pathway, accepted version, embargo
     , """{
       "doi": "10.1021/acsnano.8b01396",
       "title": "Nanometer-Resolved Mapping of Cell-Substrate Distances of Contracting Cardiomyocytes Using Surface Plasmon Resonance Microscopy",
@@ -582,6 +591,8 @@ jsonPapers =
           }
       ]
     }"""
+
+    -- free pathway, duplicate?
     , """{
       "doi": "10.1021/acsnano.8b01396",
       "title": "Only Notes Nanometer-Resolved Mapping of Cell-Substrate Distances",
@@ -1013,6 +1024,8 @@ jsonPapers =
           }
       ]
     }"""
+
+    -- free pathway, not sure what set it apart
     , """{
       "doi": "10.1021/acsnano.8b01396",
       "title": "Nanometer-Enhanced Mapping of Cell-Substrate Distances With Just Prerequisites",
@@ -1459,6 +1472,8 @@ jsonPapers =
           }
       ]
     }"""
+
+    -- free pathway, no embargo
     , """{
     "doi": "10.1364/ol.44.001359",
     "title": "Noninvasive measurement of the refractive index of cell organelles using surface plasmon resonance microscopy",
@@ -1612,6 +1627,8 @@ jsonPapers =
         }
     ]
     }"""
+
+    -- free pathway, prerequisite funders
     , """{
     "doi": "10.1016/s0001-4079(19)34586-8",
     "title": "Nouveaux progrès et nouveaux outils d’étude de la génétique moléculaire des dyslipoprotéinémies",
@@ -2603,4 +2620,246 @@ jsonPapers =
         }
     ]
     }"""
+
+    -- non-free publisher policy
+    , """{
+    "doi": "10.1016/j.neuroimage.2016.09.039",
+    "title": "Age-related changes in sleep EEG are attenuated in highly intelligent individuals",
+    "journal": "NeuroImage",
+    "authors": "Adrián Pótári et al.",
+    "year": 2017,
+    "published_date": "2017-02-01",
+    "issn": "1053-8119",
+    "is_open_access": false,
+    "oa_location_url": null,
+    "oa_pathway": "nocost",
+    "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/11398",
+    "oa_pathway_details": [
+        {
+        "id": 2252,
+        "uri": "https://v2.sherpa.ac.uk/id/publisher_policy/2252",
+        "open_access_prohibited_phrases": [
+            { "value": "no", "phrase": "No", "language": "en" }
+        ],
+        "permitted_oa": [
+            {
+            "license": [
+                {
+                "license_phrases": [
+                    { "language": "en", "phrase": "CC BY", "value": "cc_by" }
+                ],
+                "license": "cc_by"
+                }
+            ],
+            "additional_oa_fee_phrases": [
+                { "value": "no", "phrase": "No", "language": "en" }
+            ],
+            "additional_oa_fee": "no",
+            "article_version_phrases": [
+                { "phrase": "Submitted", "value": "submitted", "language": "en" },
+                { "value": "accepted", "phrase": "Accepted", "language": "en" },
+                { "value": "published", "phrase": "Published", "language": "en" }
+            ],
+            "conditions": [
+                "Published source must be acknowledged",
+                "Must link to publisher version with DOI"
+            ],
+            "article_version": ["submitted", "accepted", "published"],
+            "location": {
+                "location": ["any_repository", "named_repository", "this_journal"],
+                "named_repository": ["PubMed Central"],
+                "location_phrases": [
+                {
+                    "phrase": "Any Repository",
+                    "value": "any_repository",
+                    "language": "en"
+                },
+                {
+                    "language": "en",
+                    "phrase": "Named Repository",
+                    "value": "named_repository"
+                },
+                {
+                    "value": "this_journal",
+                    "phrase": "Journal Website",
+                    "language": "en"
+                }
+                ]
+            },
+            "publisher_deposit": [
+                {
+                "system_metadata": {
+                    "uri": "https://v2.sherpa.ac.uk/id/repository/267",
+                    "id": 267
+                },
+                "repository_metadata": {
+                    "name": [
+                    {
+                        "preferred": "name",
+                        "language_phrases": [
+                        { "phrase": "English", "value": "en", "language": "en" }
+                        ],
+                        "name": "PubMed Central",
+                        "language": "en",
+                        "preferred_phrases": [
+                        { "language": "en", "phrase": "Name", "value": "name" }
+                        ]
+                    }
+                    ],
+                    "type": "disciplinary",
+                    "description": "A subject-based repository of biomedical and life sciences journal literature developed and managed by the National Center for Biotechnology Information (NCBI) at the US National Library of Medicine (NLM). Content includes articles deposited by participating journals that have applied to and been selected for the archive by NLM, as well as individual author manuscripts that have been submitted in compliance with the NIH Public Access Policy and similar policies of other research funding agencies. More than 2000 journals currently use PMC as a repository. Digitization projects have also added content from the 18th, 19th, and 20th centuries to the archive.",
+                    "url": "http://www.ncbi.nlm.nih.gov/pmc/",
+                    "type_phrases": [
+                    {
+                        "language": "en",
+                        "value": "disciplinary",
+                        "phrase": "Disciplinary"
+                    }
+                    ]
+                }
+                }
+            ]
+            },
+            {
+            "article_version_phrases": [
+                { "phrase": "Submitted", "value": "submitted", "language": "en" },
+                { "language": "en", "value": "accepted", "phrase": "Accepted" },
+                { "phrase": "Published", "value": "published", "language": "en" }
+            ],
+            "license": [
+                {
+                "license_phrases": [
+                    {
+                    "language": "en",
+                    "value": "cc_by_nc_nd",
+                    "phrase": "CC BY-NC-ND"
+                    }
+                ],
+                "license": "cc_by_nc_nd"
+                }
+            ],
+            "additional_oa_fee_phrases": [
+                { "value": "no", "phrase": "No", "language": "en" }
+            ],
+            "additional_oa_fee": "no",
+            "publisher_deposit": [
+                {
+                "system_metadata": {
+                    "id": 267,
+                    "uri": "https://v2.sherpa.ac.uk/id/repository/267"
+                },
+                "repository_metadata": {
+                    "url": "http://www.ncbi.nlm.nih.gov/pmc/",
+                    "description": "A subject-based repository of biomedical and life sciences journal literature developed and managed by the National Center for Biotechnology Information (NCBI) at the US National Library of Medicine (NLM). Content includes articles deposited by participating journals that have applied to and been selected for the archive by NLM, as well as individual author manuscripts that have been submitted in compliance with the NIH Public Access Policy and similar policies of other research funding agencies. More than 2000 journals currently use PMC as a repository. Digitization projects have also added content from the 18th, 19th, and 20th centuries to the archive.",
+                    "type": "disciplinary",
+                    "name": [
+                    {
+                        "preferred": "name",
+                        "language_phrases": [
+                        { "language": "en", "phrase": "English", "value": "en" }
+                        ],
+                        "name": "PubMed Central",
+                        "preferred_phrases": [
+                        { "language": "en", "value": "name", "phrase": "Name" }
+                        ],
+                        "language": "en"
+                    }
+                    ],
+                    "type_phrases": [
+                    {
+                        "language": "en",
+                        "phrase": "Disciplinary",
+                        "value": "disciplinary"
+                    }
+                    ]
+                }
+                }
+            ],
+            "conditions": [
+                "Published source must be acknowledged",
+                "Must link to publisher version with DOI"
+            ],
+            "article_version": ["submitted", "accepted", "published"],
+            "location": {
+                "location": [
+                "named_repository",
+                "non_commercial_repository",
+                "this_journal"
+                ],
+                "named_repository": ["PubMed Central"],
+                "location_phrases": [
+                {
+                    "phrase": "Named Repository",
+                    "value": "named_repository",
+                    "language": "en"
+                },
+                {
+                    "language": "en",
+                    "value": "non_commercial_repository",
+                    "phrase": "Non-Commercial Repository"
+                },
+                {
+                    "language": "en",
+                    "value": "this_journal",
+                    "phrase": "Journal Website"
+                }
+                ]
+            }
+            },
+            {
+            "additional_oa_fee": "no",
+            "location": {
+                "location": ["this_journal"],
+                "location_phrases": [
+                {
+                    "language": "en",
+                    "value": "this_journal",
+                    "phrase": "Journal Website"
+                }
+                ]
+            },
+            "additional_oa_fee_phrases": [
+                { "value": "no", "phrase": "No", "language": "en" }
+            ],
+            "article_version": ["published"],
+            "license": [
+                {
+                "license": "cc_by",
+                "license_phrases": [
+                    { "language": "en", "phrase": "CC BY", "value": "cc_by" }
+                ]
+                },
+                {
+                "license": "cc_by_nc_nd",
+                "license_phrases": [
+                    {
+                    "phrase": "CC BY-NC-ND",
+                    "value": "cc_by_nc_nd",
+                    "language": "en"
+                    }
+                ]
+                }
+            ],
+            "article_version_phrases": [
+                { "phrase": "Published", "value": "published", "language": "en" }
+            ]
+            }
+        ],
+        "urls": [
+            {
+            "description": "Copyright",
+            "url": "https://www.elsevier.com/about/policies/copyright"
+            },
+            {
+            "description": "Open Access",
+            "url": "https://www.elsevier.com/about/open-science/open-access"
+            }
+        ],
+        "publication_count": 57,
+        "open_access_prohibited": "no",
+        "internal_moniker": "Creative Commons Licenses"
+        }
+    ]
+    }
+    """
     ]
