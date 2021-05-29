@@ -88,7 +88,7 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
         lambda paper, **kw: PaperWithOAPathway(oa_pathway=oa_pathway, **paper.dict()),
     )
 
-    r = client.get(f"/api/papers?doi={doi}")
+    r = client.get(f"/api/papers?paper_id={doi}")
     assert r.ok
     paper = r.json()
     assert paper["is_open_access"] == is_open_access

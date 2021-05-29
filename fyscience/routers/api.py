@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Depends, Request, Response
 from loguru import logger
@@ -79,13 +80,32 @@ def get_author_with_papers(
 
 @api_router.get("/api/papers", response_model=FullPaper)
 def get_paper(
-    doi: str,
+    paper_id: str,
     request: Request,
     response: Response,
     settings: Settings = Depends(get_settings),
 ):
     """Get paper with OpenAccess status and pathway for a given DOI."""
     response.headers["cache-control"] = "max-age=3600,public"
+
+    doi = paper_id
+    if "/" not in paper_id:
+        paper = semantic_scholar.get_paper(paper_id)
+
+        if paper is None:
+            logger.error(
+                {
+                    "event": "get_paper",
+                    "message": "no_paper_for_s2_paper_id",
+                    "paper_id": paper_id,
+                    "provider": "semantic_scholar",
+                    "trace_context": request.headers.get("x-cloud-trace-context"),
+                }
+            )
+            raise HTTPException(404, f"No paper found for {paper_id}")
+
+        doi = paper.doi
+
     paper = unpaywall_get_paper(doi=doi, email=settings.unpaywall_email)
     if paper is None:
         paper = FullPaper(doi=doi)
