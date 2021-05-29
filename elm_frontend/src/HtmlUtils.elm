@@ -48,7 +48,7 @@ resultSourceProfileText authorProfileProvider =
             "Semantic Scholar profile"
 
         "crossref" ->
-            "CrossRef search"
+            "Crossref search"
 
         "orcid" ->
             "ORCID profile"
