@@ -35,11 +35,13 @@ def get_author_with_papers(
     search method, which is not fully populated with all information.
     To fetch fully populated papers, use ``GET api/papers?doi=...``
     """
+    author = None
+
     extracted_orcid = orcid.extract_orcid(profile)
     if extracted_orcid is not None:
         author = orcid.get_author_with_papers(extracted_orcid)
 
-    else:
+    if author is None:
         author_id = semantic_scholar.extract_profile_id_from_url(profile)
         if not author_id.isnumeric():
             author_id = semantic_scholar.get_author_id(profile, settings.s2_api_key)
@@ -52,8 +54,9 @@ def get_author_with_papers(
             author = semantic_scholar.get_author_with_papers(
                 author_id, settings.s2_api_key
             )
-        else:
-            author = crossref.get_author_with_papers(profile)
+
+    if author is None:
+        author = crossref.get_author_with_papers(profile)
 
     if author is None:
         logger.info(
