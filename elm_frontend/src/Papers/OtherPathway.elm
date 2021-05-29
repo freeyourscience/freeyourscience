@@ -13,9 +13,8 @@ type alias Paper =
 
 view : Paper -> Html msg
 view paper =
-    div [ class "row mb-3 author-pubs mb-4 pt-3 border-top" ]
-        [ div
-            [ class "paper-details col-12 fs-6 mb-2 mb-md-0 col-md-9" ]
+    div [ class "publications__item" ]
+        [ div [ class "publications__item__info" ]
             (renderPaperMetaData div True paper.meta)
         ]
 
@@ -26,11 +25,11 @@ viewList papers =
         text ""
 
     else
-        section [ class "mb-5" ]
+        section []
             [ h3 []
                 [ text "Publications with non-free publisher policies"
                 ]
-            , p [ class "fs-6 mb-4" ]
+            , p []
                 [ text
                     ("The following publications do not seem to have any no-cost open access "
                         ++ "re-publishing pathways, or do not allow open access publishing at all."
