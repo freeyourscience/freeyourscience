@@ -23,6 +23,12 @@ main.author {
   }
 }
 
+.publications__item--full-width {
+  border-top: 1px solid settings.$color-background;
+  padding-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
 .publications__item__info {
   max-width: 100%;
 }
@@ -63,6 +69,10 @@ main.author {
   margin-bottom: 0.25rem;
 }
 
+.publications__item__info__metadata {
+  margin-bottom: 1rem;
+}
+
 a.howto-link {
   color: settings.$color-green;
   font-weight: bold;
@@ -75,8 +85,6 @@ a.howto-link {
 }
 
 .publications__item__info__pathway {
-  margin-top: 1rem;
-
   p {
     margin-bottom: 0.5rem;
   }

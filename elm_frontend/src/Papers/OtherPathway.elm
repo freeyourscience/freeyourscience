@@ -1,7 +1,7 @@
 module Papers.OtherPathway exposing (Paper, view, viewList)
 
-import Html exposing (Html, div, h3, p, section, text)
-import Html.Attributes exposing (class)
+import Html exposing (Html, a, div, h3, p, section, text)
+import Html.Attributes exposing (class, href)
 import Papers.Utils exposing (PaperMetadata, renderPaperMetaData)
 
 
@@ -13,9 +13,11 @@ type alias Paper =
 
 view : Paper -> Html msg
 view paper =
-    div [ class "publications__item" ]
-        [ div [ class "publications__item__info" ]
-            (renderPaperMetaData div True paper.meta)
+    div [ class "publications__item--full-width" ]
+        [ div [ class "publications__item__info" ] (renderPaperMetaData div True paper.meta)
+        , text "Check the publisher's "
+        , a [ href paper.oaPathwayURI ] [ text "open access policy" ]
+        , text " deposited with Sherpa."
         ]
 
 

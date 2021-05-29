@@ -135,7 +135,7 @@ renderPaperMetaData titleElement displayUnknownJournal { title, journal, authors
     [ titleElement [ class "publications__item__info__title" ]
         [ text (Maybe.withDefault "Unknown title" title)
         ]
-    , div [ class "" ]
+    , div [ class "publications__item__info__metadata" ]
         [ text
             (String.concat
                 [ journalString
