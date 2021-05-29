@@ -70,18 +70,39 @@ def _get_paper(doi: str, email: Optional[str] = None) -> Optional[Paper]:
     return paper
 
 
+def _assemble_author_name(author: dict) -> str:
+    name_components = []
+    if "given" in author:
+        name_components.append(author["given"])
+
+    if "family" in author:
+        name_components.append(author["family"])
+
+    # Even though the Unpaywall schema (https://unpaywall.org/data-format#doi-object)
+    # says z_authors is exclusively a Crossref Contributor schema
+    # https://github.com/CrossRef/rest-api-doc/blob/master/api_format.md#contributor
+    # however, for DOI 10.1007/s00350-021-5862-6 the author schema contains no "given"
+    # or "family" key but a "name" key instead.
+    if "name" in author:
+        name_components.append(author["name"])
+
+    if not name_components:
+        name_components.append("unknown author")
+
+    return " ".join(name_components)
+
+
 def _extract_authors(authors: List[dict]) -> str:
+    if len(authors) == 1:
+        return _assemble_author_name(authors[0])
+
     if "sequence" in authors[0]:
         first_authors = [a for a in authors if a["sequence"] == "first"]
         first_author = first_authors[0] if first_authors else authors[0]
     else:
         first_author = authors[0]
 
-    extracted_author = ""
-    if "given" in first_author:
-        extracted_author = f"{first_author['given']} "
-    extracted_author += f"{first_author['family']} et al."
-    return extracted_author
+    return f"{_assemble_author_name(first_author)} et al."
 
 
 def get_paper(doi: str, email: Optional[str] = None) -> Optional[FullPaper]:
