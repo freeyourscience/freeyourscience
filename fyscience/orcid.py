@@ -59,10 +59,9 @@ def get_author_with_papers(orcid: str) -> Optional[Author]:
         elif doi is not None and doi not in dois_with_issn:
             dois_with_issn[doi] = None
 
-    papers = [FullPaper(doi=doi, issn=issn) for doi, issn in dois_with_issn.items()]
     return Author(
         name=author_name,
-        papers=papers,
+        paper_ids=list(dois_with_issn.keys()),
         provider="orcid",
         profile_url=f"https://orcid.org/{orcid}",
     )

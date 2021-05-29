@@ -15,7 +15,7 @@ Free Your Science | {{ search_string }}
     var app = Elm.Author.init({
         node: document.getElementById('publicationsForAuthor'),
         flags: {
-            "dois": {{ dois | safe }},
+            "paper_ids": {{ paper_ids | safe }},
     "authorProfileURL": "{{ author.profile_url }}",
         "authorProfileProvider": "{{ author.provider }}",
             "searchQuery": "{{ search_string }}",

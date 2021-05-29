@@ -40,16 +40,24 @@ def test_get_publications_for_author(
     monkeypatch.setattr(
         f"fyscience.routers.api.{provider}",
         lambda *a, **kw: Author(
-            name="Dummy Author", papers=[FullPaper(doi="10.1007/s00580-005-0536-0")]
+            name="Dummy Author", paper_ids=["10.1007/s00580-005-0536-0"]
         ),
     )
 
     r = client.get(url)
     assert r.ok
 
-    monkeypatch.setattr(f"fyscience.routers.api.{provider}", lambda *a, **kw: None)
 
-    r = client.get(url)
+def test_no_author_found(monkeypatch, client: TestClient):
+    providers = [
+        "semantic_scholar.get_author_with_papers",
+        "orcid.get_author_with_papers",
+        "crossref.get_author_with_papers",
+    ]
+    for provider in providers:
+        monkeypatch.setattr(f"fyscience.routers.api.{provider}", lambda *a, **kw: None)
+
+    r = client.get("/api/authors?profile=Some+Author")
     assert r.status_code == 404
 
 

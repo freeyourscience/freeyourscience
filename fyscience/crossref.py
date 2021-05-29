@@ -2,7 +2,7 @@ import requests
 import urllib.parse
 from loguru import logger
 
-from fyscience.schemas import Author, FullPaper
+from fyscience.schemas import Author
 
 
 _CROSSREF_API_USER_AGENT = (
@@ -10,18 +10,6 @@ _CROSSREF_API_USER_AGENT = (
     "(https://freeyourscience.org/; "
     "mailto:team@freeyourscience.org)"
 )
-
-
-def _parse_paper(paper: dict) -> FullPaper:
-    issn = paper.get("ISSN", None)
-    if issn is not None:
-        issn = issn[0]
-
-    title = paper.get("title", None)
-    if title is not None:
-        title = title[0]
-
-    return FullPaper(doi=paper["DOI"], issn=issn, title=title)
 
 
 def get_author_with_papers(name: str):
@@ -43,11 +31,11 @@ def get_author_with_papers(name: str):
         return None
 
     result = r.json()
-    papers = [_parse_paper(p) for p in result["message"]["items"] if "DOI" in p]
+    paper_ids = [p["DOI"] for p in result["message"]["items"] if "DOI" in p]
 
     query = urllib.parse.urlencode({"q": name})
     profile_url = f"https://search.crossref.org/?{query}"
 
     return Author(
-        name=name, papers=papers, provider="crossref", profile_url=profile_url
+        name=name, paper_ids=paper_ids, provider="crossref", profile_url=profile_url
     )

@@ -62,7 +62,7 @@ def _render_author_page(
             "serverURL": serverURL,
             "author": author,
             "search_string": author_query,
-            "dois": [p.doi for p in author.papers],
+            "paper_ids": author.paper_ids,
         },
         headers=_get_response_headers(request.url),
     )

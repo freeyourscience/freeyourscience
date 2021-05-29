@@ -118,14 +118,13 @@ def get_author_with_papers(author_id: str, api_key: str = None) -> Optional[Auth
         return None
 
     author.papers = [] if author.papers is None else author.papers
-    papers = [get_paper(paper["paperId"], api_key) for paper in author.papers]
-    papers = [p for p in papers if p is not None]
+    paper_ids = [p["paperId"] for p in author.papers]
 
     return Author(
         name=author.name,
         provider="semantic_scholar",
         profile_url=author.url,
-        papers=papers,
+        paper_ids=paper_ids,
     )
 
 

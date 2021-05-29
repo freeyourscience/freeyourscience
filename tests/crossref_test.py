@@ -22,7 +22,5 @@ def test_get_author_with_papers(monkeypatch):
     monkeypatch.setattr("fyscience.crossref.requests.get", mock_get)
     author = get_author_with_papers(author_name)
 
-    assert len(author.papers) == 20
-    dois_with_issn = {p.doi: p.issn for p in author.papers}
-    assert dois_with_issn["10.1371/journal.pcbi.1006283"] == "1553-7358"
+    assert len(author.paper_ids) == 20
     assert author.name == author_name

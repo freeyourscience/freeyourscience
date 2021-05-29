@@ -5,23 +5,13 @@ from loguru import logger
 
 from fyscience.schemas import OAPathway, FullPaper, Author, LogEntry
 from fyscience.unpaywall import get_paper as unpaywall_get_paper
-from fyscience.oa_pathway import oa_pathway, remove_costly_oa_from_publisher_policy
+from fyscience.oa_pathway import oa_pathway
 from fyscience.oa_status import validate_oa_status_from_s2
 from fyscience import orcid, semantic_scholar, crossref
 from fyscience.routers.deps import get_settings, Settings
 
 
 api_router = APIRouter()
-
-
-def _remove_costly_oa_paths_from_oa_pathway_details(paper: FullPaper) -> FullPaper:
-    if paper.oa_pathway_details is None:
-        return paper
-
-    paper.oa_pathway_details = [
-        remove_costly_oa_from_publisher_policy(pwd) for pwd in paper.oa_pathway_details
-    ]
-    return paper
 
 
 @api_router.get("/api/authors", response_model=Author)
@@ -31,8 +21,8 @@ def get_author_with_papers(
     """Get all information associated with a specific author search string, which can
     either be an ORCID, Semantic Scholar Profile ID or URL, or an author name to be
     searched for with the Crossref meta-data search.
-    The returned ``Author.papers`` contains a list of papers provided by the chosen
-    search method, which is not fully populated with all information.
+    The returned ``Author.paper_ids`` contains a list of DOIs or S2 paper IDs provided
+    by the chosen search method.
     To fetch fully populated papers, use ``GET api/papers?doi=...``
     """
     author = None
@@ -69,11 +59,9 @@ def get_author_with_papers(
         )
         raise HTTPException(404, f"No author found for {profile}")
 
-    author.papers = [] if author.papers is None else author.papers
     # TODO: Resolve duplicate DOIs more intelligently (always choose the more recent
     #       version, or the one with more info)
-    unique_papers = {p.doi: p for p in author.papers}
-    author.papers = list(unique_papers.values())
+    author.paper_ids = list(set(author.paper_ids))
 
     logger.info(
         {
@@ -81,7 +69,7 @@ def get_author_with_papers(
             "message": "author_found",
             "search_profile": profile,
             "provider": author.provider,
-            "n_papers": len(author.papers),
+            "n_papers": len(author.paper_ids),
             "trace_context": request.headers.get("x-cloud-trace-context"),
         }
     )

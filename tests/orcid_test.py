@@ -20,10 +20,7 @@ def test_get_author_with_papers(monkeypatch):
     monkeypatch.setattr("fyscience.orcid.requests.get", mock_get)
     author = get_author_with_papers("0000-0000-0000-0000")
 
-    assert len(author.papers) == 2
-    dois_with_issn = {p.doi: p.issn for p in author.papers}
-    assert dois_with_issn["10.1087/20120404"] == "1741-4857"
-    assert dois_with_issn["10.1111/test.12241"] is None
+    assert len(author.paper_ids) == 2
     assert author.name == "Sofia Maria Hernandez Garcia"
 
 

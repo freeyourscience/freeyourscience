@@ -61,8 +61,8 @@ class FullPaper(BaseModel):
 
 class Author(BaseModel):
     name: str
+    paper_ids: List[str]
     profile_url: Optional[str] = None
-    papers: Optional[List[FullPaper]] = None
     provider: Optional[str] = None
 
 
