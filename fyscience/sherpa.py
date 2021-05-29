@@ -81,11 +81,12 @@ def get_pathway(
         print("ERROR with publications:", json.dumps(publications), e)
         return OAPathway.not_found, None, None
 
-    # TODO: How to handle multiple publications found for ISSN?
-    publication = publications["items"][0]
-    oa_policies_no_cost = list(
-        filter(has_no_cost_oa_policy, publication["publisher_policy"])
-    )
+    policies = []
+    for publication in publications["items"]:
+        policies.extend(publication["publisher_policy"])
+
+    oa_policies_no_cost = list(filter(has_no_cost_oa_policy, policies))
+
     sherpa_publication_uri = (
         publication["system_metadata"]["uri"]
         if "system_metadata" in publication
