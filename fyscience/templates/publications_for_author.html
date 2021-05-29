@@ -16,9 +16,10 @@ Free Your Science | {{ search_string }}
         node: document.getElementById('publicationsForAuthor'),
         flags: {
             "dois": {{ dois | safe }},
-        "authorProfileURL": "{{ author.profile_url }}",
-        "searchQuery": "{{ search_string }}",
-            "serverURL": "{{ serverURL }}"
+    "authorProfileURL": "{{ author.profile_url }}",
+        "authorProfileProvider": "{{ author.provider }}",
+            "searchQuery": "{{ search_string }}",
+                "serverURL": "{{ serverURL }}"
         }
     });
 </script>

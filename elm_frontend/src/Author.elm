@@ -5,7 +5,7 @@ import Array exposing (Array)
 import Browser
 import Date exposing (Date, fromIsoString)
 import Debug
-import Html exposing (Html, a, div, footer, h1, h2, main_, p, small, text)
+import Html exposing (Html, a, div, h1, h2, main_, p, small, text)
 import Html.Attributes exposing (class, href, target)
 import HtmlUtils exposing (viewSearchForm, viewSearchNoteWithLinks)
 import Http
@@ -31,6 +31,7 @@ type alias Model =
     , numFailedDOIRequests : Int
     , searchQuery : String
     , authorProfileURL : String
+    , authorProfileProvider : String
     , serverURL : String
     , style : Animation.State
     , today : Date
@@ -45,6 +46,7 @@ type alias Flags =
     { dois : List String
     , serverURL : String
     , authorProfileURL : String
+    , authorProfileProvider : String
     , searchQuery : String
     }
 
@@ -58,6 +60,7 @@ init flags =
       , buggyPapers = []
       , numFailedDOIRequests = 0
       , authorProfileURL = flags.authorProfileURL
+      , authorProfileProvider = flags.authorProfileProvider
       , searchQuery = flags.searchQuery
       , serverURL = flags.serverURL
       , style = Animation.style [ Animation.width (percent 0), Animation.opacity 1 ]
@@ -110,7 +113,11 @@ view model =
         [ main_ [ class "author" ]
             [ h1 [] [ text "Results" ]
             , viewSearchForm model.searchQuery
-                (viewSearchNoteWithLinks model.searchQuery)
+                (viewSearchNoteWithLinks
+                    model.searchQuery
+                    model.authorProfileURL
+                    model.authorProfileProvider
+                )
                 (Animation.render model.style)
             , FreePathway.viewList model.today paywalledNoCostPathwayPapers
             , h2 [] [ text "Other search results" ]
@@ -121,7 +128,6 @@ view model =
                 , Buggy.viewList model.buggyPapers
                 ]
             ]
-        , renderFooter model.authorProfileURL
         ]
 
 
@@ -129,16 +135,14 @@ view model =
 -- VIEW SOURCE PROFILE
 
 
-renderFooter : String -> Html Msg
-renderFooter authorProfileURL =
-    footer [ class "container text-center m-4" ]
-        [ small []
-            [ text "("
-            , a [ href authorProfileURL, target "_blank", class "link-dark" ]
-                [ text "Source Profile"
-                ]
-            , text " that was used to retreive the author's publications.)"
+renderSourceProfile : String -> Html Msg
+renderSourceProfile authorProfileURL =
+    small []
+        [ text "("
+        , a [ href authorProfileURL, target "_blank", class "link-dark" ]
+            [ text "Source Profile"
             ]
+        , text " that was used to retreive the author's publications.)"
         ]
 
 

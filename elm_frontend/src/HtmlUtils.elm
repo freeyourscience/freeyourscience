@@ -1,6 +1,6 @@
 module HtmlUtils exposing (addEmbargo, renderList, ulWithHeading, viewSearchForm, viewSearchNoteWithLinks)
 
-import Html exposing (Html, a, button, div, form, input, li, p, small, span, text, ul)
+import Html exposing (Html, a, br, button, div, form, input, li, p, small, span, text, ul)
 import Html.Attributes exposing (action, attribute, class, href, id, method, name, placeholder, target, type_, value)
 
 
@@ -41,16 +41,34 @@ viewSearchForm searchString searchNote progressStyle =
         ]
 
 
-viewSearchNoteWithLinks : String -> Html msg
-viewSearchNoteWithLinks searchQuery =
+resultSourceProfileText : String -> String
+resultSourceProfileText authorProfileProvider =
+    case authorProfileProvider of
+        "semantic_scholar" ->
+            "Semantic Scholar profile"
+
+        "crossref" ->
+            "CrossRef search"
+
+        "orcid" ->
+            "ORCID profile"
+
+        _ ->
+            "external search"
+
+
+viewSearchNoteWithLinks : String -> String -> String -> Html msg
+viewSearchNoteWithLinks searchQuery authorProfileURL authorProfileProvider =
     span []
-        [ text "If you can't find your publications using your name try your "
+        [ text "The results below are based on this "
+        , a [ href authorProfileURL ] [ text (resultSourceProfileText authorProfileProvider) ]
+        , text ". You can also search for your "
         , a [ href ("https://orcid.org/orcid-search/search?searchQuery=" ++ searchQuery), target "_blank" ]
             [ text "ORCID" ]
         , text ", "
         , a [ href ("https://www.semanticscholar.org/search?q=" ++ searchQuery ++ "&sort=relevance"), target "_blank" ]
             [ text "Semantic Scholar ID" ]
-        , text " or an individual DOI"
+        , text " or an individual DOI."
         ]
 
 

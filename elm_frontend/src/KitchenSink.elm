@@ -31,6 +31,7 @@ initialModel =
     , buggyPapers = []
     , numFailedDOIRequests = 0
     , authorProfileURL = "https://freeyourscience.org"
+    , authorProfileProvider = "semantic_scholar"
     , searchQuery = "Dummy Author"
     , serverURL = ""
     , style = Animation.style []
