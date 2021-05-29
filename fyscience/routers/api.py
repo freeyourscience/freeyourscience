@@ -93,15 +93,6 @@ def get_paper(
         paper = semantic_scholar.get_paper(paper_id)
 
         if paper is None:
-            logger.info(
-                {
-                    "event": "get_paper",
-                    "message": "no_paper_for_s2_paper_id",
-                    "paper_id": paper_id,
-                    "provider": "semantic_scholar",
-                    "trace_context": request.headers.get("x-cloud-trace-context"),
-                }
-            )
             raise HTTPException(404, f"No paper found for {paper_id}")
 
         doi = paper.doi

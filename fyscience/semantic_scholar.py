@@ -69,7 +69,7 @@ def _get_paper(paper_id: str, api_key: str = None) -> Optional[Paper]:
             {
                 "event": "s2_get_paper",
                 "message": "response_not_ok",
-                "paper": paper_id,
+                "paper_id": paper_id,
                 "status_code": r.status_code,
                 "response": r.content.decode() if r.content else "",
             }
@@ -82,6 +82,13 @@ def _get_paper(paper_id: str, api_key: str = None) -> Optional[Paper]:
 def get_paper(paper_id: str, api_key: str = None) -> Optional[FullPaper]:
     paper = _get_paper(paper_id, api_key)
     if paper is None or paper.doi is None:
+        logger.info(
+            {
+                "event": "s2_get_paper",
+                "message": "paper_without_doi",
+                "paper_id": paper_id,
+            }
+        )
         return None
 
     oa_location_url = paper.url if paper.is_open_access else None
