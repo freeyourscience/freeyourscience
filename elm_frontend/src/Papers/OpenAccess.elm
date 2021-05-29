@@ -18,7 +18,7 @@ type alias Paper =
 
 view : Paper -> Html msg
 view paper =
-    div [ class "publications__item" ]
+    div [ class "publications__item--full-width" ]
         [ div [ class "publications__item__info" ]
             (renderPaperMetaData div
                 False
