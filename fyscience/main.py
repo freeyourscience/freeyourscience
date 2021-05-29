@@ -42,7 +42,8 @@ async def human_friendly_exception_pages(request: Request, exc: Exception):
             {
                 "request": request,
                 "detail": "Ooops",
-                "message": "Something unexpected went wrong on our side. If reloading the page doesn't help, please let us know.",
+                "message": "Something unexpected went wrong on our side. "
+                + "If reloading the page doesn't help, please let us know.",
             },
         )
         response.status_code = 500
