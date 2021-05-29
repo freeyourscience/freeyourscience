@@ -7,6 +7,10 @@
   }
 }
 
+.landing--section {
+  margin-bottom: 6rem;
+}
+
 .landing--blurb {
   @include utils.font-sizing(20px, 25px);
   @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
@@ -41,4 +45,14 @@
 .for-authors--text {
   grid-column: 2;
   margin-bottom: 0rem;
+}
+
+.data-partner-logos {
+  display: flex;
+  flex-direction: row;
+
+  img {
+    height: 3rem;
+    margin-right: 3rem;
+  }
 }
