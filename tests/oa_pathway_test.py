@@ -28,7 +28,7 @@ def test_oa_pathway(monkeypatch):
     assert updated_paper.oa_pathway is OAPathway.not_attempted
 
     def mock_sherpa_pathway_api(*args, **kwargs):
-        return OAPathway.already_oa, None, None
+        return OAPathway.already_oa, None
 
     monkeypatch.setattr(
         "fyscience.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api
@@ -58,7 +58,7 @@ def test_oa_pathway_chaches_after_api_call(monkeypatch):
     cache = {}
 
     def mock_sherpa_pathway_api(*args, **kwargs):
-        return target_pathway, "", []
+        return target_pathway, []
 
     monkeypatch.setattr(
         "fyscience.oa_pathway.sherpa_pathway_api", mock_sherpa_pathway_api

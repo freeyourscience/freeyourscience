@@ -32,10 +32,7 @@ def test_get_pathway_successes(issn, pathway, monkeypatch):
 
     monkeypatch.setattr("fyscience.sherpa.requests.get", mock_get_publisher)
 
-    sherpa_pathway, _, _ = get_pathway(
-        issn=issn,
-        api_key="DUMMY-KEY",
-    )
+    sherpa_pathway = get_pathway(issn=issn, api_key="DUMMY-KEY")[0]
     assert sherpa_pathway is pathway
 
 
@@ -47,10 +44,7 @@ def test_get_pathway_request_error(monkeypatch):
 
     monkeypatch.setattr("fyscience.sherpa.requests.get", mock_get_publisher)
 
-    pathway, _, _ = get_pathway(
-        issn="1234-1234",
-        api_key="DUMMY-KEY",
-    )
+    pathway = get_pathway(issn="1234-1234", api_key="DUMMY-KEY")[0]
     assert pathway == OAPathway.not_found
 
 

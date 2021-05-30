@@ -2,6 +2,13 @@
     "items": [
         {
             "id": 4,
+            "system_metadata": {
+                "uri": "https://v2.sherpa.ac.uk/id/publication/4",
+                "date_created": "2010-06-30 17:47:50",
+                "id": 4,
+                "date_modified": "2020-01-29 15:25:29",
+                "publicly_visible": "yes"
+            },
             "publishers": [
                 {
                     "publisher": {
