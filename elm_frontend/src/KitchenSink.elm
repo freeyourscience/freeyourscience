@@ -89,7 +89,6 @@ jsonPapers =
         "issn": "2211-0984",
         "is_open_access": false,
         "oa_pathway": "not_found",
-        "oa_pathway_uri": null,
         "oa_pathway_details": null,
         "oa_location_url": null
     }"""
@@ -106,7 +105,6 @@ jsonPapers =
         "is_open_access": false,
         "oa_location_url": null,
         "oa_pathway": null,
-        "oa_pathway_uri": null,
         "oa_pathway_details": null
     }"""
 
@@ -121,7 +119,6 @@ jsonPapers =
         "issn": "1553-734X",
         "is_open_access": true,
         "oa_pathway": "already_oa",
-        "oa_pathway_uri": null,
         "oa_pathway_details": null,
         "oa_location_url": "https://oa-location.url"
     }"""
@@ -137,7 +134,6 @@ jsonPapers =
         "issn": "1553-734X",
         "is_open_access": true,
         "oa_pathway": "already_oa",
-        "oa_pathway_uri": null,
         "oa_pathway_details": null,
         "oa_location_url": "https://oa-location.url"
     }"""
@@ -154,10 +150,10 @@ jsonPapers =
       "is_open_access": false,
       "oa_location_url": null,
       "oa_pathway": "nocost",
-      "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/7765",
       "oa_pathway_details": [
           {
               "uri": "https://v2.sherpa.ac.uk/id/publisher_policy/4",
+              "sherpa_publication_uri": "https://v2.sherpa.ac.uk/id/publication/7765",
               "notes": "General policy note. Make sure to read this closely!",
               "urls": [
                   {
@@ -605,10 +601,10 @@ jsonPapers =
       "is_open_access": false,
       "oa_location_url": null,
       "oa_pathway": "nocost",
-      "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/7765",
       "oa_pathway_details": [
           {
               "uri": "https://v2.sherpa.ac.uk/id/publisher_policy/4",
+              "sherpa_publication_uri": "https://v2.sherpa.ac.uk/id/publication/7765",
               "notes": "General policy note. Make sure to read this closely!",
               "urls": [
                   {
@@ -1038,10 +1034,10 @@ jsonPapers =
       "is_open_access": false,
       "oa_location_url": null,
       "oa_pathway": "nocost",
-      "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/7765",
       "oa_pathway_details": [
           {
               "uri": "https://v2.sherpa.ac.uk/id/publisher_policy/4",
+              "sherpa_publication_uri": "https://v2.sherpa.ac.uk/id/publication/7765",
               "notes": "General policy note. Make sure to read this closely!",
               "urls": [
                   {
@@ -1486,10 +1482,10 @@ jsonPapers =
     "is_open_access": false,
     "oa_pathway": "nocost",
     "oa_location_url": "#oa-location",
-    "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/13362",
     "oa_pathway_details": [
         {
             "publication_count": 13,
+            "sherpa_publication_uri": "https://v2.sherpa.ac.uk/id/publication/13362",
             "permitted_oa": [
                 {
                     "location": {
@@ -1641,10 +1637,10 @@ jsonPapers =
     "is_open_access": false,
     "oa_location_url": null,
     "oa_pathway": "nocost",
-    "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/10419",
     "oa_pathway_details": [
         {
         "uri": "https://v2.sherpa.ac.uk/id/publisher_policy/3329",
+        "sherpa_publication_uri": "https://v2.sherpa.ac.uk/id/publication/10419",
         "internal_moniker": "UK Funder 12 months",
         "open_access_prohibited": "no",
         "open_access_prohibited_phrases": [
@@ -2634,11 +2630,11 @@ jsonPapers =
     "is_open_access": false,
     "oa_location_url": null,
     "oa_pathway": "nocost",
-    "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/11398",
     "oa_pathway_details": [
         {
         "id": 2252,
         "uri": "https://v2.sherpa.ac.uk/id/publisher_policy/2252",
+        "sherpa_publication_uri": "https://v2.sherpa.ac.uk/id/publication/11398",
         "open_access_prohibited_phrases": [
             { "value": "no", "phrase": "No", "language": "en" }
         ],

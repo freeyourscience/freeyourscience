@@ -212,9 +212,6 @@ classifyPaper backendPaper model =
         isOpenAccess =
             backendPaper.isOpenAccess
 
-        pathwayUri =
-            backendPaper.oaPathwayURI
-
         meta =
             { doi = backendPaper.doi
             , title = backendPaper.title
@@ -231,16 +228,16 @@ classifyPaper backendPaper model =
         recommendedPathway =
             Maybe.andThen FreePathway.recommendPathway backendPaper.pathwayDetails
     in
-    case ( isOpenAccess, pathwayUri, recommendedPathway ) of
-        ( Just False, Just pwUri, Just pathway ) ->
-            FreePathway.Paper meta pwUri pathway
+    case ( isOpenAccess, recommendedPathway ) of
+        ( Just False, Just pathway ) ->
+            FreePathway.Paper meta pathway
                 |> (\p -> { model | freePathwayPapers = Array.push p model.freePathwayPapers })
 
-        ( Just False, Just pwUri, Nothing ) ->
-            OtherPathway.Paper meta pwUri
+        ( Just False, Nothing ) ->
+            OtherPathway.Paper meta
                 |> (\p -> { model | otherPathwayPapers = model.otherPathwayPapers ++ [ p ] })
 
-        ( Just True, _, _ ) ->
+        ( Just True, _ ) ->
             OpenAccess.Paper meta.doi
                 meta.title
                 meta.journal

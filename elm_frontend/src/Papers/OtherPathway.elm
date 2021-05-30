@@ -6,19 +6,31 @@ import Papers.Utils exposing (PaperMetadata, renderPaperMetaData)
 
 
 type alias Paper =
-    { meta : PaperMetadata
-    , oaPathwayURI : String
-    }
+    { meta : PaperMetadata }
 
 
 view : Paper -> Html msg
 view paper =
     div [ class "publications__item--full-width" ]
-        [ div [ class "publications__item__info" ] (renderPaperMetaData div True paper.meta)
-        , text "Check the publisher's "
-        , a [ href paper.oaPathwayURI ] [ text "open access policy" ]
-        , text " deposited with Sherpa."
-        ]
+        (div [ class "publications__item__info" ] (renderPaperMetaData div True paper.meta)
+            :: (paper.meta.issn
+                    |> Maybe.map
+                        (\issn ->
+                            [ text "Check the publisher's "
+                            , a
+                                [ href
+                                    ("https://v2.sherpa.ac.uk/cgi/romeosearch?publication_title-auto="
+                                        ++ issn
+                                        ++ "&_action_search=Search&screen=Search&publication_title-auto_merge=ALL"
+                                    )
+                                ]
+                                [ text "open access policy" ]
+                            , text " deposited with Sherpa."
+                            ]
+                        )
+                    |> Maybe.withDefault []
+               )
+        )
 
 
 viewList : List Paper -> Html msg

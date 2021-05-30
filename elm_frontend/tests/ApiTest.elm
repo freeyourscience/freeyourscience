@@ -21,10 +21,10 @@ fullPaperJson =
     "is_open_access": false,
     "oa_pathway": "nocost",
     "oa_location_url": "https://doi.org/10.1002/STAB.201710469",
-    "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/1908",
     "oa_pathway_details": [
         {
             "open_access_prohibited": "no",
+            "sherpa_publication_uri": "https://v2.sherpa.ac.uk/id/publication/1908",
             "urls": [
                 {
                     "description": "Vereinbarung zur Rechteűbertragung",
@@ -224,7 +224,6 @@ oaPathwayNull =
     "issn": "0038-9145",
     "is_open_access": false,
     "oa_pathway": "nocost",
-    "oa_pathway_uri": "https://v2.sherpa.ac.uk/id/publication/1908",
     "oa_pathway_details": null,
     "oa_location_url": "https://doi.org/10.1002/STAB.201710469"
 }
@@ -242,7 +241,6 @@ fullPaperElm =
     , issn = Just "0038-9145"
     , isOpenAccess = Just False
     , oaPathway = Just "nocost"
-    , oaPathwayURI = Just "https://v2.sherpa.ac.uk/id/publication/1908"
     , oaLocationURL = Just "https://doi.org/10.1002/STAB.201710469"
     , pathwayDetails =
         Just
@@ -286,6 +284,7 @@ fullPaperElm =
                           }
                         ]
               , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
+              , sherpaPublicationUrl = "https://v2.sherpa.ac.uk/id/publication/1908"
               , notes = Just "Notes about this policy"
               }
             ]

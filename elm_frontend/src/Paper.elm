@@ -111,7 +111,7 @@ viewWhosPublication doi =
 
 
 viewRightVersion : List String -> String -> List (Html Msg)
-viewRightVersion articleVersions policyProfileUrl =
+viewRightVersion articleVersions sherpaPublicationUrl =
     let
         version =
             articleVersionString articleVersions
@@ -169,7 +169,7 @@ viewRightVersion articleVersions policyProfileUrl =
         If you no longer have the version specified by the pathway
         you might also be allowed to re-publish an earlier one.
         Check the """
-        , a [ href policyProfileUrl, target "_blank" ] [ text "pathway details for this publication" ]
+        , a [ href sherpaPublicationUrl, target "_blank" ] [ text "pathway details for this publication" ]
         , text " in the Sherpa Romeo policy database for what other versions are allowed."
         ]
     ]
@@ -242,7 +242,9 @@ viewRepublishTodayForFree paper =
             div
             paper.meta
             ++ viewWhosPublication paper.meta.doi
-            :: viewRightVersion pathway.articleVersions paper.oaPathwayURI
+            :: viewRightVersion
+                pathway.articleVersions
+                (Tuple.first paper.recommendedPathway).sherpaPublicationUrl
             ++ viewCheckConditions paper.recommendedPathway
             ++ viewWhereTo pathway.locationLabelsSorted
             ++ [ -- CO-AUTHORS
@@ -408,9 +410,6 @@ classifyPaper backendPaper model =
         isOpenAccess =
             backendPaper.isOpenAccess
 
-        pathwayUri =
-            backendPaper.oaPathwayURI
-
         meta =
             { doi = backendPaper.doi
             , title = backendPaper.title
@@ -427,16 +426,16 @@ classifyPaper backendPaper model =
         recommendedPathway =
             Maybe.andThen FreePathway.recommendPathway backendPaper.pathwayDetails
     in
-    case ( isOpenAccess, pathwayUri, recommendedPathway ) of
-        ( Just False, Just pwUri, Just pathway ) ->
-            FreePathway.Paper meta pwUri pathway
+    case ( isOpenAccess, recommendedPathway ) of
+        ( Just False, Just pathway ) ->
+            FreePathway.Paper meta pathway
                 |> (\p -> { model | paper = Just (FP p) })
 
-        ( Just False, Just pwUri, Nothing ) ->
-            OtherPathway.Paper meta pwUri
+        ( Just False, Nothing ) ->
+            OtherPathway.Paper meta
                 |> (\p -> { model | paper = Just (OP p) })
 
-        ( Just True, _, _ ) ->
+        ( Just True, _ ) ->
             OpenAccess.Paper meta.doi
                 meta.title
                 meta.journal

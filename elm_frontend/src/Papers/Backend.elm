@@ -19,7 +19,6 @@ type alias Paper =
     , issn : Maybe String
     , isOpenAccess : Maybe Bool
     , oaPathway : Maybe String
-    , oaPathwayURI : Maybe String
     , pathwayDetails : Maybe (List Policy)
     , oaLocationURL : Maybe String
     }
@@ -28,7 +27,8 @@ type alias Paper =
 type alias Policy =
     { urls : Maybe (List NamedUrl)
     , permittedOA : Maybe (List PermittedOA)
-    , policyUrl : String -- TODO: replace with use of oaPathwayURI?
+    , policyUrl : String
+    , sherpaPublicationUrl : String
     , notes : Maybe String
     }
 
@@ -174,6 +174,7 @@ policyDetailsDecoder =
         |> required "urls" (D.nullable (D.list namedUrlDecoder))
         |> required "permitted_oa" (D.nullable (D.list permittedOADecoder))
         |> required "uri" D.string
+        |> required "sherpa_publication_uri" D.string
         |> optional "notes" (D.nullable D.string) Nothing
 
 
@@ -189,6 +190,5 @@ paperDecoder =
         |> required "issn" (D.nullable D.string)
         |> required "is_open_access" (D.nullable D.bool)
         |> required "oa_pathway" (D.nullable D.string)
-        |> required "oa_pathway_uri" (D.nullable D.string)
         |> required "oa_pathway_details" (D.nullable (D.list policyDetailsDecoder))
         |> required "oa_location_url" (D.nullable D.string)

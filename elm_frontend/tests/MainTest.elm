@@ -35,7 +35,8 @@ noCostOaPathway =
 recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
 recommendedPathway =
     ( { additionalUrls = Just [ { description = "Vereinbarung zur Rechteűbertragung", url = "https://www.ernst-und-sohn.de/sites/default/files/uploads/service/autoren/EuS_CTA_DE_2016-02.pdf" } ]
-      , profileUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
+      , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
+      , sherpaPublicationUrl = "https://v2.sherpa.ac.uk/id/publication/000"
       , notes = Just "Notes about this policy"
       }
     , noCostOaPathway
@@ -89,6 +90,7 @@ pathwayDetails =
                   }
                 ]
       , policyUrl = "https://v2.sherpa.ac.uk/id/publisher_policy/1390"
+      , sherpaPublicationUrl = "https://v2.sherpa.ac.uk/id/publication/000"
       , notes = Just "Notes about this policy"
       }
     ]

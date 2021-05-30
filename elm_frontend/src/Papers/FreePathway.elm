@@ -30,13 +30,13 @@ import Time exposing (Month(..))
 
 type alias Paper =
     { meta : PaperMetadata
-    , oaPathwayURI : String
     , recommendedPathway : ( PolicyMetaData, NoCostOaPathway )
     }
 
 
 type alias PolicyMetaData =
-    { profileUrl : String
+    { policyUrl : String
+    , sherpaPublicationUrl : String
     , additionalUrls : Maybe (List NamedUrl)
     , notes : Maybe String
     }
@@ -152,8 +152,9 @@ parsePathway { articleVersions, location, prerequisites, conditions, additionalO
 
 
 parsePolicyMetaData : Policy -> PolicyMetaData
-parsePolicyMetaData { policyUrl, urls, notes } =
-    { profileUrl = policyUrl
+parsePolicyMetaData { policyUrl, sherpaPublicationUrl, urls, notes } =
+    { policyUrl = policyUrl
+    , sherpaPublicationUrl = sherpaPublicationUrl
     , additionalUrls = urls
     , notes = notes
     }
