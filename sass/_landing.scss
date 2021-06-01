@@ -50,10 +50,12 @@
 .data-partner-logos {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 
   img {
-    height: 3rem;
+    max-height: 3rem;
     margin-right: 3rem;
+    margin-bottom: 1rem;
     filter: grayscale(1);
   }
   img:hover {
