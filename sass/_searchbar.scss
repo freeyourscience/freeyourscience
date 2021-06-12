@@ -21,6 +21,7 @@
   background-color: settings.$color-blue;
   font-weight: bold;
   cursor: pointer;
+  min-width: 5.5rem;
 }
 
 .search__small {
@@ -49,4 +50,9 @@
   outline: 2px solid transparent;
   box-sizing: border-box;
   height: 2px;
+}
+
+.loader {
+  font-size: 0.2rem;
+  margin: auto;
 }

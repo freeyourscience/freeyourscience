@@ -107,6 +107,19 @@
       });
     </script>
 
+    <script>
+      var searchButtons = document.querySelectorAll(".search__button");
+      Array.prototype.forEach.call(searchButtons, function (el, i) {
+        el.addEventListener("click", function (event) {
+          if (
+            this.parentNode.querySelector(".search__input").value.length > 0
+          ) {
+            this.innerHTML = "<div class='loader'></div>";
+          }
+        });
+      });
+    </script>
+
     <!-- Matomo -->
     <script type="text/javascript">
       var _paq = (window._paq = window._paq || []);
