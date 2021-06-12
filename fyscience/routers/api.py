@@ -132,6 +132,8 @@ def get_paper(
             "event": "get_paper",
             "message": "paper_found",
             "doi": doi,
+            "is_oa": paper.is_open_access,
+            "pathway": str(paper.oa_pathway),
             "trace_context": request.headers.get("x-cloud-trace-context"),
         }
     )
