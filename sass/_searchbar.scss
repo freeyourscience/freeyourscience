@@ -1,6 +1,29 @@
 @use 'utils';
 @use 'settings';
 
+.landing--search--container {
+  background: settings.$color-background;
+
+  margin-left: -1rem;
+  margin-right: -1rem;
+
+  padding-top: 3rem;
+  padding-bottom: 3.2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  .search {
+    margin-bottom: 0;
+  }
+
+  @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
+    margin-left: -100%;
+    margin-right: -100%;
+    padding-left: 100%;
+    padding-right: 100%;
+  }
+}
+
 .search {
   display: flex;
   margin-bottom: 6rem;

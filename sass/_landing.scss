@@ -16,7 +16,7 @@
   @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
     @include utils.font-sizing(22px, 30px);
   }
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .for-authors--item {
