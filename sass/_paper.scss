@@ -34,14 +34,14 @@ main.paper {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   column-gap: 2rem;
-  row-gap: 1rem;
-  margin-top: 3rem;
+  row-gap: 2rem;
+  margin-top: 4rem;
   margin-left: -1rem;
   margin-right: -1rem;
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 2rem;
-  padding-bottom: 1rem;
+  padding-bottom: 4rem;
   background: settings.$color-background;
 
   @media screen and (min-width: utils.px-to-rem(settings.$breakpoint)) {
@@ -50,6 +50,12 @@ main.paper {
     margin-right: -75%;
     padding-left: 75%;
     padding-right: 75%;
+  }
+
+  h2 {
+    grid-column: 1/-1;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
   }
 }
 
@@ -63,8 +69,11 @@ main.paper {
 
 .whos-publication__item {
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr);
   grid-template-rows: auto 1fr;
+
+  p {
+    margin-bottom: 0;
+  }
 }
 
 .whos-publication--title {
@@ -75,6 +84,12 @@ main.paper {
 .whos-publication--details {
   grid-column: 2;
   margin-bottom: 1rem;
+}
+
+.whos-publication--footer {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 1rem;
 }
 
 .material-icons {

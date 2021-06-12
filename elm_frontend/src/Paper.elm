@@ -3,7 +3,7 @@ port module Paper exposing (..)
 import Browser
 import Date exposing (Date, fromIsoString)
 import Debug
-import Html exposing (Html, a, article, div, h1, h3, main_, p, small, span, strong, text)
+import Html exposing (Html, a, article, div, h1, h2, h3, main_, p, small, span, strong, text)
 import Html.Attributes exposing (class, href, id, target)
 import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchForm)
 import Http
@@ -77,36 +77,76 @@ fetchPaper serverURL doi =
 viewWhosPublication : DOI -> Html Msg
 viewWhosPublication doi =
     div [ class "whos-publication" ]
-        [ div [ class "whos-publication__item" ]
+        [ h2 [] [ text "Your re-publishing choices" ]
+        , div [ class "whos-publication__item" ]
             [ span [ class "whos-publication--title" ]
-                [ text "Your publication?"
+                [ text "ShareYourPaper re-publishes for you"
                 ]
-            , span [ class "material-icons" ] [ text "send" ]
-            , p [ class "whos-publication--details" ]
-                [ text "Let "
+            , p []
+                [ text
+                    ("The non-profit running shareyourpaper.org is aligned with our mission and ideals. "
+                        ++ "Their re-publication process just takes a few clicks, "
+                    )
                 , a
                     [ href ("https://shareyourpaper.org/" ++ doi)
                     , target "_blank"
                     ]
-                    [ text "shareyourpaper.org" ]
-                , text " re-publish this for you."
-                ]
-            , span [ class "material-icons" ] [ text "school" ]
-            , p [ class "whos-publication--details" ]
-                [ text "Alternatively, learn to re-publish yourself. The guide below is specific to this publication."
+                    [ text "start here" ]
+                , text "."
                 ]
             ]
         , div [ class "whos-publication__item" ]
             [ span [ class "whos-publication--title" ]
-                [ text "Not your publication?"
+                [ text "Learn to re-publish yourself"
                 ]
-            , span [ class "material-icons" ] [ text "campaign" ]
-            , div [ class "whos-publication--content" ]
-                [ p []
-                    [ text "Let the authors know what they can do. Share this page with them."
-                    ]
+            , p []
+                [ text
+                    ("We think learning is great. So if you are curious to find out "
+                        ++ "what individual steps are involved in re-publishing, "
+                        ++ "there is a guide, customized for this publication, for you to "
+                    )
+                , a [ href "#guide" ] [ text "read below" ]
+                , text "."
                 ]
             ]
+        , small [ class "whos-publication--footer" ]
+            [ text
+                ("Not your publication? Let the authors know what they can do. "
+                    ++ "Share this page with them."
+                )
+            ]
+
+        -- , div
+        --     [ class "whos-publication__item" ]
+        --     [ span [ class "whos-publication--title" ]
+        --         [ text "Your publication?"
+        --         ]
+        --     , span [ class "material-icons" ] [ text "send" ]
+        --     , p [ class "whos-publication--details" ]
+        --         [ text "Let "
+        --         , a
+        --             [ href ("https://shareyourpaper.org/" ++ doi)
+        --             , target "_blank"
+        --             ]
+        --             [ text "shareyourpaper.org" ]
+        --         , text " re-publish this for you."
+        --         ]
+        --     , span [ class "material-icons" ] [ text "school" ]
+        --     , p [ class "whos-publication--details" ]
+        --         [ text "Alternatively, learn to re-publish yourself. The guide below is specific to this publication."
+        --         ]
+        --     ]
+        -- , div [ class "whos-publication__item" ]
+        --     [ span [ class "whos-publication--title" ]
+        --         [ text "Not your publication?"
+        --         ]
+        --     , span [ class "material-icons" ] [ text "campaign" ]
+        --     , div [ class "whos-publication--content" ]
+        --         [ p []
+        --             [ text "Let the authors know what they can do. Share this page with them."
+        --             ]
+        --         ]
+        --     ]
         ]
 
 
@@ -241,8 +281,10 @@ viewRepublishTodayForFree paper =
         (renderPaperMetaDataWithDoi
             div
             paper.meta
-            ++ viewWhosPublication paper.meta.doi
-            :: viewRightVersion
+            ++ [ viewWhosPublication paper.meta.doi
+               , h2 [ id "guide" ] [ text "Custom re-publishing guide" ]
+               ]
+            ++ viewRightVersion
                 pathway.articleVersions
                 (Tuple.first paper.recommendedPathway).sherpaPublicationUrl
             ++ viewCheckConditions paper.recommendedPathway
