@@ -57,10 +57,10 @@ resultSourceProfileText authorProfileProvider =
             "external search"
 
 
-viewSearchNoteWithLinks : String -> String -> String -> Html msg
-viewSearchNoteWithLinks searchQuery authorProfileURL authorProfileProvider =
+viewSearchNoteWithLinks : String -> String -> String -> Int -> Html msg
+viewSearchNoteWithLinks searchQuery authorProfileURL authorProfileProvider numResults =
     span []
-        [ text "The results below are based on this "
+        [ text ("The " ++ String.fromInt numResults ++ " results below are based on this ")
         , a [ href authorProfileURL ] [ text (resultSourceProfileText authorProfileProvider) ]
         , text ". You can also search for your "
         , a [ href ("https://orcid.org/orcid-search/search?searchQuery=" ++ searchQuery), target "_blank" ]

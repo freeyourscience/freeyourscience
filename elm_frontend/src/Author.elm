@@ -117,6 +117,7 @@ view model =
                     model.searchQuery
                     model.authorProfileURL
                     model.authorProfileProvider
+                    (model |> numberFetchedPapers)
                 )
                 (Animation.render model.style)
             , FreePathway.viewList model.today paywalledNoCostPathwayPapers
