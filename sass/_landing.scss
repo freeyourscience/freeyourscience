@@ -47,16 +47,20 @@
   margin-bottom: 0rem;
 }
 
-.data-partner-logos {
+.data-partners__text {
+  margin-bottom: 3rem;
+}
+.data-partners__logos {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-around;
+  margin-bottom: 3rem;
 
   img {
     max-height: 3rem;
-    margin-right: 3rem;
-    margin-bottom: 1rem;
-    filter: grayscale(1);
+    margin: 0 3rem 2rem;
+    filter: grayscale(1) opacity(80%);
   }
   img:hover {
     filter: none;
