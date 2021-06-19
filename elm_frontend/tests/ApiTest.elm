@@ -1,7 +1,6 @@
 module ApiTest exposing (..)
 
 import Expect
-import Html.Attributes exposing (name)
 import Json.Decode as D
 import Papers.Backend as Backend
 import Test exposing (Test, describe, test)

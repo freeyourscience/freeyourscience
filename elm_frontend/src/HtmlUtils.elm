@@ -1,6 +1,6 @@
 module HtmlUtils exposing (addEmbargo, renderList, ulWithHeading, viewSearchForm, viewSearchNoteWithLinks)
 
-import Html exposing (Html, a, br, button, div, form, input, li, p, small, span, text, ul)
+import Html exposing (Html, a, button, div, form, input, li, p, small, span, text, ul)
 import Html.Attributes exposing (action, attribute, class, href, id, method, name, placeholder, target, type_, value)
 
 

@@ -5,8 +5,8 @@ import Array exposing (Array)
 import Browser
 import Date exposing (Date, fromIsoString)
 import Debug
-import Html exposing (Html, a, div, h1, h2, main_, p, small, text)
-import Html.Attributes exposing (class, href, target)
+import Html exposing (Html, a, div, h1, h2, main_, p, text)
+import Html.Attributes exposing (class)
 import HtmlUtils exposing (viewSearchForm, viewSearchNoteWithLinks)
 import Http
 import HttpBuilder exposing (withHeader)
@@ -129,21 +129,6 @@ view model =
                 , Buggy.viewList model.buggyPapers
                 ]
             ]
-        ]
-
-
-
--- VIEW SOURCE PROFILE
-
-
-renderSourceProfile : String -> Html Msg
-renderSourceProfile authorProfileURL =
-    small []
-        [ text "("
-        , a [ href authorProfileURL, target "_blank", class "link-dark" ]
-            [ text "Source Profile"
-            ]
-        , text " that was used to retreive the author's publications.)"
         ]
 
 
