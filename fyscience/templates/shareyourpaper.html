@@ -1,13 +1,19 @@
 {% extends "base.html" %} {% block header %}
-<script src="https://shareyourpaper.org/embed.js"></script>
+<script src="https://shareyourpaper.org/static/embed/oab_embed.js"></script>
 {% endblock %} {% block content %}
 <main>
   <section id="shareyourpaper"></section>
 </main>
 
 <script>
-  _oab = shareyourpaper({ config: {} });
+  _oab = shareyourpaper({ config: {
+      "repo_name":"Zenodo",
+      "oa_deposit_off":true,
+      "dark_deposit_off":true,
+      //"live":1585895131684,
+      "not_library":true,
+      "owner":"team@freeyourscience.org"
+    } });
   _oab.permissions({{ permissions | safe }});
-  syp = document.getElementById("shareyourpaper")
 </script>
 {% endblock %}
