@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block header %}
+<script src="https://shareyourpaper.org/embed.js"></script>
+{% endblock %} {% block content %}
+<main>
+  <section id="shareyourpaper"></section>
+</main>
+
+<script>
+  _oab = shareyourpaper({ config: {} });
+  _oab.permissions({{ permissions | safe }});
+  syp = document.getElementById("shareyourpaper")
+</script>
+{% endblock %}

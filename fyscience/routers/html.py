@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from fyscience.routers.api import get_author_with_papers
 from fyscience.routers.deps import get_settings, Settings, TEMPLATE_PATH
 from starlette.datastructures import URL
+from fyscience.openaccessbutton import get_permissions
 
 html_router = APIRouter()
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
@@ -94,6 +95,28 @@ def get_search_result_html(
         return _render_author_page(
             author_query=query, settings=settings, request=request
         )
+
+
+@html_router.get("/syp", response_class=HTMLResponse)
+def get_share_your_paper(doi: str, request: Request):
+    """Get shareyourpaper.org submission form for the given DOI."""
+    permissions = get_permissions(doi=doi)
+
+    host = request.headers["host"]
+    server_url = (
+        "https://" + host if host.endswith("freeyourscience.org") else "http://" + host
+    )
+
+    return templates.TemplateResponse(
+        "shareyourpaper.html",
+        {
+            "request": request,
+            "serverURL": server_url,
+            "doi": doi,
+            "permissions": permissions,
+        },
+        headers=_get_response_headers(request.url),
+    )
 
 
 @html_router.get("/technology", response_class=HTMLResponse)
