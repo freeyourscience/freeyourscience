@@ -3,11 +3,11 @@ import re
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.datastructures import URL
 
 from fyscience.routers.api import get_author_with_papers
 from fyscience.routers.deps import get_settings, Settings, TEMPLATE_PATH
-from starlette.datastructures import URL
-from fyscience.openaccessbutton import get_permissions
+from fyscience.openaccessbutton import get_paper_metadata
 
 html_router = APIRouter()
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
@@ -100,7 +100,7 @@ def get_search_result_html(
 @html_router.get("/syp", response_class=HTMLResponse)
 def get_share_your_paper(doi: str, request: Request):
     """Get shareyourpaper.org submission form for the given DOI."""
-    permissions = get_permissions(doi=doi)
+    paper_meta_data = get_paper_metadata(doi=doi)
 
     host = request.headers["host"]
     server_url = (
@@ -113,7 +113,7 @@ def get_share_your_paper(doi: str, request: Request):
             "request": request,
             "serverURL": server_url,
             "doi": doi,
-            "permissions": permissions,
+            "paper_meta_data": paper_meta_data,
         },
         headers=_get_response_headers(request.url),
     )
