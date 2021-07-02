@@ -19,38 +19,10 @@ def get_settings_override():
 main.app.dependency_overrides[get_settings] = get_settings_override
 
 
-@pytest.mark.parametrize(
-    "profile,provider",
-    [
-        (51453144, "semantic_scholar.get_author_with_papers"),
-        (
-            "https://www.semanticscholar.org/author/Lukas-Gro%C3%9Fberger/51453144",
-            "semantic_scholar.get_author_with_papers",
-        ),
-        ("https://orcid.org/0000-0000-0000-0000", "orcid.get_author_with_papers"),
-        ("0000-0000-0000-0000", "orcid.get_author_with_papers"),
-        ("firstname lastname", "crossref.get_author_with_papers"),
-    ],
-)
-def test_get_publications_for_author(
-    profile, provider, monkeypatch, client: TestClient
-) -> None:
-    url = f"/api/authors?profile={profile}"
-
-    monkeypatch.setattr(
-        f"fyscience.routers.api.{provider}",
-        lambda *a, **kw: Author(
-            name="Dummy Author", paper_ids=["10.1007/s00580-005-0536-0"]
-        ),
-    )
-
-    r = client.get(url)
-    assert r.ok
-
-
 def test_no_author_found(monkeypatch, client: TestClient):
     providers = [
         "semantic_scholar.get_author_with_papers",
+        "semantic_scholar.get_author_id",
         "orcid.get_author_with_papers",
         "crossref.get_author_with_papers",
     ]
