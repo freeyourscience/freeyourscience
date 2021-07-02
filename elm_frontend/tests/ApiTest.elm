@@ -243,6 +243,7 @@ fullPaperElm =
     , isOpenAccess = Just False
     , oaPathway = Just "nocost"
     , oaLocationURL = Just "https://doi.org/10.1002/STAB.201710469"
+    , canShareYourPaper = False
     , pathwayDetails =
         Just
             [ { urls =
