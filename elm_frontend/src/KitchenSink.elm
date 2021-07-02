@@ -88,6 +88,7 @@ jsonPapers =
         "published_date": "2016-01-01",
         "issn": "2211-0984",
         "is_open_access": false,
+        "can_share_your_paper": false,
         "oa_pathway": "not_found",
         "oa_pathway_details": null,
         "oa_location_url": null
@@ -103,6 +104,7 @@ jsonPapers =
         "published_date": "1997-01-01",
         "issn": null,
         "is_open_access": false,
+        "can_share_your_paper": false,
         "oa_location_url": null,
         "oa_pathway": null,
         "oa_pathway_details": null
@@ -118,6 +120,7 @@ jsonPapers =
         "published_date": "2018-01-01",
         "issn": "1553-734X",
         "is_open_access": true,
+        "can_share_your_paper": false,
         "oa_pathway": "already_oa",
         "oa_pathway_details": null,
         "oa_location_url": "https://oa-location.url"
@@ -133,6 +136,7 @@ jsonPapers =
         "published_date": "2018-01-01",
         "issn": "1553-734X",
         "is_open_access": true,
+        "can_share_your_paper": false,
         "oa_pathway": "already_oa",
         "oa_pathway_details": null,
         "oa_location_url": "https://oa-location.url"
@@ -148,6 +152,7 @@ jsonPapers =
       "published_date": "2018-01-01",
       "issn": "1936-0851",
       "is_open_access": false,
+      "can_share_your_paper": false,
       "oa_location_url": null,
       "oa_pathway": "nocost",
       "oa_pathway_details": [
@@ -599,6 +604,7 @@ jsonPapers =
       "published_date": "2018-01-01",
       "issn": "1936-0851",
       "is_open_access": false,
+      "can_share_your_paper": false,
       "oa_location_url": null,
       "oa_pathway": "nocost",
       "oa_pathway_details": [
@@ -1032,6 +1038,7 @@ jsonPapers =
       "published_date": "2018-01-01",
       "issn": "1936-0851",
       "is_open_access": false,
+      "can_share_your_paper": false,
       "oa_location_url": null,
       "oa_pathway": "nocost",
       "oa_pathway_details": [
@@ -1480,6 +1487,7 @@ jsonPapers =
     "published_date": "2019-01-01",
     "issn": "0146-9592",
     "is_open_access": false,
+    "can_share_your_paper": true,
     "oa_pathway": "nocost",
     "oa_location_url": "#oa-location",
     "oa_pathway_details": [
@@ -1635,6 +1643,7 @@ jsonPapers =
     "published_date": "2001-01-01",
     "issn": "0001-4079",
     "is_open_access": false,
+    "can_share_your_paper": false,
     "oa_location_url": null,
     "oa_pathway": "nocost",
     "oa_pathway_details": [
@@ -2628,6 +2637,7 @@ jsonPapers =
     "published_date": "2017-02-01",
     "issn": "1053-8119",
     "is_open_access": false,
+    "can_share_your_paper": false,
     "oa_location_url": null,
     "oa_pathway": "nocost",
     "oa_pathway_details": [

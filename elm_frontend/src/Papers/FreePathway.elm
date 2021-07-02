@@ -392,22 +392,33 @@ view today ( id, paper ) =
 -- VIEW ELEMENTS
 
 
-renderPathwayButtons : ( Int, { a | title : Maybe String, doi : String } ) -> Html Msg
-renderPathwayButtons ( id, { title, doi } ) =
+renderPathwayButtons : ( Int, { a | title : Maybe String, doi : String, canShareYourPaper : Bool } ) -> Html Msg
+renderPathwayButtons ( id, { title, doi, canShareYourPaper } ) =
     let
         paperTitle =
             Maybe.withDefault "Unknown title" title
     in
     div [ class "publications__item__buttons" ]
         -- TODO: Link absolute to URL and not relative
-        [ a [ href ("/search?query=" ++ doi) ]
-            [ button
-                [ class "pathway__button--show"
-                , class "pathway__button"
-                , Html.Attributes.title ("Re-publication details for: " ++ paperTitle)
+        [ if canShareYourPaper then
+            a [ href ("/syp?doi=" ++ doi) ]
+                [ button
+                    [ class "pathway__button--show"
+                    , class "pathway__button"
+                    , Html.Attributes.title ("Re-publish: " ++ paperTitle)
+                    ]
+                    [ text "Re-publish" ]
                 ]
-                [ text "Details" ]
-            ]
+
+          else
+            a [ href ("/search?query=" ++ doi) ]
+                [ button
+                    [ class "pathway__button--show"
+                    , class "pathway__button"
+                    , Html.Attributes.title ("Re-publication details for: " ++ paperTitle)
+                    ]
+                    [ text "Details" ]
+                ]
         ]
 
 

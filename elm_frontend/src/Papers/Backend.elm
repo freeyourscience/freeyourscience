@@ -18,6 +18,7 @@ type alias Paper =
     , publishedDate : Maybe String
     , issn : Maybe String
     , isOpenAccess : Maybe Bool
+    , canShareYourPaper : Bool
     , oaPathway : Maybe String
     , pathwayDetails : Maybe (List Policy)
     , oaLocationURL : Maybe String
@@ -189,6 +190,7 @@ paperDecoder =
         |> required "published_date" (D.nullable D.string)
         |> required "issn" (D.nullable D.string)
         |> required "is_open_access" (D.nullable D.bool)
+        |> required "can_share_your_paper" D.bool
         |> required "oa_pathway" (D.nullable D.string)
         |> required "oa_pathway_details" (D.nullable (D.list policyDetailsDecoder))
         |> required "oa_location_url" (D.nullable D.string)

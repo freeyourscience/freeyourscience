@@ -18,6 +18,7 @@ fullPaperJson =
     "published_date": null,
     "issn": "0038-9145",
     "is_open_access": false,
+    "can_share_your_paper": false,
     "oa_pathway": "nocost",
     "oa_location_url": "https://doi.org/10.1002/STAB.201710469",
     "oa_pathway_details": [
@@ -222,6 +223,7 @@ oaPathwayNull =
     "published_date": null,
     "issn": "0038-9145",
     "is_open_access": false,
+    "can_share_your_paper": false,
     "oa_pathway": "nocost",
     "oa_pathway_details": null,
     "oa_location_url": "https://doi.org/10.1002/STAB.201710469"

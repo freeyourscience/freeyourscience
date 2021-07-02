@@ -7,7 +7,7 @@ from fyscience.schemas import OAPathway, FullPaper, Author, LogEntry
 from fyscience.unpaywall import get_paper as unpaywall_get_paper
 from fyscience.oa_pathway import oa_pathway
 from fyscience.oa_status import validate_oa_status_from_s2
-from fyscience import orcid, semantic_scholar, crossref
+from fyscience import openaccessbutton, orcid, semantic_scholar, crossref
 from fyscience.routers.deps import get_settings, Settings
 
 
@@ -127,12 +127,17 @@ def get_paper(
             }
         )
 
+    permissions = openaccessbutton.get_permissions(doi)
+    if permissions is not None:
+        paper.can_share_your_paper = permissions["best_permission"]["can_archive"]
+
     logger.info(
         {
             "event": "get_paper",
             "message": "paper_found",
             "doi": doi,
             "is_oa": paper.is_open_access,
+            "can_syp": paper.can_share_your_paper,
             "pathway": str(paper.oa_pathway),
             "trace_context": request.headers.get("x-cloud-trace-context"),
         }

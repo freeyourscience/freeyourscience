@@ -384,6 +384,7 @@ view model =
                         , doi = paper.doi
                         , issn = paper.issn
                         , url = Just paper.oaLocationURL
+                        , canShareYourPaper = False
                         }
                     )
                 , p [ class "pathway-status" ]
@@ -463,6 +464,7 @@ classifyPaper backendPaper model =
                     |> Maybe.andThen (\d -> d |> fromIsoString |> Result.toMaybe)
             , issn = backendPaper.issn
             , url = Nothing
+            , canShareYourPaper = backendPaper.canShareYourPaper
             }
 
         recommendedPathway =

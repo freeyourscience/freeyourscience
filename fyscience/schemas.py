@@ -55,6 +55,7 @@ class FullPaper(BaseModel):
     oa_location_url: Optional[str] = None
     oa_pathway: Optional[OAPathway] = None
     oa_pathway_details: Optional[List[dict]] = None
+    can_share_your_paper: bool = False
 
 
 class Author(BaseModel):
