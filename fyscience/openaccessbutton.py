@@ -5,7 +5,23 @@ import requests
 
 def get_paper_metadata(doi: str) -> Optional[dict]:
     """Get OA Button's paper meta data for a given DOI."""
-    r = requests.get("https://api.openaccessbutton.org/find", params={"doi": doi})
+    r = requests.post(
+        "https://api.openaccessbutton.org/find",
+        json={
+            "doi": doi,
+            "config": {
+                "repo_name": "Zenodo",
+                "oa_deposit_off": True,
+                "dark_deposit_off": True,
+                "not_library": True,
+                "autorun_off": False,
+                "owner": "team@freeyourscience.org",
+            },
+            "from": "anonymous",
+            "plugin": "shareyourpaper",
+            "embedded": f"https://freeyourscience.org/syp?doi={doi}",
+        },
+    )
     if not r.ok:
         return None
 

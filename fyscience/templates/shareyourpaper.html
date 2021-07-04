@@ -6,14 +6,22 @@
 </main>
 
 <script>
-  _oab = shareyourpaper({ config: {
-      "repo_name":"Zenodo",
-      "oa_deposit_off":true,
-      "dark_deposit_off":true,
+  _oab = shareyourpaper({
+    config: {
+      repo_name: "Zenodo",
+      oa_deposit_off: true,
+      dark_deposit_off: true,
       //"live":1585895131684,
-      "not_library":true,
-      "owner":"team@freeyourscience.org"
-    } });
-  _oab.permissions({{ paper_meta_data | safe }});
+      not_library: true,
+      autorun_off: true,
+      owner: "team@freeyourscience.org",
+    },
+  });
+  var checkEmbedLoaded = setInterval(function () {
+    if (_oab.loading) {
+      _oab.permissions({{ paper_meta_data | safe }});
+      clearInterval(checkEmbedLoaded);
+    }
+  }, 100);
 </script>
 {% endblock %}

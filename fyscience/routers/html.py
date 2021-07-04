@@ -1,4 +1,5 @@
 import re
+import json
 
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import HTMLResponse
@@ -113,7 +114,7 @@ def get_share_your_paper(doi: str, request: Request):
             "request": request,
             "serverURL": server_url,
             "doi": doi,
-            "paper_meta_data": paper_meta_data,
+            "paper_meta_data": json.dumps(paper_meta_data),
         },
         headers=_get_response_headers(request.url),
     )
