@@ -49,6 +49,7 @@ type alias NoCostOaPathway =
     , conditions : Maybe (List String)
     , embargo : Maybe Embargo
     , notes : Maybe (List String)
+    , shareYourPaperCompatibleLocation : Bool
     }
 
 
@@ -88,6 +89,18 @@ pathwayLocationDoesNotIncludeThisJournal ( metadata, pathway ) =
     not (List.member "this_journal" pathway.locationSorted.location)
 
 
+shareYourPaperCompatibleLocation : List String -> Bool
+shareYourPaperCompatibleLocation locations =
+    locations
+        |> List.filter
+            (\l ->
+                List.member l
+                    [ "any_repository", "preprint_repository", "non_commercial_repository" ]
+            )
+        |> List.isEmpty
+        |> not
+
+
 noCostOaPathway : ( PolicyMetaData, Pathway ) -> Maybe ( PolicyMetaData, NoCostOaPathway )
 noCostOaPathway ( metadata, pathway ) =
     case ( pathway.additionalOaFee, pathway.articleVersions ) of
@@ -100,6 +113,7 @@ noCostOaPathway ( metadata, pathway ) =
                   , conditions = pathway.conditions
                   , embargo = pathway.embargo
                   , notes = pathway.notes
+                  , shareYourPaperCompatibleLocation = shareYourPaperCompatibleLocation pathway.locationSorted.location
                   }
                 )
 
