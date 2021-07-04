@@ -28,7 +28,7 @@ type alias PaperMetadata =
     , publishedDate : Maybe Date
     , issn : Maybe String
     , url : Maybe String
-    , canShareYourPaper : Bool
+    , recommendShareYourPaper : Bool
     }
 
 

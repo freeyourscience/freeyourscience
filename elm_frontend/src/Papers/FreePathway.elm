@@ -392,15 +392,15 @@ view today ( id, paper ) =
 -- VIEW ELEMENTS
 
 
-renderPathwayButtons : ( Int, { a | title : Maybe String, doi : String, canShareYourPaper : Bool } ) -> Html Msg
-renderPathwayButtons ( id, { title, doi, canShareYourPaper } ) =
+renderPathwayButtons : ( Int, { a | title : Maybe String, doi : String, recommendShareYourPaper : Bool } ) -> Html Msg
+renderPathwayButtons ( id, { title, doi, recommendShareYourPaper } ) =
     let
         paperTitle =
             Maybe.withDefault "Unknown title" title
     in
     div [ class "publications__item__buttons" ]
         -- TODO: Link absolute to URL and not relative
-        [ if canShareYourPaper then
+        [ if recommendShareYourPaper then
             a [ href ("/syp?doi=" ++ doi) ]
                 [ button
                     [ class "pathway__button--show"
