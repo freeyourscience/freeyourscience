@@ -115,38 +115,6 @@ viewWhosPublication doi =
                     ++ "Share this page with them."
                 )
             ]
-
-        -- , div
-        --     [ class "whos-publication__item" ]
-        --     [ span [ class "whos-publication--title" ]
-        --         [ text "Your publication?"
-        --         ]
-        --     , span [ class "material-icons" ] [ text "send" ]
-        --     , p [ class "whos-publication--details" ]
-        --         [ text "Let "
-        --         , a
-        --             [ href ("https://shareyourpaper.org/" ++ doi)
-        --             , target "_blank"
-        --             ]
-        --             [ text "shareyourpaper.org" ]
-        --         , text " re-publish this for you."
-        --         ]
-        --     , span [ class "material-icons" ] [ text "school" ]
-        --     , p [ class "whos-publication--details" ]
-        --         [ text "Alternatively, learn to re-publish yourself. The guide below is specific to this publication."
-        --         ]
-        --     ]
-        -- , div [ class "whos-publication__item" ]
-        --     [ span [ class "whos-publication--title" ]
-        --         [ text "Not your publication?"
-        --         ]
-        --     , span [ class "material-icons" ] [ text "campaign" ]
-        --     , div [ class "whos-publication--content" ]
-        --         [ p []
-        --             [ text "Let the authors know what they can do. Share this page with them."
-        --             ]
-        --         ]
-        --     ]
         ]
 
 
