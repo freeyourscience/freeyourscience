@@ -10,3 +10,13 @@
   background-color: settings.$color-green;
   color: white;
 }
+
+main.shareyourpaper {
+  .publications__item__info__title {
+    @include utils.f3;
+    overflow: inherit;
+    text-overflow: inherit;
+    white-space: inherit;
+    font-weight: bold;
+  }
+}

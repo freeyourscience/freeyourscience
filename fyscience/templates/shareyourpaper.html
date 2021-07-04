@@ -1,8 +1,20 @@
 {% extends "base.html" %} {% block header %}
 <script src="https://shareyourpaper.org/embed.js"></script>
 {% endblock %} {% block content %}
-<main>
-  <section id="shareyourpaper"></section>
+<main class="shareyourpaper">
+  <h1>Re-publish open access today for free</h1>
+  <article>
+    <div class="publications__item__info__title">
+    {{ title }}
+    </div>
+    <div>
+      {{ journal }}, {{ authors }} ({{ year }}), {{ doi }}
+      <a href="https://doi.org/{{ doi }}" target="_blank">
+        <span class="material-icons">launch</span>
+      </a>
+    </div>
+
+  <article id="shareyourpaper"></article>
 </main>
 
 <script>

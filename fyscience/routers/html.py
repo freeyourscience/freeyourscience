@@ -9,6 +9,8 @@ from starlette.datastructures import URL
 from fyscience.routers.api import get_author_with_papers
 from fyscience.routers.deps import get_settings, Settings, TEMPLATE_PATH
 from fyscience.openaccessbutton import get_paper_metadata
+from fyscience.utils import assemble_author_name
+
 
 html_router = APIRouter()
 templates = Jinja2Templates(directory=TEMPLATE_PATH)
@@ -108,12 +110,23 @@ def get_share_your_paper(doi: str, request: Request):
         "https://" + host if host.endswith("freeyourscience.org") else "http://" + host
     )
 
+    # NOTE: SYP lacks author names that unpaywall knows, see 10.1007/s00350-021-5862-6
+    authors = (
+        assemble_author_name(paper_meta_data["metadata"]["author"][0])
+        if paper_meta_data["metadata"]["author"]
+        else "unknown authors"
+    )
+
     return templates.TemplateResponse(
         "shareyourpaper.html",
         {
             "request": request,
             "serverURL": server_url,
             "doi": doi,
+            "title": paper_meta_data["metadata"]["title"],
+            "journal": paper_meta_data["metadata"]["journal"],
+            "authors": authors,
+            "year": paper_meta_data["metadata"]["year"],
             "paper_meta_data": json.dumps(paper_meta_data),
         },
         headers=_get_response_headers(request.url),
