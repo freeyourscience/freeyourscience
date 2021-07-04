@@ -29,6 +29,7 @@ noCostOaPathway =
     , embargo = Just { units = "months", amount = 12 }
     , conditions = Just [ "Published source must be acknowledged", "Must link to publisher version with DOI" ]
     , notes = Just [ "Pathway specific notes" ]
+    , shareYourPaperCompatibleLocation = True
     }
 
 
