@@ -130,8 +130,8 @@ def get_paper(
     # Ensure it's a FullPaper and not just a PaperWithOAStatus
     paper = FullPaper(**paper.dict())
 
-    permissions = openaccessbutton.get_permissions(doi)
-    if permissions is not None:
+    permissions = openaccessbutton.get_permissions(paper.doi)
+    if permissions is not None and permissions["all_permissions"]:
         paper.can_share_your_paper = permissions["best_permission"]["can_archive"]
 
     logger.info(
