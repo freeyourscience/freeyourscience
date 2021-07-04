@@ -249,9 +249,14 @@ viewRepublishTodayForFree paper =
         (renderPaperMetaDataWithDoi
             div
             paper.meta
-            ++ [ viewWhosPublication paper.meta.doi
-               , h2 [ id "guide" ] [ text "Custom re-publishing guide" ]
-               ]
+            ++ (if paper.meta.recommendShareYourPaper then
+                    [ viewWhosPublication paper.meta.doi
+                    , h2 [ id "guide" ] [ text "Custom re-publishing guide" ]
+                    ]
+
+                else
+                    []
+               )
             ++ viewRightVersion
                 pathway.articleVersions
                 (Tuple.first paper.recommendedPathway).sherpaPublicationUrl
