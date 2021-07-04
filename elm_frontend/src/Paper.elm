@@ -453,6 +453,17 @@ classifyPaper backendPaper model =
         isOpenAccess =
             backendPaper.isOpenAccess
 
+        recommendedPathway =
+            Maybe.andThen FreePathway.recommendPathway backendPaper.pathwayDetails
+
+        recommendShareYourPaper =
+            backendPaper.canShareYourPaper
+                && (recommendedPathway
+                        |> Maybe.map Tuple.second
+                        |> Maybe.map (\p -> p.shareYourPaperCompatibleLocation)
+                        |> Maybe.withDefault False
+                   )
+
         meta =
             { doi = backendPaper.doi
             , title = backendPaper.title
@@ -464,11 +475,8 @@ classifyPaper backendPaper model =
                     |> Maybe.andThen (\d -> d |> fromIsoString |> Result.toMaybe)
             , issn = backendPaper.issn
             , url = Nothing
-            , recommendShareYourPaper = backendPaper.canShareYourPaper
+            , recommendShareYourPaper = recommendShareYourPaper
             }
-
-        recommendedPathway =
-            Maybe.andThen FreePathway.recommendPathway backendPaper.pathwayDetails
     in
     case ( isOpenAccess, recommendedPathway ) of
         ( Just False, Just pathway ) ->
