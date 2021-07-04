@@ -1,3 +1,4 @@
+from fyscience.routers.api import extract_doi
 import pytest
 from fastapi.testclient import TestClient
 
@@ -78,3 +79,11 @@ def test_log_endpoint(caplog, client: TestClient) -> None:
 
     assert event in caplog.text
     assert message in caplog.text
+
+
+def test_extract_doi():
+    only_doi = "10.1234/abc.42424242"
+    assert only_doi == extract_doi(only_doi)
+    assert only_doi == extract_doi(f"https://doi.org/{only_doi}")
+    assert only_doi == extract_doi(f"http://doi.org/{only_doi}")
+    assert f"http://example.com/" == extract_doi(f"http://example.com/")

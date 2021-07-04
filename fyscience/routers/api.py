@@ -73,6 +73,10 @@ def get_author_with_papers(
     return author
 
 
+def extract_doi(input: str) -> str:
+    return input.split("doi.org/")[-1]
+
+
 @api_router.get("/api/papers", response_model=FullPaper)
 def get_paper(
     paper_id: str,
@@ -83,7 +87,8 @@ def get_paper(
     """Get paper with OpenAccess status and pathway for a given DOI."""
     response.headers["cache-control"] = "max-age=3600,public"
 
-    doi = paper_id
+    doi = extract_doi(paper_id)
+
     if "/" not in paper_id:
         paper = semantic_scholar.get_paper(paper_id)
 
