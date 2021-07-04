@@ -209,7 +209,7 @@ classifyPaper backendPaper model =
                     |> Maybe.andThen (\d -> d |> fromIsoString |> Result.toMaybe)
             , issn = backendPaper.issn
             , url = Nothing
-            , canShareYourPaper = backendPaper.canShareYourPaper
+            , recommendShareYourPaper = backendPaper.canShareYourPaper
             }
 
         recommendedPathway =

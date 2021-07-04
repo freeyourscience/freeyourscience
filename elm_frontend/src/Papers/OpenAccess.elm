@@ -30,7 +30,7 @@ view paper =
                 , doi = paper.doi
                 , issn = paper.issn
                 , url = Just paper.oaLocationURL
-                , canShareYourPaper = False
+                , recommendShareYourPaper = False
                 }
             )
         ]
