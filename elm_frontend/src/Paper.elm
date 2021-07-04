@@ -3,7 +3,7 @@ port module Paper exposing (..)
 import Browser
 import Date exposing (Date, fromIsoString)
 import Debug
-import Html exposing (Html, a, article, div, h1, h2, h3, main_, p, small, span, strong, text)
+import Html exposing (Html, a, article, button, div, h1, h2, h3, main_, p, small, span, strong, text)
 import Html.Attributes exposing (class, href, id, target)
 import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchForm)
 import Http
@@ -80,19 +80,19 @@ viewWhosPublication doi =
         [ h2 [] [ text "Your re-publishing choices" ]
         , div [ class "whos-publication__item" ]
             [ span [ class "whos-publication--title" ]
-                [ text "ShareYourPaper re-publishes for you"
+                [ text "Let us do the heavy lifting"
                 ]
             , p []
                 [ text
-                    ("The non-profit running shareyourpaper.org is aligned with our mission and ideals. "
-                        ++ "Their re-publication process just takes a few clicks, "
+                    ("Our friends from the non-profit ShareYourPaper have checked the policy for you. "
+                        ++ "Now, all you need is a PDF of your work."
                     )
-                , a
-                    [ href ("https://shareyourpaper.org/" ++ doi)
-                    , target "_blank"
-                    ]
-                    [ text "start here" ]
-                , text "."
+                ]
+            , a
+                [ href ("/syp?doi=" ++ doi) ]
+                [ button
+                    [ class "pathway__button--show", class "pathway__button" ]
+                    [ text "Re-publish" ]
                 ]
             ]
         , div [ class "whos-publication__item" ]
