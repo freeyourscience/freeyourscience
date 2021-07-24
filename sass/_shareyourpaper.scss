@@ -2,7 +2,7 @@
 @use 'settings';
 
 ._oab_restart {
-  display: none;
+  display: none !important;
 }
 
 #_oab_deposit {
