@@ -1,16 +1,6 @@
 @use 'utils';
 @use 'settings';
 
-._oab_restart {
-  display: none !important;
-}
-
-#_oab_deposit {
-  border: 1px solid settings.$color-green;
-  background-color: settings.$color-green;
-  color: white;
-}
-
 main.shareyourpaper {
   .publications__item__info__title {
     @include utils.f3;
@@ -19,4 +9,34 @@ main.shareyourpaper {
     white-space: inherit;
     font-weight: bold;
   }
+}
+
+/* Override shareyourpaper.org/embed.js inline styling */
+
+input._oab_form {
+  border-radius: 0 !important;
+  padding: 0.75rem 1rem 0.625rem !important;
+  height: auto;
+}
+
+._oab_button,
+#_oab_upload_accept {
+  border-radius: 0 !important;
+  height: auto !important;
+  padding: 0.5rem !important;
+  background-color: white !important;
+  font-weight: bold !important;
+  border: 2px solid !important;
+  display: inline !important;
+}
+
+#_oab_deposit {
+  padding: 0.75rem 1.25rem !important;
+  border: 1px solid settings.$color-green !important;
+  background-color: settings.$color-green !important;
+  color: white !important;
+}
+
+._oab_restart {
+  display: none !important;
 }
