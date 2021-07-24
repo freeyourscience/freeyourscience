@@ -1,3 +1,15 @@
+"""Download the logs with the following command after authenticating and selecting the
+matching project (find out the right one with "gcloud projects list")
+
+gclout auth login
+
+gsutil -m cp -r \
+  "gs://prod-log-bucket/run.googleapis.com/stderr/" \
+  .
+
+and pass the directory from which the download was run to this script.
+"""
+
 import json
 import argparse
 from pathlib import Path
