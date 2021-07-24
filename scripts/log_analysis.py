@@ -59,7 +59,7 @@ if __name__ == "__main__":
     print("Found events:", list(events.keys()))
 
     unique_dois = set([e["doi"] for e in events["get_paper"]])
-    print(len(unique_dois), "unique DOIs searched")
+    print(len(unique_dois), "unique DOIs requested")
 
     found = {e["doi"]: e for e in events["get_paper"] if e["message"] == "paper_found"}
     print(len(found), "unique publications found")
