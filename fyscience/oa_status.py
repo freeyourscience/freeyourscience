@@ -13,6 +13,7 @@ def validate_oa_status_from_s2_and_zenodo(
             paper.is_open_access = s2_paper.is_open_access
             paper.oa_location_url = s2_paper.oa_location_url
 
+    if not paper.is_open_access:
         zenodo_oa_location_url = zenodo.get_open_access_url(doi=paper.doi)
         if zenodo_oa_location_url:
             paper.is_open_access = True
