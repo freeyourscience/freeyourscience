@@ -25,13 +25,21 @@ if __name__ == "__main__":
     num_files = 0
     for path in log_dir.rglob("*.json"):
         num_files += 1
-        with open(log_dir / path.name, "r") as fh:
+        with open(path, "r") as fh:
             logs.extend([json.loads(line) for line in fh.readlines()])
     print(f"Finished loading {num_files} log files")
 
     events = {}
     for log in logs:
         text_payload = log["textPayload"]
+        if not (
+            " INFO " in text_payload
+            or " WARNING " in text_payload
+            or " ERROR " in text_payload
+        ):
+            print("Skipping:", text_payload)
+            continue
+
         extract = text_payload.split(" - ")[-1]
 
         # Fix that extracts aren't JSON but string representations of Python dicts
