@@ -17,6 +17,9 @@ from pathlib import Path
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("FYS Log Analysis")
     parser.add_argument("log_dir", type=str)
+    parser.add_argument(
+        "--verbose", action="store_true", help="increase output verbosity"
+    )
     args = parser.parse_args()
     log_dir = Path(args.log_dir)
     print("Loading all JSON files in directory", args.log_dir)
@@ -37,7 +40,8 @@ if __name__ == "__main__":
             or " WARNING " in text_payload
             or " ERROR " in text_payload
         ):
-            print("Skipping:", text_payload)
+            if args.verbose:
+                print("Skipping:", text_payload)
             continue
 
         extract = text_payload.split(" - ")[-1]
