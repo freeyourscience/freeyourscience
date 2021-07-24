@@ -5,7 +5,7 @@ from functools import partial
 from fyscience.cache import json_filesystem_cache
 from fyscience.data import load_jsonl, calculate_metrics
 from fyscience.oa_pathway import oa_pathway
-from fyscience.oa_status import validate_oa_status_from_s2
+from fyscience.oa_status import validate_oa_status_from_s2_and_zenodo
 from fyscience.schemas import PaperWithOAStatus
 
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     with json_filesystem_cache(args.pathway_cache) as pathway_cache:
         # Enrich data
         papers_with_s2_validated_oa_status = map(
-            validate_oa_status_from_s2, papers_with_oa_status
+            validate_oa_status_from_s2_and_zenodo, papers_with_oa_status
         )
         papers_with_pathway = map(
             partial(oa_pathway, cache=pathway_cache), papers_with_s2_validated_oa_status

@@ -1,5 +1,4 @@
 from fyscience.routers.api import extract_doi
-import pytest
 from fastapi.testclient import TestClient
 
 from fyscience.schemas import (
@@ -10,7 +9,6 @@ from fyscience.schemas import (
 )
 from fyscience import main
 from fyscience.routers.deps import Settings, get_settings
-from fyscience.semantic_scholar import Author
 
 
 def get_settings_override():
@@ -51,7 +49,7 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
         lambda *a, **kw: FullPaper(doi=doi, issn=issn, is_open_access=is_open_access),
     )
     monkeypatch.setattr(
-        "fyscience.routers.api.validate_oa_status_from_s2",
+        "fyscience.routers.api.validate_oa_status_from_s2_and_zenodo",
         lambda *a, **kw: PaperWithOAStatus(
             doi=doi, issn=issn, is_open_access=is_open_access
         ),
@@ -86,4 +84,4 @@ def test_extract_doi():
     assert only_doi == extract_doi(only_doi)
     assert only_doi == extract_doi(f"https://doi.org/{only_doi}")
     assert only_doi == extract_doi(f"http://doi.org/{only_doi}")
-    assert f"http://example.com/" == extract_doi(f"http://example.com/")
+    assert "http://example.com/" == extract_doi("http://example.com/")

@@ -6,7 +6,7 @@ from loguru import logger
 from fyscience.schemas import OAPathway, FullPaper, Author, LogEntry
 from fyscience.unpaywall import get_paper as unpaywall_get_paper
 from fyscience.oa_pathway import oa_pathway
-from fyscience.oa_status import validate_oa_status_from_s2
+from fyscience.oa_status import validate_oa_status_from_s2_and_zenodo
 from fyscience import openaccessbutton, orcid, semantic_scholar, crossref
 from fyscience.routers.deps import get_settings, Settings
 
@@ -116,7 +116,7 @@ def get_paper(
 
     # TODO: Don't do this twice if the author papers already have the s2 status
     #       Potentially move towards an enrich as opposed to a construct approach
-    paper = validate_oa_status_from_s2(paper, settings.s2_api_key)
+    paper = validate_oa_status_from_s2_and_zenodo(paper, settings.s2_api_key)
 
     paper = oa_pathway(paper=paper, api_key=settings.sherpa_api_key)
     if paper.oa_pathway is OAPathway.not_found:
