@@ -488,7 +488,7 @@ remainingEmbargo today publishedDate embargo =
 
 renderRecommendedPathway : Date -> Maybe Date -> ( PolicyMetaData, NoCostOaPathway ) -> List (Html Msg)
 renderRecommendedPathway today publicationDate ( policy, { articleVersions, conditions, embargo } ) =
-    p []
+    [ p []
         [ text "You can re-publish the "
         , strong [] [ text (articleVersionString articleVersions ++ " version") ]
         , text " "
@@ -499,8 +499,4 @@ renderRecommendedPathway today publicationDate ( policy, { articleVersions, cond
             )
         , text "."
         ]
-        :: (conditions
-                |> addEmbargo (Maybe.map embargoToString embargo)
-                |> Maybe.map (ulWithHeading [ text "Conditions are:" ] text)
-                |> Maybe.withDefault [ text "" ]
-           )
+    ]
