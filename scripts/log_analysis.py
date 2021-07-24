@@ -60,3 +60,9 @@ if __name__ == "__main__":
 
     unique_dois = set([e["doi"] for e in events["get_paper"]])
     print(len(unique_dois), "unique DOIs searched")
+
+    found = {e["doi"]: e for e in events["get_paper"] if e["message"] == "paper_found"}
+    print(len(found), "unique publications found")
+
+    free_pathway = [e for e in found.values() if e["pathway"] == "OAPathway.nocost"]
+    print(len(free_pathway), "with free pathway")
