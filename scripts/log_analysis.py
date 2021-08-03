@@ -14,6 +14,10 @@ import json
 import argparse
 from pathlib import Path
 
+from fyscience.schemas import Paper
+from fyscience.oa_status import oa_status
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("FYS Log Analysis")
     parser.add_argument("log_dir", type=str)
@@ -66,3 +70,11 @@ if __name__ == "__main__":
 
     free_pathway = [e for e in found.values() if e["pathway"] == "OAPathway.nocost"]
     print(len(free_pathway), "with free pathway")
+
+    # free_pathway_papers = [
+    #     oa_status(Paper(doi=e["doi"], issn="")) for e in free_pathway
+    # ]
+    # now_oa = [p for p in free_pathway_papers if p.is_open_access]
+    # print(
+    #     len(now_oa), "of requested that were previously paywalled are open access now"
+    # )

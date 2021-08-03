@@ -36,6 +36,7 @@ class Paper(BaseModel):
 
 class PaperWithOAStatus(Paper):
     is_open_access: Optional[bool] = None
+    oa_location_url: Optional[str] = None
 
 
 class PaperWithOAPathway(PaperWithOAStatus):
