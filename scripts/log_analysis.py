@@ -48,7 +48,8 @@ if __name__ == "__main__":
                 print("Skipping:", text_payload)
             continue
 
-        extract = text_payload.split(" - ")[-1]
+        extract = text_payload.split(" - {")[-1]
+        extract = "{" + extract
 
         # Fix that extracts aren't JSON but string representations of Python dicts
         extract = extract.replace("'", "<QTE>").replace('"', "'").replace("<QTE>", '"')
