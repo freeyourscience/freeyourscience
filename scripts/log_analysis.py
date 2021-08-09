@@ -3,7 +3,7 @@ matching project (find out the right one with "gcloud projects list")
 
 gclout auth login
 
-gsutil -m cp -r \
+gsutil -m rsync -r \
   "gs://prod-log-bucket/run.googleapis.com/stderr/" \
   .
 
