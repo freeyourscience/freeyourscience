@@ -25,8 +25,9 @@ if __name__ == "__main__":
         "--verbose", action="store_true", help="increase output verbosity"
     )
     args = parser.parse_args()
+    verbose = args.verbose
     log_dir = Path(args.log_dir)
-    print("Loading all JSON files in directory", args.log_dir)
+    print("Loading all JSON files in directory", log_dir)
 
     logs = []
     num_files = 0
@@ -44,7 +45,7 @@ if __name__ == "__main__":
             or " WARNING " in text_payload
             or " ERROR " in text_payload
         ):
-            if args.verbose:
+            if verbose:
                 print("Skipping:", text_payload)
             continue
 
