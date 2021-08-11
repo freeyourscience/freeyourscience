@@ -14,6 +14,9 @@ import json
 import argparse
 from pathlib import Path
 
+import pandas as pd
+import altair as alt
+
 from fyscience.schemas import Paper
 from fyscience.oa_status import oa_status
 
@@ -60,5 +63,30 @@ if __name__ == "__main__":
     )
     interpreted = map(interpret_payload, payloads)
 
-    for log in interpreted:
-        print(log)
+    data = pd.DataFrame(filter(lambda log: log.get("interpreted", False), interpreted))
+    selection = alt.selection_multi(fields=["interpreted"])
+    color = alt.condition(
+        selection, alt.Color("interpreted:N", legend=None), alt.value("lightgray")
+    )
+    bar = (
+        alt.Chart(data)
+        .mark_bar()
+        .encode(
+            x="yearmonthdate(timestamp):T",
+            y="count(interpreted)",
+            color=color,
+            tooltip=["interpreted:N", "count(interpreted)"],
+        )
+        .properties(width=1200, height=400)
+        .interactive()
+    )
+
+    legend = (
+        alt.Chart(data)
+        .mark_point()
+        .encode(y=alt.Y("interpreted:N", axis=alt.Axis(orient="right")), color=color)
+        .add_selection(selection)
+    )
+
+    chart = bar | legend
+    chart.save("./requests.html")
