@@ -11,7 +11,7 @@ module Papers.Utils exposing
 
 import Date exposing (Date)
 import Html exposing (Attribute, Html, a, div, li, p, span, text, ul)
-import Html.Attributes exposing (class, href, target)
+import Html.Attributes exposing (class, href, rel, target)
 import HtmlUtils exposing (renderList, ulWithHeading)
 
 
@@ -107,6 +107,7 @@ renderPaperMetaDataWithDoi titleElement { title, journal, authors, year, doi, ur
         , a
             [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url)
             , target "_blank"
+            , rel "noopener"
             , Html.Attributes.title (Maybe.withDefault ("https://doi.org/" ++ doi) url)
             ]
             [ span [ class "material-icons" ] [ text "launch" ]
@@ -149,6 +150,7 @@ renderPaperMetaData titleElement displayUnknownJournal { title, journal, authors
         , a
             [ href (Maybe.withDefault ("https://doi.org/" ++ doi) url)
             , target "_blank"
+            , rel "noopener"
             , Html.Attributes.title (Maybe.withDefault ("https://doi.org/" ++ doi) url)
             ]
             [ span [ class "material-icons" ] [ text "launch" ]

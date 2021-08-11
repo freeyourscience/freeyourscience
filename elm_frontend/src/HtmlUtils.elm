@@ -1,7 +1,7 @@
 module HtmlUtils exposing (addEmbargo, renderList, ulWithHeading, viewSearchForm, viewSearchNoteWithLinks)
 
 import Html exposing (Html, a, button, div, form, input, li, p, small, span, text, ul)
-import Html.Attributes exposing (action, attribute, class, href, id, method, name, placeholder, target, type_, value)
+import Html.Attributes exposing (action, attribute, class, href, id, method, name, placeholder, rel, target, type_, value)
 
 
 ulWithHeading : List (Html msg) -> (a -> Html msg) -> List a -> List (Html msg)
@@ -63,10 +63,10 @@ viewSearchNoteWithLinks searchQuery authorProfileURL authorProfileProvider numRe
         [ text ("The " ++ String.fromInt numResults ++ " results below are based on this ")
         , a [ href authorProfileURL ] [ text (resultSourceProfileText authorProfileProvider) ]
         , text ". You can also search for your "
-        , a [ href ("https://orcid.org/orcid-search/search?searchQuery=" ++ searchQuery), target "_blank" ]
+        , a [ href ("https://orcid.org/orcid-search/search?searchQuery=" ++ searchQuery), target "_blank", rel "noopener" ]
             [ text "ORCID" ]
         , text ", "
-        , a [ href ("https://www.semanticscholar.org/search?q=" ++ searchQuery ++ "&sort=relevance"), target "_blank" ]
+        , a [ href ("https://www.semanticscholar.org/search?q=" ++ searchQuery ++ "&sort=relevance"), target "_blank", rel "noopener" ]
             [ text "Semantic Scholar ID" ]
         , text " or an individual DOI."
         ]

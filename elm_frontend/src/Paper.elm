@@ -4,7 +4,7 @@ import Browser
 import Date exposing (Date, fromIsoString)
 import Debug
 import Html exposing (Html, a, article, button, div, h1, h2, h3, main_, p, small, span, strong, text)
-import Html.Attributes exposing (class, href, id, target)
+import Html.Attributes exposing (class, href, id, rel, target)
 import HtmlUtils exposing (addEmbargo, ulWithHeading, viewSearchForm)
 import Http
 import HttpBuilder exposing (withHeader)
@@ -177,7 +177,7 @@ viewRightVersion articleVersions sherpaPublicationUrl =
         If you no longer have the version specified by the pathway
         you might also be allowed to re-publish an earlier one.
         Check the """
-        , a [ href sherpaPublicationUrl, target "_blank" ] [ text "pathway details for this publication" ]
+        , a [ href sherpaPublicationUrl, target "_blank", rel "noopener" ] [ text "pathway details for this publication" ]
         , text " in the Sherpa Romeo policy database for what other versions are allowed."
         ]
     ]
@@ -362,7 +362,7 @@ view model =
                     )
                 , p [ class "pathway-status" ]
                     [ text "This publication is already "
-                    , a [ href paper.oaLocationURL, target "_blank" ] [ text "open access" ]
+                    , a [ href paper.oaLocationURL, target "_blank", rel "noopener" ] [ text "open access" ]
                     , text " 🎉"
                     ]
                 , searchBar

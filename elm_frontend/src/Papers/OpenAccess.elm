@@ -1,7 +1,7 @@
 module Papers.OpenAccess exposing (Paper, view, viewList)
 
 import Html exposing (Html, a, br, div, h3, p, section, text)
-import Html.Attributes exposing (class, href, target)
+import Html.Attributes exposing (class, href, rel, target)
 import Papers.Utils exposing (DOI, renderPaperMetaData)
 
 
@@ -48,7 +48,7 @@ viewList papers =
                 [ text "We could not find any of your open access publications in the unpaywall.org database."
                 , br [] []
                 , text "In case you think there should be open access publications here, help "
-                , a [ href "https://unpaywall.org/sources", target "_blank" ] [ text "unpaywall.org" ]
+                , a [ href "https://unpaywall.org/sources", target "_blank", rel "noopener" ] [ text "unpaywall.org" ]
                 , text " to find them."
                 ]
 
