@@ -227,7 +227,7 @@ viewWhereTo locationLabelsSorted =
            )
         ++ [ p []
                 [ text """Our recommendation for choosing is already reflected in the
-                order of the options above: Prefer prefer public repositories over
+                order of the options above: Prefer public repositories over
                 personal websites or social networks and use locations that are indexed
                 so your publications are easy to find.""" ]
            , p []
