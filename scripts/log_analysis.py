@@ -70,17 +70,13 @@ if __name__ == "__main__":
     found = {e["doi"]: e for e in events["get_paper"] if e["message"] == "paper_found"}
     print(len(found), "unique publications found")
 
-    can_syp = [e for e in found.values() if e.get("can_syp", False)]
+    can_syp = [e for e in found.values() if e.get("can_syp", False) and not e["is_oa"]]
     print(len(can_syp), "can ShareYourPaper")
 
     free_pathway = [e for e in found.values() if e["pathway"] == "OAPathway.nocost"]
     print(len(free_pathway), "with Sherpa free pathway")
 
-    free_pathway_and_syp = [
-        e
-        for e in found.values()
-        if e["pathway"] == "OAPathway.nocost" and e.get("can_syp", False)
-    ]
+    free_pathway_and_syp = [e for e in can_syp if e["pathway"] == "OAPathway.nocost"]
     print(len(free_pathway_and_syp), "with Sherpa free pathway and SYP")
 
     # free_pathway_papers = [
