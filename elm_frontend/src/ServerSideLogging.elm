@@ -1,4 +1,4 @@
-module ServerSideLogging exposing (reportHttpError)
+module ServerSideLogging exposing (callToActionLogMessage, postLogToBackend, reportHttpError)
 
 import Http
 import HttpBuilder exposing (withBody, withExpect, withHeader)
@@ -17,6 +17,22 @@ extractMessage error =
 
         _ ->
             Nothing
+
+
+callToActionLogMessage : Bool -> Bool -> String -> String
+callToActionLogMessage recommendShareYourPaper canShareYourPaper doi =
+    case ( recommendShareYourPaper, canShareYourPaper ) of
+        ( True, True ) ->
+            "recommend_cansyp_" ++ doi
+
+        ( True, False ) ->
+            "recommend_cantsyp_" ++ doi
+
+        ( False, True ) ->
+            "norecommend_cansyp_" ++ doi
+
+        ( False, False ) ->
+            "norecommend_cant_" ++ doi
 
 
 postLogToBackend : String -> String -> String -> Cmd Msg

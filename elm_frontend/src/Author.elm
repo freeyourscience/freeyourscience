@@ -156,11 +156,36 @@ update msg model =
     in
     case msg of
         Msg.GotPaper (Ok backendPaper) ->
-            ( model
-                |> classifyPaper backendPaper
-                |> updateStyle
-            , Cmd.none
-            )
+            let
+                updatedModel =
+                    model
+                        |> classifyPaper backendPaper
+                        |> updateStyle
+
+                hasNewFreePathwayPaper =
+                    Array.length updatedModel.freePathwayPapers
+                        > Array.length model.freePathwayPapers
+
+                newestFreePathwayPaper =
+                    Array.get
+                        (Array.length updatedModel.freePathwayPapers - 1)
+                        updatedModel.freePathwayPapers
+
+                command =
+                    case ( hasNewFreePathwayPaper, newestFreePathwayPaper ) of
+                        ( True, Just paper ) ->
+                            ServerSideLogging.callToActionLogMessage
+                                paper.meta.recommendShareYourPaper
+                                backendPaper.canShareYourPaper
+                                paper.meta.doi
+                                |> ServerSideLogging.postLogToBackend
+                                    model.serverURL
+                                    "author_free_pathway_paper"
+
+                        ( _, _ ) ->
+                            Cmd.none
+            in
+            ( updatedModel, command )
 
         Msg.GotPaper (Err error) ->
             let

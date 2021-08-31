@@ -394,14 +394,23 @@ update msg model =
                     model |> classifyPaper backendPaper
             in
             case modelWithClassifiedPaper.paper of
-                Just (FP _) ->
+                Just (FP p) ->
                     ( modelWithClassifiedPaper
-                    , title "Free Your Science | Re-publish open access today"
+                    , Cmd.batch
+                        [ ServerSideLogging.callToActionLogMessage
+                            p.meta.recommendShareYourPaper
+                            backendPaper.canShareYourPaper
+                            p.meta.doi
+                            |> ServerSideLogging.postLogToBackend
+                                model.serverURL
+                                "details_free_pathway_paper"
+                        , title "Free Your Science | Re-publish open access today"
+                        ]
                     )
 
                 _ ->
                     ( modelWithClassifiedPaper
-                    , title "Free Your Science"
+                    , Cmd.batch [ title "Free Your Science" ]
                     )
 
         Msg.GotPaper (Err error) ->
