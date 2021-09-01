@@ -51,6 +51,11 @@ tasks:
       - "../fyscience/**/*.py"
       - "./**/*.py"
 
+  lint:
+    cmds:
+      - black --check .
+      - npx elm-format --validate elm_frontend
+
   elm:
     dir: elm_frontend
     cmds:
