@@ -12,6 +12,26 @@ tasks:
     sources:
       - "fyscience/**/*.py"
 
+  test:
+    cmds:
+      - task: frontend-test
+      - task: backend-test
+
+  frontend-test:
+    dir: elm_frontend
+    cmds:
+      - npx elm-test
+    sources:
+      - "src/**/*.elm"
+
+  backend-test:
+    dir: tests
+    cmds:
+      - pytest
+    sources:
+      - "../fyscience/**/*.py"
+      - "./**/*.py"
+
   elm:
     dir: elm_frontend
     cmds:
