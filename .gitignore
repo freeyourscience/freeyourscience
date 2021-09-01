@@ -9,6 +9,9 @@ fyscience/static/style.css.map
 # Taskfile cache
 .task/
 
+# npm
+node_modules/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

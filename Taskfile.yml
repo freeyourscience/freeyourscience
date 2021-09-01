@@ -12,6 +12,17 @@ tasks:
     sources:
       - "fyscience/**/*.py"
 
+  install:
+    cmds:
+      - npm install
+      - pip install -r requirements_scripts.txt
+      - pip install -e .[dev]
+    sources:
+      - "setup.py"
+      - "requirements*.txt"
+      - "package-lock.json"
+      - "package.json"
+
   test:
     cmds:
       - task: frontend-test
