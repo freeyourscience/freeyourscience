@@ -9,7 +9,7 @@ elm:
 elm-test:
 	cd elm_frontend && npx elm-test
 
-build-dev:
+build-dev: elm
 	docker build . --target dev --cache-from freeyourscience-dev -t freeyourscience-dev
 
 dev: build-dev
@@ -21,7 +21,7 @@ test:
 lint:
 	docker run --rm freeyourscience-dev black --check .
 
-prod:
+prod: elm
 	docker build . --target prod -t freeyourscience
 	docker run --rm -it -p 8080:80 freeyourscience
 
