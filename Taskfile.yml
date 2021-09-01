@@ -1,0 +1,34 @@
+# https://taskfile.dev
+
+version: 3
+
+tasks:
+  dev:
+    deps:
+      - sass
+      - elm
+    cmds:
+      - uvicorn --host 0.0.0.0 --port 8080 --log-level info fyscience.main:app
+    sources:
+      - "fyscience/**/*.py"
+
+  elm:
+    dir: elm_frontend
+    cmds:
+      - elm make src/Author.elm --output ../fyscience/static/authorPapers.js
+      - elm make src/Paper.elm --output ../fyscience/static/singlePaper.js
+      - elm make src/KitchenSink.elm --output dist/kitchenSink.js
+    sources:
+      - "src/**/*.elm"
+    generates:
+      - "../fyscience/static/authorPapers.js"
+      - "../fyscience/static/singlePaper.js"
+      - "dist/kitchenSink.js"
+
+  sass:
+    cmds:
+      - sass sass/style.scss fyscience/static/style.css
+    sources:
+      - "sass/*.scss"
+    generates:
+      - "fyscience/static/style.css"

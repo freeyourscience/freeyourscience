@@ -6,6 +6,9 @@ fyscience/static/style.css
 fyscience/static/style.css.map
 .sass-cache/
 
+# Taskfile cache
+.task/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
