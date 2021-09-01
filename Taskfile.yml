@@ -12,6 +12,14 @@ tasks:
     sources:
       - "fyscience/**/*.py"
 
+  prod:
+    deps:
+      - sass
+      - elm
+    cmds:
+      - docker build . --target prod -t freeyourscience
+      - docker run --rm -it -p 8080:80 freeyourscience
+
   install:
     cmds:
       - npm install
