@@ -143,6 +143,14 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
+      - name: Check that desired image exists
+        run: |
+          gcloud container images list-tags \
+            --filter="${{ github.sha }}" \
+            --format=json \
+            gcr.io/stunning-oasis-298115/fyscience \
+            | grep datetime
+
       - name: Deploy
         run: |
           gcloud run deploy "${{ secrets.GCP_CLOUDRUN_SERVICE }}" \
@@ -153,4 +161,4 @@ jobs:
             --allow-unauthenticated \
             --set-env-vars "UNPAYWALL_EMAIL=${{ secrets.API_EMAIL }},SHERPA_API_KEY=${{ secrets.SHERPA_API_KEY }},S2_API_KEY=${{ secrets.S2_API_KEY }}" \
             --service-account=${{ secrets.GCP_SERVICEACCOUNT_EMAIL}} \
-            --revision-suffix ${{ github.sha }}
+            --revision-suffix ${{ github.ref }}
