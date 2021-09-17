@@ -38,7 +38,6 @@ callToActionLogMessage recommendShareYourPaper canShareYourPaper doi =
 postLogToBackend : String -> String -> String -> Cmd Msg
 postLogToBackend serverURL event message =
     HttpBuilder.post (serverURL ++ "/api/logs")
-        |> withHeader "Content-Type" "application/json"
         |> withBody
             (Http.jsonBody
                 (Json.Encode.object
