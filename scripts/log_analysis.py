@@ -79,6 +79,20 @@ if __name__ == "__main__":
     free_pathway_and_syp = [e for e in can_syp if e["pathway"] == "OAPathway.nocost"]
     print(len(free_pathway_and_syp), "with Sherpa free pathway and SYP")
 
+    cases = [
+        "recommend_cansyp",
+        "recommend_cantsyp",
+        "norecommend_cansyp",
+        "norecommend_cant",
+    ]
+    for case in cases:
+        case_events = [
+            e
+            for e in events["client_side_author_free_pathway_paper"]
+            if e["message"].startswith(case)
+        ]
+        print(len(case_events), case)
+
     # free_pathway_papers = [
     #     oa_status(Paper(doi=e["doi"], issn="")) for e in free_pathway
     # ]
