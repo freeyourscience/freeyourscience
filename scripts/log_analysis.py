@@ -80,18 +80,16 @@ if __name__ == "__main__":
     print(len(free_pathway_and_syp), "with Sherpa free pathway and SYP")
 
     cases = [
-        "recommend_cansyp",
-        "recommend_cantsyp",
-        "norecommend_cansyp",
-        "norecommend_cant",
+        ("recommend_cansyp", "SYP allows -> SYP button"),
+        ("norecommend_cansyp", "SYP allows -> Details button"),
     ]
-    for case in cases:
+    for case, description in cases:
         case_events = [
             e
             for e in events["client_side_author_free_pathway_paper"]
             if e["message"].startswith(case)
         ]
-        print(len(case_events), case)
+        print(len(case_events), description)
 
     # free_pathway_papers = [
     #     oa_status(Paper(doi=e["doi"], issn="")) for e in free_pathway
