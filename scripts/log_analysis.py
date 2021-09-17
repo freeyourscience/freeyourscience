@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     print()
 
-    print(len(events["get_paper"]), "total DOIs requested")
+    print(len(events["get_paper"]), "total DOI requests")
 
     unique_dois = set([e["doi"] for e in events["get_paper"]])
     print(len(unique_dois), "unique DOIs requested")
@@ -78,21 +78,21 @@ if __name__ == "__main__":
     found = {e["doi"]: e for e in events["get_paper"] if e["message"] == "paper_found"}
     print(len(found), "unique publications found")
 
-    can_syp = [e for e in found.values() if e.get("can_syp", False) and not e["is_oa"]]
-    print(len(can_syp), "of which can SYP")
-
     free_pathway = [e for e in found.values() if e["pathway"] == "OAPathway.nocost"]
-    print(len(free_pathway), "of which with Sherpa free pathway")
+    print(len(free_pathway), "with Sherpa free pathway")
+
+    can_syp = [e for e in found.values() if e.get("can_syp", False) and not e["is_oa"]]
+    print(len(can_syp), "can SYP")
 
     free_pathway_and_syp = [e for e in can_syp if e["pathway"] == "OAPathway.nocost"]
-    print(len(free_pathway_and_syp), "of which with Sherpa free pathway and SYP")
+    print(len(free_pathway_and_syp), "with Sherpa free pathway and can SYP")
 
     print()
 
     print("Since 2020-09-17, in absolute numbers, buttons were shown on author pages:")
     cases = [
-        ("recommend_cansyp", "SYP allows -> SYP button"),
-        ("norecommend_cansyp", "SYP allows -> Details button"),
+        ("recommend_cansyp", "can SYP -> SYP button"),
+        ("norecommend_cansyp", "can SYP -> Details button"),
     ]
     for case, description in cases:
         case_events = [
