@@ -37,6 +37,8 @@ if __name__ == "__main__":
             logs.extend([json.loads(line) for line in fh.readlines()])
     print(f"Finished loading {num_files} log files")
 
+    print()
+
     events = {}
     for log in logs:
         text_payload = log["textPayload"]
@@ -64,21 +66,30 @@ if __name__ == "__main__":
 
     print("Found events:", list(events.keys()))
 
+    print()
+
+    print(len(events["get_paper"]), "total DOIs requested")
+
     unique_dois = set([e["doi"] for e in events["get_paper"]])
     print(len(unique_dois), "unique DOIs requested")
+
+    print()
 
     found = {e["doi"]: e for e in events["get_paper"] if e["message"] == "paper_found"}
     print(len(found), "unique publications found")
 
     can_syp = [e for e in found.values() if e.get("can_syp", False) and not e["is_oa"]]
-    print(len(can_syp), "can ShareYourPaper")
+    print(len(can_syp), "of which can SYP")
 
     free_pathway = [e for e in found.values() if e["pathway"] == "OAPathway.nocost"]
-    print(len(free_pathway), "with Sherpa free pathway")
+    print(len(free_pathway), "of which with Sherpa free pathway")
 
     free_pathway_and_syp = [e for e in can_syp if e["pathway"] == "OAPathway.nocost"]
-    print(len(free_pathway_and_syp), "with Sherpa free pathway and SYP")
+    print(len(free_pathway_and_syp), "of which with Sherpa free pathway and SYP")
 
+    print()
+
+    print("Since 2020-09-17, in absolute numbers, buttons were shown on author pages:")
     cases = [
         ("recommend_cansyp", "SYP allows -> SYP button"),
         ("norecommend_cansyp", "SYP allows -> Details button"),
@@ -90,6 +101,8 @@ if __name__ == "__main__":
             if e["message"].startswith(case)
         ]
         print(len(case_events), description)
+
+    print()
 
     # free_pathway_papers = [
     #     oa_status(Paper(doi=e["doi"], issn="")) for e in free_pathway
