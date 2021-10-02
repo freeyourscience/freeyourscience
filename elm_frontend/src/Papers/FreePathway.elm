@@ -14,7 +14,7 @@ module Papers.FreePathway exposing
     )
 
 import Date exposing (Date, Unit(..), diff)
-import Html exposing (Html, a, br, button, div, h2, h3, p, section, strong, text)
+import Html exposing (Html, a, br, button, div, h2, h3, p, section, span, strong, text)
 import Html.Attributes exposing (class, href)
 import HtmlUtils exposing (addEmbargo, ulWithHeading)
 import Msg exposing (Msg)
@@ -421,7 +421,9 @@ renderPathwayButtons ( id, { title, doi, recommendShareYourPaper } ) =
                     , class "pathway__button"
                     , Html.Attributes.title ("Re-publish: " ++ paperTitle)
                     ]
-                    [ text "Re-publish" ]
+                    [ span [ class "material-icons" ] [ text "fast_forward" ]
+                    , text " Assisted"
+                    ]
                 ]
 
           else
@@ -431,7 +433,9 @@ renderPathwayButtons ( id, { title, doi, recommendShareYourPaper } ) =
                     , class "pathway__button"
                     , Html.Attributes.title ("Re-publication details for: " ++ paperTitle)
                     ]
-                    [ text "Details" ]
+                    [ span [ class "material-icons" ] [ text "format_list_numbered" ]
+                    , text " Manual"
+                    ]
                 ]
         ]
 
