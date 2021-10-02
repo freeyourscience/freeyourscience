@@ -93,6 +93,7 @@ if __name__ == "__main__":
     cases = [
         ("recommend_cansyp", "can SYP -> SYP button"),
         ("norecommend_cansyp", "can SYP -> Details button"),
+        ("norecommend_cant", "can't SYP -> Details button"),
     ]
     for case, description in cases:
         case_events = [
