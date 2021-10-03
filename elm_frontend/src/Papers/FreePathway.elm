@@ -377,7 +377,7 @@ viewList today papers =
                         , text "Assisted re-publication:"
                         ]
                     , dd []
-                        [ text "You provide the PDF we do the rest." ]
+                        [ text "You provide the PDF, we do the rest." ]
                     , dt []
                         [ span [ class "material-icons" ]
                             [ text "format_list_numbered" ]
