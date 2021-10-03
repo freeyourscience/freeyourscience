@@ -14,7 +14,7 @@ module Papers.FreePathway exposing
     )
 
 import Date exposing (Date, Unit(..), diff)
-import Html exposing (Html, a, br, button, div, h2, h3, p, section, span, strong, text)
+import Html exposing (Html, a, br, button, dd, div, dl, dt, h2, h3, p, section, span, strong, text)
 import Html.Attributes exposing (class, href)
 import HtmlUtils exposing (addEmbargo, ulWithHeading)
 import Msg exposing (Msg)
@@ -361,15 +361,35 @@ viewList today papers =
         [ h2 []
             [ text "Paywalled with free open access pathway"
             ]
-        , p []
-            (if List.length papers > 0 then
-                [ text
-                    ("For the following publications, the publisher appears to allow no-cost open access re-publishing. "
-                        ++ "Did we miss an already existing open access version? Let us know."
-                    )
+        , if List.length papers > 0 then
+            div []
+                [ p []
+                    [ text
+                        ("For the following publications, the publisher appears to "
+                            ++ "allow no-cost open access re-publishing. Depending on "
+                            ++ "the publisher we offer:"
+                        )
+                    ]
+                , dl []
+                    [ dt []
+                        [ span [ class "material-icons" ]
+                            [ text "fast_forward" ]
+                        , text "Assisted re-publication:"
+                        ]
+                    , dd []
+                        [ text "You provide the PDF we do the rest." ]
+                    , dt []
+                        [ span [ class "material-icons" ]
+                            [ text "format_list_numbered" ]
+                        , text "Manual guide:"
+                        ]
+                    , dd []
+                        [ text "We tell you the steps, you re-publish yourself." ]
+                    ]
                 ]
 
-             else
+          else
+            p []
                 [ text
                     ("We found no paywalled publications with free open access re-publication pathways. "
                         ++ "Either you are already doing a wonderful job of keeping all your publications open access, "
@@ -379,7 +399,6 @@ viewList today papers =
                 , text "Let us know via "
                 , a [ href "mailto:team@freeyourscience.org" ] [ text "team@freeyourscience.org" ]
                 ]
-            )
         , div [] (List.map (view today) papers)
         ]
 
