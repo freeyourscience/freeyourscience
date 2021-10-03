@@ -47,6 +47,10 @@ main.author {
   max-width: $button-width;
   color: white;
   font-weight: bold;
+
+  .material-icons {
+    margin-bottom: 1px;
+  }
 }
 
 .pathway__button--assisted {
