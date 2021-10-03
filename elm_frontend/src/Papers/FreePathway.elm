@@ -436,9 +436,9 @@ renderPathwayButtons ( id, { title, doi, recommendShareYourPaper } ) =
         [ if recommendShareYourPaper then
             a [ href ("/syp?doi=" ++ doi) ]
                 [ button
-                    [ class "pathway__button--show"
+                    [ class "pathway__button--assisted"
                     , class "pathway__button"
-                    , Html.Attributes.title ("Re-publish: " ++ paperTitle)
+                    , Html.Attributes.title ("Assisted re-publishing for: " ++ paperTitle)
                     ]
                     [ span [ class "material-icons" ] [ text "fast_forward" ]
                     , text " Assisted"
@@ -448,9 +448,9 @@ renderPathwayButtons ( id, { title, doi, recommendShareYourPaper } ) =
           else
             a [ href ("/search?query=" ++ doi) ]
                 [ button
-                    [ class "pathway__button--show"
+                    [ class "pathway__button--manual"
                     , class "pathway__button"
-                    , Html.Attributes.title ("Re-publication details for: " ++ paperTitle)
+                    , Html.Attributes.title ("Manual re-publication guide for: " ++ paperTitle)
                     ]
                     [ span [ class "material-icons" ] [ text "format_list_numbered" ]
                     , text " Manual"

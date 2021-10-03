@@ -45,18 +45,18 @@ main.author {
   line-height: 1;
   width: 100%;
   max-width: $button-width;
+  color: white;
+  font-weight: bold;
 }
 
-.pathway__button--show {
+.pathway__button--assisted {
   border: 1px solid settings.$color-green;
   background-color: settings.$color-green;
-  color: white;
 }
 
-.pathway__button--hide {
-  border: 1px solid settings.$color-background;
-  background-color: settings.$color-background;
-  color: settings.$color-text;
+.pathway__button--manual {
+  border: 1px solid settings.$color-dark-gray;
+  background-color: settings.$color-dark-gray;
 }
 
 .publications__item__info__title {
