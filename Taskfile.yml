@@ -5,10 +5,11 @@ version: 3
 tasks:
   dev:
     deps:
+      - install
       - sass
       - elm
     cmds:
-      - uvicorn --host 0.0.0.0 --port 8080 --log-level info fyscience.main:app
+      - ./venv/bin/uvicorn --host 0.0.0.0 --port 8080 --log-level info fyscience.main:app
 
   prod:
     deps:
@@ -21,7 +22,8 @@ tasks:
   install:
     cmds:
       - npm install
-      - pip install -e .[dev]
+      - python3 -m venv venv
+      - ./venv/bin/pip install -e .[dev]
     sources:
       - "setup.py"
       - "requirements*.txt"
@@ -56,9 +58,9 @@ tasks:
   elm:
     dir: elm_frontend
     cmds:
-      - elm make src/Author.elm --output ../fyscience/static/authorPapers.js
-      - elm make src/Paper.elm --output ../fyscience/static/singlePaper.js
-      - elm make src/KitchenSink.elm --output dist/kitchenSink.js
+      - npx elm make src/Author.elm --output ../fyscience/static/authorPapers.js
+      - npx elm make src/Paper.elm --output ../fyscience/static/singlePaper.js
+      - npx elm make src/KitchenSink.elm --output dist/kitchenSink.js
     sources:
       - "src/**/*.elm"
     generates:
@@ -68,7 +70,7 @@ tasks:
 
   sass:
     cmds:
-      - sass sass/style.scss fyscience/static/style.css
+      - npx sass sass/style.scss fyscience/static/style.css
     sources:
       - "sass/*.scss"
     generates:
