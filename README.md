@@ -29,3 +29,10 @@ task test # run all tests
 task lint # run codeformatting and linting
 task prod # build Docker images and run service like prod would, but on localhost:8080
 ```
+
+## Deploying
+
+- every commit is deployed to [dev](https://dev.freeyourscience.org)
+- to release to [prod](https://freeyourscience.org) run `make release`
+
+`make release` will create and push a `git` tag. This in turn triggers the release pipeline.
