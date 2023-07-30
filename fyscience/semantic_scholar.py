@@ -72,7 +72,7 @@ def _get_request(
 def _get_paper(paper_id: str, api_key: str = None) -> Optional[Paper]:
     r = _get_request(f"paper/{paper_id}", api_key)
 
-    if not r.ok:
+    if r.status_code != 200:
         logger.error(
             {
                 "event": "s2_get_paper",
@@ -112,7 +112,7 @@ def get_paper(paper_id: str, api_key: str = None) -> Optional[FullPaper]:
 def _get_author(author_id: str, api_key: str = None) -> Optional[S2Author]:
     r = _get_request(f"author/{author_id}", api_key)
 
-    if not r.ok:
+    if r.status_code != 200:
         logger.error(
             {
                 "event": "s2_get_author",
@@ -166,7 +166,7 @@ def get_author_id(author_name: str, api_key: str = None) -> Optional[str]:
     r = _get_request(
         f"author/search?query={author_name}", api_key=api_key, graph_api=True
     )
-    if not r.ok:
+    if r.status_code != 200:
         return None
 
     data = r.json().get("data")

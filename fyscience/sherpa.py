@@ -57,7 +57,7 @@ def get_pathway(
         + f"item-type=publication&api-key={api_key}&format=Json&"
         + f'filter=[["issn","equals","{issn}"]]'
     )
-    if not response.ok:
+    if response.status_code != 200:
         logger.error(
             {
                 "event": "sherpa_get_pathway",

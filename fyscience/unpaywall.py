@@ -54,7 +54,7 @@ def _get_paper(doi: str, email: Optional[str] = None) -> Optional[Paper]:
         )
 
     response = requests.get(f"https://api.unpaywall.org/v2/{doi}?email={email}")
-    if not response.ok:
+    if response.status_code != 200:
         logger.error(
             {
                 "event": "unpaywall_get_paper",

@@ -25,7 +25,7 @@ def query_sherpa(issn):
 
 
 def extract_policy(response):
-    if not response.ok:
+    if response.status_code != 200:
         return "bad response"
 
     try:

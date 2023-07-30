@@ -34,7 +34,6 @@ def test_no_author_found(monkeypatch, client: TestClient):
 
 def test_get_publications_for_author_without_profile_arg(client: TestClient) -> None:
     r = client.get("/api/authors")
-    assert not r.ok
     assert r.status_code == 422
 
 
@@ -60,7 +59,7 @@ def test_get_paper(monkeypatch, client: TestClient) -> None:
     )
 
     r = client.get(f"/api/papers?paper_id={doi}")
-    assert r.ok
+    assert r.status_code == 200
     paper = r.json()
     assert paper["is_open_access"] == is_open_access
     assert paper["oa_pathway"] == oa_pathway
@@ -73,7 +72,7 @@ def test_log_endpoint(caplog, client: TestClient) -> None:
     message = "Details about how grand."
 
     r = client.post("/api/logs", json={"event": event, "message": message})
-    assert r.ok, r
+    assert r.status_code == 200, r
 
     assert event in caplog.text
     assert message in caplog.text

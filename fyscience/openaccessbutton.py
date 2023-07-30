@@ -22,7 +22,7 @@ def get_paper_metadata(doi: str) -> Optional[dict]:
             "embedded": f"https://freeyourscience.org/syp?doi={doi}",
         },
     )
-    if not r.ok:
+    if r.status_code not in ["200", "201"]:
         return None
 
     return r.json()
@@ -33,7 +33,7 @@ def get_permissions(doi: str) -> Optional[dict]:
     r = requests.get(
         "https://api.openaccessbutton.org/permissions", params={"doi": doi}
     )
-    if not r.ok:
+    if r.status_code != 200:
         return None
 
     return r.json()

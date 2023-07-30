@@ -8,7 +8,7 @@ def get_open_access_url(doi: str) -> Optional[str]:
     # TODO: Add access_token parameter with registered API token
     r = requests.get("https://zenodo.org/api/records", params={"q": f'doi:"{doi}"'})
 
-    if not r.ok:
+    if r.status_code != 200:
         logger.error(
             {
                 "event": "zenodo_get_open_access_url",

@@ -1,9 +1,10 @@
-import requests
 import urllib.parse
+from typing import Optional
+
+import requests
 from loguru import logger
 
 from fyscience.schemas import Author
-
 
 _CROSSREF_API_USER_AGENT = (
     "FreeYourScience/1.0 "
@@ -12,13 +13,13 @@ _CROSSREF_API_USER_AGENT = (
 )
 
 
-def get_author_with_papers(name: str):
+def get_author_with_papers(name: str) -> Optional[Author]:
     query = urllib.parse.urlencode({"query.author": name})
     r = requests.get(
         f"https://api.crossref.org/works?{query}",
         headers={"User-Agent": _CROSSREF_API_USER_AGENT},
     )
-    if not r.ok:
+    if r.status_code != 200:
         logger.error(
             {
                 "event": "crossref_get_author_with_papers",

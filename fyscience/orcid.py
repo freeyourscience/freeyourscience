@@ -20,7 +20,7 @@ WORKS = "{http://www.orcid.org/ns/activities}works"
 
 def get_author_with_papers(orcid: str) -> Optional[Author]:
     r = requests.get(f"https://pub.orcid.org/{orcid}")
-    if not r.ok:
+    if r.status_code != 200:
         logger.error(
             {
                 "event": "orcid_get_author_with_papers",

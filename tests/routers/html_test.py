@@ -11,7 +11,7 @@ from fyscience.routers.html import _is_doi_query, _get_response_headers
 )
 def test_endpoint_responds_ok(endpoint, client: TestClient) -> None:
     r = client.get(endpoint)
-    assert r.ok
+    assert r.status_code == 200
 
 
 def test_hit_error_page(client: TestClient) -> None:
@@ -43,7 +43,6 @@ def test_no_author_found(monkeypatch, client: TestClient):
 
 def test_search_missing_args(client: TestClient) -> None:
     r = client.get("/search")
-    assert not r.ok
     assert r.status_code == 422
 
 
