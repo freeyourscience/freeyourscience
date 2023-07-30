@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 from functools import lru_cache
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 TEMPLATE_PATH = os.path.join(
@@ -14,8 +14,7 @@ class Settings(BaseSettings):
     unpaywall_email: str
     s2_api_key: Optional[str] = None
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
 
 
 @lru_cache()

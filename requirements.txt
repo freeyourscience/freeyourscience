@@ -1,5 +1,6 @@
 requests
-pydantic[dotenv]
+pydantic
+pydantic-settings
 fastapi
 uvicorn
 gunicorn
