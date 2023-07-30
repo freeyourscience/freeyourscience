@@ -22,7 +22,7 @@ def get_paper_metadata(doi: str) -> Optional[dict]:
             "embedded": f"https://freeyourscience.org/syp?doi={doi}",
         },
     )
-    if r.status_code not in ["200", "201"]:
+    if r.status_code not in [200, 201]:
         return None
 
     return r.json()
