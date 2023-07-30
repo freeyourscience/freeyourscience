@@ -44,7 +44,9 @@ class S2Author(BaseModel):
     url: Optional[str] = None
 
 
-def _get_request(relative_url: str, api_key: str, **kwargs) -> requests.Response:
+def _get_request(
+    relative_url: str, api_key: str, graph_api: bool = False, **kwargs
+) -> requests.Response:
     if api_key is not None:
         headers = kwargs.pop("headers", None)
         if isinstance(headers, dict):
@@ -53,10 +55,16 @@ def _get_request(relative_url: str, api_key: str, **kwargs) -> requests.Response
             headers = {"x-api-key": api_key}
         kwargs["headers"] = headers
 
-        url = f"https://partner.semanticscholar.org/v1/{relative_url}"
+        url = (
+            "https://partner.semanticscholar.org"
+            + f"{'/graph' if graph_api else ''}/v1/{relative_url}"
+        )
 
     else:
-        url = f"https://api.semanticscholar.org/v1/{relative_url}"
+        url = (
+            "https://api.semanticscholar.org"
+            + f"{'/graph' if graph_api else ''}/v1/{relative_url}"
+        )
 
     return requests.get(url, **kwargs)
 
@@ -154,16 +162,15 @@ def extract_profile_id_from_url(url: str) -> Optional[str]:
 
 
 def get_author_id(author_name: str, api_key: str = None) -> Optional[str]:
-    """Get S2 author ID via the name search."""
-    r = requests.get(
-        "https://www.semanticscholar.org/api/1/completion",
-        params={"q": author_name, "fresh": "false"},
+    """Get S2 author ID via the author search."""
+    r = _get_request(
+        f"author/search?query={author_name}", api_key=api_key, graph_api=True
     )
     if not r.ok:
         return None
 
-    suggestions = r.json().get("suggestions")
-    if not suggestions:
+    data = r.json().get("data")
+    if not data:
         return None
 
-    return suggestions[0]["linkedId"]
+    return data[0].get("authorId")
