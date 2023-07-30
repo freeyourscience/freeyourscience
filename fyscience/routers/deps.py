@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     unpaywall_email: str
     s2_api_key: Optional[str] = None
 
-    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
 @lru_cache()
