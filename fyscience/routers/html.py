@@ -111,11 +111,10 @@ def get_share_your_paper(doi: str, request: Request):
     )
 
     # NOTE: SYP lacks author names that unpaywall knows, see 10.1007/s00350-021-5862-6
-    authors = (
-        assemble_author_name(paper_meta_data["metadata"]["author"][0])
-        if paper_meta_data["metadata"]["author"]
-        else "unknown authors"
-    )
+    try:
+        authors = assemble_author_name(paper_meta_data["metadata"]["author"][0])
+    except KeyError:
+        authors = "unknown authors"
 
     return templates.TemplateResponse(
         "shareyourpaper.html",
