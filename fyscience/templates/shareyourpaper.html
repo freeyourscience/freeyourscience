@@ -1,16 +1,15 @@
 {% extends "base.html" %} {% block header %}
-<script src="https://shareyourpaper.org/embed.js"></script>
+<script src="https://shareyourpaper.org/static/embed/oab_embed.js"></script>
 {% endblock %} {% block content %}
 <main class="shareyourpaper">
   <h1>Re-publish open access today for free</h1>
   <article>
     <div class="publications__item__info__title">
-    {{ title }}
+    {{ doi }}
     </div>
     <div>
-      {{ journal }}, {{ authors }} ({{ year }}), {{ doi }}
       <a href="https://doi.org/{{ doi }}" target="_blank" rel="noopener">
-        <span class="material-icons">launch</span>
+        {{doi}} <span class="material-icons">launch</span>
       </a>
     </div>
   <article class="shareyourpaper__intro">
@@ -33,17 +32,9 @@
       repo_name: "Zenodo",
       oa_deposit_off: true,
       dark_deposit_off: true,
-      //"live":1585895131684,
       not_library: true,
-      autorun_off: true,
       owner: "team@freeyourscience.org",
     },
   });
-  var checkEmbedLoaded = setInterval(function () {
-    if (_oab.loading) {
-      _oab.permissions({{ paper_meta_data | safe }});
-      clearInterval(checkEmbedLoaded);
-    }
-  }, 100);
 </script>
 {% endblock %}
