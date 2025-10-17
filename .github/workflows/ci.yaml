@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup elm
-        uses: jorelali/setup-elm@v2
+        uses: jorelali/setup-elm@v5
         with:
           elm-version: 0.19.1
 
@@ -30,14 +30,14 @@ jobs:
           elm make src/Paper.elm --output singlePaper.js
 
       - name: Archive Author.js
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: publications-for-authors-js
           path: elm_frontend/authorPapers.js
           retention-days: 1
 
       - name: Archive Paper.js
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: single-paper-js
           path: elm_frontend/singlePaper.js
@@ -64,13 +64,13 @@ jobs:
           password: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Download Author.js
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: publications-for-authors-js
           path: fyscience/static/
 
       - name: Download Paper.js
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: single-paper-js
           path: fyscience/static/
