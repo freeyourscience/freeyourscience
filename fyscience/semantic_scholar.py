@@ -3,6 +3,8 @@ from typing import List, Optional
 import requests
 from pydantic import BaseModel
 from loguru import logger
+from urllib3.exceptions import HTTPError
+from requests.exceptions import ConnectionError
 
 from fyscience.schemas import FullPaper, Author
 
@@ -44,9 +46,10 @@ class S2Author(BaseModel):
     url: Optional[str] = None
 
 
+@logger.catch((HTTPError, ConnectionError))
 def _get_request(
     relative_url: str, api_key: str, graph_api: bool = False, **kwargs
-) -> requests.Response:
+) -> Optional[requests.Response]:
     if api_key is not None:
         headers = kwargs.pop("headers", None)
         if isinstance(headers, dict):
@@ -71,6 +74,9 @@ def _get_request(
 
 def _get_paper(paper_id: str, api_key: str = None) -> Optional[Paper]:
     r = _get_request(f"paper/{paper_id}", api_key)
+
+    if r is None:
+        return None
 
     if r.status_code != 200:
         logger.error(
@@ -111,6 +117,9 @@ def get_paper(paper_id: str, api_key: str = None) -> Optional[FullPaper]:
 
 def _get_author(author_id: str, api_key: str = None) -> Optional[S2Author]:
     r = _get_request(f"author/{author_id}", api_key)
+
+    if r is None:
+        return None
 
     if r.status_code != 200:
         logger.error(
@@ -166,7 +175,8 @@ def get_author_id(author_name: str, api_key: str = None) -> Optional[str]:
     r = _get_request(
         f"author/search?query={author_name}", api_key=api_key, graph_api=True
     )
-    if r.status_code != 200:
+
+    if r is None or r.status_code != 200:
         return None
 
     data = r.json().get("data")

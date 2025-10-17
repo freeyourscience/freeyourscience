@@ -1,5 +1,5 @@
 import pytest
-from requests import Response
+from urllib3.exceptions import NameResolutionError
 
 from fyscience.semantic_scholar import (
     get_paper,
@@ -74,3 +74,12 @@ def test_dev_vs_prod_endpoint(monkeypatch):
 
     monkeypatch.setattr("fyscience.semantic_scholar.requests.get", mock_get_prod)
     _get_request("someEndpoint/123", api_key="api_key_dummy")
+
+
+def test_name_resolution_error(monkeypatch):
+    def mock_get_dev(url, **kwargs):
+        raise NameResolutionError(host="non-existing-host", conn=None, reason=None)
+
+    monkeypatch.setattr("fyscience.semantic_scholar.requests.get", mock_get_dev)
+    result = _get_request("someEndpoint/123", api_key=None)
+    assert result == None
